@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  state: MyString
+  current_question: 1
+  final_response: MyString
+
+two:
+  state: MyString
+  current_question: 1
+  final_response: MyString

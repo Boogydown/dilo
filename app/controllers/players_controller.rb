@@ -27,6 +27,7 @@ class PlayersController < ApplicationController
   # GET /players/new.xml
   def new
     @player = Player.new
+    session[:current_user_id] = @player.id
 
     respond_to do |format|
       format.html # new.html.erb
@@ -47,7 +48,8 @@ class PlayersController < ApplicationController
 
     respond_to do |format|
       if @player.save
-        format.html { redirect_to(@player, :notice => 'Player was successfully created.') }
+        session[:current_user_id] = @player.id
+        format.html { redirect_to root_url }
         format.xml  { render :xml => @player, :status => :created, :location => @player }
         format.json  { render :json => @player, :status => :created, :location => @player }
 

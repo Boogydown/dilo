@@ -1,5 +1,10 @@
 <p id="notice"><%= notice %></p>
 
+ <div class="field">
+    user id= <br />
+    <%= session[:current_user_id] %>
+  </div>
+
 <p>
   <b>State:</b>
   <%= @session.state %>

@@ -44,7 +44,18 @@ class PlayersController < ApplicationController
   # POST /players
   # POST /players.xml
   def create
-    @player = Player.new(params[:player])
+
+    playerJson = ActiveSupport::JSON.decode(request.raw_post)
+    logger.debug request.raw_post
+    logger.debug playerJson
+
+
+    #we must be handling json
+    if(playerJson.blank?)
+      @player = Player.new(playerJson["name"])
+    else#handle html page
+      @player = Player.new(params[:player])
+    end
 
     respond_to do |format|
       if @player.save

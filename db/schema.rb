@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110830191004) do
+ActiveRecord::Schema.define(:version => 20110905153404) do
 
   create_table "players", :force => true do |t|
     t.string   "name"
@@ -25,6 +25,18 @@ ActiveRecord::Schema.define(:version => 20110830191004) do
   create_table "players_sessions", :id => false, :force => true do |t|
     t.integer "player_id"
     t.integer "session_id"
+  end
+
+  create_table "questions", :force => true do |t|
+    t.text     "prompt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "responses", :force => true do |t|
+    t.string   "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sessions", :force => true do |t|

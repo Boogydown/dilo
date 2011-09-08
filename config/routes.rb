@@ -1,4 +1,8 @@
 Dilo::Application.routes.draw do
+  resources :responses
+
+  resources :questions
+
   resources :sessions
 
   resources :players

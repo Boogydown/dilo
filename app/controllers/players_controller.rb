@@ -48,11 +48,13 @@ class PlayersController < ApplicationController
     playerJson = ActiveSupport::JSON.decode(request.raw_post)
     logger.debug request.raw_post
     logger.debug playerJson
-
+    logger.debug "player = " + playerJson['name']
+    logger.debug "player = " + playerJson['name']
 
     #we must be handling json
-    if(playerJson.blank?)
-      @player = Player.new(playerJson["name"])
+    if(!playerJson.blank?)
+      @player = Player.new
+      @player.name = playerJson['name']
     else#handle html page
       @player = Player.new(params[:player])
     end

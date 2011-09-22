@@ -10,7 +10,35 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110905153404) do
+ActiveRecord::Schema.define(:version => 20110912173052) do
+
+  create_table "game_questions", :force => true do |t|
+    t.integer  "game_id"
+    t.integer  "question_id"
+    t.integer  "order"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "games", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "options", :force => true do |t|
+    t.text     "content"
+    t.boolean  "correct"
+    t.integer  "order"
+    t.integer  "question_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "player_sessions", :id => false, :force => true do |t|
+    t.integer "player_id"
+    t.integer "session_id"
+  end
 
   create_table "players", :force => true do |t|
     t.string   "name"
@@ -19,12 +47,7 @@ ActiveRecord::Schema.define(:version => 20110905153404) do
     t.integer  "sessions_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "session_id"
-  end
-
-  create_table "players_sessions", :id => false, :force => true do |t|
-    t.integer "player_id"
-    t.integer "session_id"
+    t.integer  "player_session_id"
   end
 
   create_table "questions", :force => true do |t|
@@ -45,6 +68,8 @@ ActiveRecord::Schema.define(:version => 20110905153404) do
     t.string   "final_response"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "game_id"
+    t.integer  "player_sessions_id"
   end
 
 end

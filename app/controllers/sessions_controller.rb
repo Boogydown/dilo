@@ -49,20 +49,28 @@ class SessionsController < ApplicationController
 
     #look for an existing session
     @session = Session.where(:state=>"waiting").order("created_at ASC").limit(1).first
-    @player = Player.find(session[:current_user_id])
-    logger.debug @session
-    logger.debug @player
 
     #can't find one? let's create one.
     if(@session.blank?)
-      @session = Session.new(params[:session])
+      @session = Session.new
       @session.state = 'waiting'
     else
       @session.state = 'active'
     end
 
-    #add this player to the session
-    @session.players.push(@player)
+    logger.debug @session
+
+    json = ActiveSupport::JSON.decode(request.raw_post)
+
+    #handling json
+    if(!json.blank?)
+      player = Player.find(json['playerId'])
+      #add this player to the session
+      @session.players.push(player)
+      logger.debug player
+    end
+
+
 
     respond_to do |format|
       if @session.save
@@ -83,8 +91,11 @@ class SessionsController < ApplicationController
   def update
     @session = Session.find(params[:id])
 
+    json = ActiveSupport::JSON.decode(request.raw_post)
+    @session.state = json['state']
+
     respond_to do |format|
-      if @session.update_attributes(params[:session])
+      if @session.save
         format.html { redirect_to(@session, :notice => 'Session was successfully updated.') }
         format.xml  { head :ok }
         format.json  { head :ok }

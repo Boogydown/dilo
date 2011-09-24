@@ -1,0 +1,46 @@
+grande	big
+largo	long
+patas	paws
+peludo	furry
+aleta	fin
+colmillo	tusks
+garras	claws
+pezuñas	hoofs
+bigotes	whiskers
+grandísimo	huge
+chiquito	tiny
+plumas	feathers
+escamas	scales
+pico	beak
+gordo	fat
+delgado	thin
+agudo	sharp
+melena	mane
+callado	quiet
+tranquilo	tranquil
+enemigo	enemy
+es amigo de	it's a friend of
+omnívoro	omnivore
+carnívoro	carnivore
+herbívoro	herbivore
+inteligente	smart
+listo	clever
+astuto	astute
+solapado	sneaky
+juguetón	playful
+cruel	cruel
+cómico	funny
+antipático	mean
+tímido	timid
+ruidoso	loud
+simpático	nice
+amistoso	friendly
+fuerte	strong
+débil	weak
+fiero	fierce
+feroz	ferocious
+rápido	fast
+despacio	slow
+además	in addition
+también	also
+a veces	at times

@@ -1,0 +1,24 @@
+el pájaro		http://farm6.static.flickr.com/5146/5689256465_48cc7ea820.jpg
+la mariposa		http://farm4.static.flickr.com/3621/3443942988_8d98206a66.jpg
+el pato		http://farm1.static.flickr.com/219/499042396_bedb1bd187.jpg
+el pez		http://farm3.static.flickr.com/2456/3973983331_de5b246580.jpg
+la rana		http://farm4.static.flickr.com/3216/2894076284_9b4d341e5b.jpg
+el saltamontes		http://farm7.static.flickr.com/6079/6088845425_6eb12437a6.jpg
+la marmota americana		http://farm4.static.flickr.com/3323/3650238499_040ca793b0.jpg
+el halcón		http://farm3.static.flickr.com/2490/4109906871_748b09b048.jpg
+la catarina		http://farm1.static.flickr.com/39/90789758_c12fbcf758.jpg
+la llama		http://farm3.static.flickr.com/2509/4047892504_eb7076ae27.jpg
+el alce		http://farm4.static.flickr.com/3273/2628732909_46195af910.jpg
+el ratón		http://farm6.static.flickr.com/5045/5205050373_faba8070f0.jpg
+el pulpo		http://farm4.static.flickr.com/3197/3043020836_4950c0636f.jpg
+la lechuza		http://farm6.static.flickr.com/5114/5834532238_5b8f16a2b0.jpg
+el pavo real		http://farm6.static.flickr.com/5217/5514161087_d8c1a155a3.jpg
+el cerdo		http://farm1.static.flickr.com/122/299015399_4fc59e9f0a.jpg
+la rata		http://farm4.static.flickr.com/3544/3438909189_60d63694b0.jpg
+el caballo		http://farm1.static.flickr.com/48/152544723_786ad4e8c9.jpg
+el aligator		http://farm4.static.flickr.com/3103/3163169918_c5569f6fae.jpg
+la abeja		http://farm7.static.flickr.com/6210/6144882221_84b8936360.jpg
+la cucaracha		http://farm4.static.flickr.com/3624/3639234792_33b5e6fe46.jpg
+el gusano		http://farm1.static.flickr.com/31/93956444_c8292fd3c4.jpg
+la mosca		http://farm7.static.flickr.com/6194/6114054641_28a4e172f7.jpg
+el mosquito		http://farm3.static.flickr.com/2091/1503042055_70fc0c345d.jpg

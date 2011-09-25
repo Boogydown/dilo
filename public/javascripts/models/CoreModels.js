@@ -40,7 +40,8 @@ App.Models.PollModel = App.Models.RailsModel.extend({
         options || (options = {});
         interval || (interval = 300);
         timeout || (timeout = 10000);
-        var closureFetch = this.fetch;
+        var changeStr = "change" + (attribute ? ":" + attribute :"");
+        var model = this;
         this.poll = {
             polling: true,
             interval: interval,
@@ -48,9 +49,10 @@ App.Models.PollModel = App.Models.RailsModel.extend({
             options: options,
             next: function() {
                 if ( this.polling )
-                    setTimeout( closureFetch, this.interval, this.options );
+                    setTimeout( model.fetch, this.interval, this.options );
             },
             stop: function( timedout ) {
+                model.unbind( changeStr, model._pollChangedHandler);
                 if ( timedout && this.polling ) {
                     this.polling = false;
                     options.error();
@@ -60,7 +62,7 @@ App.Models.PollModel = App.Models.RailsModel.extend({
         };
         _.bindAll( this.poll, "next", "stop" );
         //listen for the change, either general or attribute-specific
-        this.bind("change" + (attribute ? ":" + attribute :""), this._pollChangedHandler );
+        this.bind( changeStr, this._pollChangedHandler );
 
         // this fetch success will trigger the next polling fetch
         options.success = this.poll.next;

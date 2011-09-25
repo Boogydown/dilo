@@ -1,34 +1,55 @@
 /**
- * Created by JetBrains RubyMine.
- * User: HAMMDI
- * Date: 9/24/11
- * Time: 12:04 PM
- * To change this template use File | Settings | File Templates.
+ * MainRouter routes hash values of the url to different views
+ * Created by: HAMMDI on 9/24/11 12:04 PM
  */
-
 App.Routers.MainRouter = Backbone.Router.extend({
     curView : null,
     mainEl : "#app",
+    session: {},
     routes: {
+        "" : "showHome",
         "home" : "showHome",
         "play" : "showGame"
     },
 
-    intialize : function () {
+    initialize : function () {
         _.bindAll( this, "showHome", "showGame");
+        this.session = new App.Models.SessionModel();
+        this.player = new App.Models.PlayerModel();
     },
 
     showHome : function () {
-        ( this.curView = new App.Views.LoginView({ el:this.mainEl }) ).render();
+        // create the login view and immediately render it
+        ( this.curView = new App.Views.LoginView({
+            el:this.mainEl,
+            session: this.session,
+            model: this.player
+        }) ).render();
     },
 
     showGame : function () {
-        //TODO: make questions dynamically load
+        if ( this.session && this.session.get("state") != "active" ) {
+            alert("You must login and pair up, first!");
+            location.href = "#home";
+            return;
+        }
+
+        // some basic, hard-coded question
         var sampleQ = new App.Models.QuestionModel({
-            stemContent: "Who is the coolest of the Dilo dev team?",
+            stemContent: {prompt:"Who is the coolest of the Dilo dev team?"},
             responseContent: {choices : ["James", "Jason", "Dimitri", "Jonathan"]},
-            correctResponse: function (response) {return response == "choice2"}
+            correctResponse: 2
         });
-        ( this.curView = new App.Views.GameView({ el:this.mainEl, model:sampleQ }) ).render();
+
+        // create the game view...
+        this.curView = new App.Views.GameView({
+            el: this.mainEl,
+            model: sampleQ,
+            session: this.session,
+            player: this.player
+        });
+
+        ///...and start it!
+        this.curView.start();
     }
-})
+});

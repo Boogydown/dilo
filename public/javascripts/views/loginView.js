@@ -6,12 +6,12 @@
  * To change this template use File | Settings | File Templates.
  */
 App.Views.LoginView = Backbone.View.extend({
-    oIndex : 0,
-    events : { "submit #loginForm" : "sendPlayer",
-               "click #loginDone" : "sendPlayer"},
+    events : { "submit #loginForm" : "sendPlayer" },
 
-    initialize: function () {
+    initialize: function (options) {
         _.bindAll(this, "sendPlayer", "playerCreated", "sessionCreated", "syncError");
+        this.session = options.session;
+        this.model.set({opponentIndex:0});
     },
 
     render : function() {
@@ -20,9 +20,10 @@ App.Views.LoginView = Backbone.View.extend({
     },
 
     sendPlayer : function(  ) {
-        // create new player with name value taken from input node of id usernameEntry
-        this.model = new App.Models.PlayerModel({name:$("#usernameEntry").val()});
-        this.model.save(null, {
+        // model is player; populate name with value taken from input node of id usernameEntry
+        this.model.save({
+            name:$("#usernameEntry").val()
+        },{
             success: this.playerCreated,
             error: this.syncError
         });
@@ -30,31 +31,35 @@ App.Views.LoginView = Backbone.View.extend({
     },
 
     playerCreated : function () {
-        $(this.el).append("<p>Hello "+ this.model.get("name") + "!  You are player " + this.model.id + "</p><p>Pairing...</p>");
-        this.session = new App.Models.SessionModel({playerId: this.model.id});
-        this.session.save(null, {
+        $("#statusMsg").html("<p>Hello "+ this.model.get("name") + "!  You are player #" + this.model.id +
+                             "</p><p>We are pairing you with a partner...</p>");
+        this.session.save({
+            playerId: this.model.id
+        },{
             success: this.sessionCreated,
             error: this.syncError
-            }
-        );
+        });
     },
 
     sessionCreated : function () {
         var state = this.session.get("state");
         switch ( state ){
             case "waiting" :
-                $(this.el).append("<p>Waiting for other player...</p>");
-                this.oIndex = 1;
+                $("#statusMsg").append("<p>Waiting for other player...</p>");
+                this.model.set({opponentIndex:1});
                 this.session.pollFetch({success:this.sessionCreated, error:this.syncError}, "state", 300, 20000 );
                 break;
+
             case "active" :
                 this.opponent = new App.Models.PlayerModel( this.session.get("players")[this.oIndex] );
-                $(this.el).append("<p>Paired with player " + this.opponent.get("name") + " with session id " + this.session.id + "!</p>");
+                $("#statusMsg").html("<p>Paired with player " + this.opponent.get("name") + " with session id " + this.session.id + "!</p>" +
+                                     "<p>Click button to start!</p>");
+                $("#startGameBtn", this.el).show();
                 break;
         }
     },
 
     syncError : function (model, response) {
-        alert("Failure!\n" + response);
+        alert("Server failure!\n" + response);
     }
 });

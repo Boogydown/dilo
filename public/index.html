@@ -19,20 +19,22 @@
             Username: <input id="usernameEntry" type="text"></input>
             <button type="submit" id="loginDone">Submit</button>
         </form>
+        <div id="statusMsg"></div>
+        <button id="startGameBtn" onclick="location.href='#play'" style="display:none">Start Game!</button>
     </script>
 
     <script type="application/_template" id="gameTemplate">
         <h1>Dilo</h1>
         <h3>How fast can you answer?</h3>
-        <div id="questionArea"><% print( this.renderQuestion ) %></div>
-   </script>
+        <div id="questionArea"></div>
+    </script>
 
     <script type="application/_template" id="questionTemplate_MC">
-        <%= stemContent %><br/>
-        <div id="choice0"><h3>A.</h3><%= responseContent.choices[0] %></div>
-        <div id="choice1"><h3>B.</h3><%= responseContent.choices[1] %></div>
-        <div id="choice2"><h3>C.</h3><%= responseContent.choices[2] %></div>
-        <div id="choice3"><h3>D.</h3><%= responseContent.choices[3] %></div>
+        <%= stemContent.prompt %><br/>
+        <div id="choice0" class="answerChoice"><b>A. </b><%= responseContent.choices[0] %></div>
+        <div id="choice1" class="answerChoice"><b>B. </b><%= responseContent.choices[1] %></div>
+        <div id="choice2" class="answerChoice"><b>C. </b><%= responseContent.choices[2] %></div>
+        <div id="choice3" class="answerChoice"><b>D. </b><%= responseContent.choices[3] %></div>
     </script>
 
 </head>

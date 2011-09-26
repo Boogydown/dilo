@@ -17,6 +17,7 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
+      format.json  { render :json => @game }
       format.xml  { render :xml => @game }
     end
   end
@@ -28,7 +29,9 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
+      format.json  { render :json => @game }
       format.xml  { render :xml => @game }
+
     end
   end
 

@@ -8,7 +8,7 @@ class RemoveIdFromGameQuestions < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :game_questions
+    drop_table :games_questions
     create_table :game_questions do |t|
       t.references :game
       t.references :question

@@ -14,6 +14,7 @@ class GamesController < ApplicationController
   # GET /games/1.xml
   def show
     @game = Game.find(params[:id])
+    #@game.questions[0].choices =  generate_choices(@game.questions)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -21,6 +22,16 @@ class GamesController < ApplicationController
       format.xml  { render :xml => @game }
     end
   end
+
+  # @param questions [questions]
+  def generate_choices(questions)
+    choices = Hash.new
+    choices["A"] = questions[0].answer
+    choices["B"] = questions[1].answer
+    choices["C"] = questions[2].answer
+    choices["D"] = questions[3].answer
+  end
+
 
   # GET /games/new
   # GET /games/new.xml

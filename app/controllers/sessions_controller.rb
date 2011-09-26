@@ -43,6 +43,24 @@ class SessionsController < ApplicationController
     @session = Session.find(params[:id])
   end
 
+
+  # @param questions [questions]
+  def generate_choices(questions, current)
+    choices = Hash.new
+    selectable = []
+    selectable = questions - [questions[current]]
+    randomized = selectable.sample(3)
+
+    choices[0] = randomized[0].answer
+    choices[1] = randomized[1].answer
+    choices[2] = randomized[2].answer
+
+
+    ActiveSupport::JSON.encode(choices)
+
+  end
+
+
   # POST /sessions
   # POST /sessions.xml
   def create
@@ -64,13 +82,20 @@ class SessionsController < ApplicationController
           @session.game.questions << question
       end
 
+      @session.game.game_questions.each_with_index do |gameQuestion, index|
+        gameQuestion.update_attributes(:distractors => generate_choices(questions, index))
+      end
+
+      #@session.save
+      logger.debug @session.game.id
+      #gameQuestions = GameQuestion.where("game_id = ?", @session.game.id )
+      #@session.game.save
+
+
     end
 
 
     logger.debug @session
-
-
-
     json = ActiveSupport::JSON.decode(request.raw_post)
 
     #handling json
@@ -130,5 +155,15 @@ class SessionsController < ApplicationController
       format.json  { head :ok }
 
     end
+  end
+end
+
+
+
+class Array
+  # If +number+ is greater than the size of the array, the method
+  # will simply return the array itself sorted randomly
+  def randomly_pick(number)
+    sort_by{ rand }.slice(0...number)
   end
 end

@@ -54,6 +54,7 @@ class SessionsController < ApplicationController
     choices[0] = randomized[0].answer
     choices[1] = randomized[1].answer
     choices[2] = randomized[2].answer
+    choices[3] = questions[current].answer
 
 
     ActiveSupport::JSON.encode(choices)

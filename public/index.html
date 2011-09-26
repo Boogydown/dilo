@@ -7,14 +7,46 @@
     <script type="text/javascript" src="javascripts/json2.js"></script>
     <script type="text/javascript" src="javascripts/underscore.js"></script>
     <script type="text/javascript" src="javascripts/backbone.js"></script>
+
     <script type="text/javascript" src="javascripts/diloapp.js"></script>
-</head>
-<body>
-    <div id="loginDiv" style="display:none">
-        <form id="loginForm" action="">
-            Username: <input id="usernameEntry" type="text"></form>
+    <script type="text/javascript" src="javascripts/models/CoreModels.js"></script>
+    <script type="text/javascript" src="javascripts/controllers/MainRouter.js"></script>
+    <script type="text/javascript" src="javascripts/views/loginView.js"></script>
+    <script type="text/javascript" src="javascripts/views/GameView.js"></script>
+
+    <script type="application/_template" id="loginTemplate">
+        <form id="loginForm" action="" onsubmit="return false;">
+            Username: <input id="usernameEntry" type="text"></input>
             <button type="submit" id="loginDone">Submit</button>
         </form>
-    </div>
+        <div id="statusMsg"></div>
+        <button id="startGameBtn" onclick="location.href='#play'" style="display:none">Start Game!</button>
+    </script>
+
+    <script type="application/_template" id="gameTemplate">
+        <h1>Dilo</h1>
+        <h3>How fast can you answer?</h3>
+        <div id="questionArea"></div>
+    </script>
+
+    <script type="application/_template" id="questionTemplate_MC">
+        <%= stemContent.prompt %><br/>
+        <div id="choice0" class="answerChoice"><b>A. </b><%= responseContent.choices[0] %></div>
+        <div id="choice1" class="answerChoice"><b>B. </b><%= responseContent.choices[1] %></div>
+        <div id="choice2" class="answerChoice"><b>C. </b><%= responseContent.choices[2] %></div>
+        <div id="choice3" class="answerChoice"><b>D. </b><%= responseContent.choices[3] %></div>
+    </script>
+
+</head>
+<body>
+    <!-- This is the main div for the app.  When a View is rendered it replaces this element's contents -->
+    <div id="app"></div>
+
+    <!-- Kickoff the main app on document-ready! -->
+    <script type="text/javascript">
+        $(function() {
+            App.init();
+        });
+    </script>
 </body>
 </html>

@@ -10,20 +10,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110912173052) do
-
-  create_table "game_questions", :force => true do |t|
-    t.integer  "game_id"
-    t.integer  "question_id"
-    t.integer  "order"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(:version => 20110926035413) do
 
   create_table "games", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "session_id"
+  end
+
+  create_table "games_questions", :id => false, :force => true do |t|
+    t.integer "game_id"
+    t.integer "question_id"
   end
 
   create_table "options", :force => true do |t|
@@ -54,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20110912173052) do
     t.text     "prompt"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "answer"
   end
 
   create_table "responses", :force => true do |t|

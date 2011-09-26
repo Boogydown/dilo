@@ -62,7 +62,7 @@ class PlayersController < ApplicationController
     respond_to do |format|
       if @player.save
         session[:current_user_id] = @player.id
-        format.html { redirect_to root_url }
+        format.html { render :action => "show" }
         format.xml  { render :xml => @player, :status => :created, :location => @player }
         format.json  { render :json => @player, :status => :created, :location => @player }
 

@@ -4,7 +4,7 @@ class Session < ActiveRecord::Base
   has_one :game
 
   def as_json(options={})
-    super( :include =>[:players])
+    super( :include =>[:players, :game])
   end
 
 end

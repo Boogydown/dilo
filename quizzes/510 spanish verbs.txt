@@ -13,7 +13,7 @@ satisfacer	to satisfy
 secar	to dry, to wipe dry
 secarse	to dry oneself
 seguir	to follow, to pursue, to continue
-señalar	to signal, to indicate, to point out, to show
+seï¿½alar	to signal, to indicate, to point out, to show
 sentarse	to sit down
 sentir	to feel sorry, to regret, to feel
 sentirse	to feel (well, ill)
@@ -26,8 +26,6 @@ soler	to be accustomed to, to be in the habit of, to have the custom of
 sollozar	to sob, to whimper
 someter	to subdue, to subject, to surrender, to submit
 sonar	to ring, to echo, to resound, to sound
-soñar	to dream
-sonreír	to smile
 soplar	to blow, to blow out
 sorprender	to surprise, to astonish
 sospechar	to suspect
@@ -43,7 +41,7 @@ suponer	to suppose, to assume
 suprimir	to suppress, to abolish, to cancel (in mathematics), to eliminate
 surgir	to surge, to appear, to spout, to spurt
 suspirar	to sigh
-tañer	to pluck, to play (a stringed instrument)
+taï¿½er	to pluck, to play (a stringed instrument)
 telefonear	to telephone
 telegrafiar	to telegraph, to cable
 temblar	to tremble, to quake, to quiver, to shake, to shiver
@@ -98,7 +96,7 @@ ocultarse	to hide oneself
 ocupar	to occupy
 ocurrir	to occur, to happen
 ofrecer	to offer
-oír	to hear
+oï¿½r	to hear
 oler	to smell, to scent
 olvidar	to forget
 oponer	to oppose
@@ -165,12 +163,9 @@ recordar	to remember, to recall, to remind
 referir	to refer, to relate
 regalar	to give as a present, to make a present of, to give as a gift
 regar	to water, to irrigate, to sprinkle
-reírse	to laugh
 regresar	to return, to go back, to regress
-reír	to laugh
 rellenar	to refill, to fill again, to stuff
 remitir	to remit, to forward, to transmit
-reñir	to scold, to quarrel
 reparar	to mend, to repair, to notice, to observe
 repartir	to distribute, to deal cards
 repetir	to repeat
@@ -204,13 +199,11 @@ fingir	to feign, to pretend
 firmar	to sign
 formar	to form, to shape
 fregar	to wash dishes, to scrub
-freír	to fry
 fumar	to smoke
 funcionar	to function, to run (machine)
 ganar	to earn, to gain, to win
 gastar	to spend (money), to wear out, to waste
 gritar	to shout, to scream, to shriek, to cry out
-gruñir	to grumble, to grunt, to growl, to creak
 guiar	to lead, to guide
 gustar	to be pleasing (to), to like
 haber	to have (as an auxiliary, helping verb to form the compound tenses)
@@ -306,7 +299,6 @@ criar	to breed, to raise, to bring up (rear)
 cruzar	to cross
 cubrir	to cover
 cuidarse	to take care of oneself
-cumplir	to fulfill, to keep (a promise), to reach one's birthday (use with años)
 deber	to owe, must, ought
 decidir	to decide
 decir	to say, to tell
@@ -324,7 +316,6 @@ descansar	to rest
 describir	to describe, to delineate
 descubrir	to discover
 desear	to desire, to wish, to want
-desempeñar	to play (a part), to act (a part), to discharge, to perform (a duty), to take out of pawn
 deshacer	to undo, to destroy, to take apart
 despedirse	to take leave of, to say good-bye to
 despegar	to detach, to unglue, to unstuck, to take off (airplane)
@@ -361,7 +352,6 @@ encontrar	to meet, to encounter, to find
 enfadarse	to become angry
 enfermarse	to get sick, to fall sick, to become sick, to fall ill, to become ill
 enojarse	to become angry, to get angry, to get cross
-enseñar	to teach, to show, to point out
 entender	to understand
 entrar	to enter, to go (in), to come (in)
 entregar	to deliver, to hand over, to give
@@ -394,7 +384,6 @@ alumbrar	to illuminate, to light, to enlighten
 alumbrarse	to be (get) high, to get tipsy, to become lively (from liquor)
 alzar	to heave, to lift, to pick up, to raise (prices)
 amar	to love
-añadir	to add
 andar	to walk
 anunciar	to announce, to foretell, to proclaim
 apagar	to put out (flame, fire), to extinguish, to turn off (flame, fire, light)
@@ -426,7 +415,6 @@ ayudar	to help, to aid, to assist
 bailar	to dance
 bajar	to lower, to let down, to come down, to go down, to descend
 balbucear	to stammer, to hesitate in speech
-bañarse	to bathe oneself, to take a bath
 barrer	to sweep, to whisk
 bastar	to be enough, to be sufficient, to suffice
 bautizar	to baptize, to christen
@@ -482,7 +470,6 @@ acercarse	to approach, to draw near
 acertar	to hit the mark, to hit upon, to do (something) right, to succeed in, to guess right
 aclamar	to acclaim, to applaud, to shout, to hail
 aclarar	to explain, to clarify, to make clear, to rinse, to clear
-acompañar	to accompany, to escort, to go with, to keep company
 aconsejar	to advise, to counsel
 acordar	to agree (upon)
 acordarse	to remember

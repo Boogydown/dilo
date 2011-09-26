@@ -56,9 +56,20 @@ class SessionsController < ApplicationController
       @session.state = 'waiting'
     else
       @session.state = 'active'
+      @session.game = Game.new
+      questions = Question.find(:all, :order => "created_at ASC", :limit => 7 )
+      #@session.save
+      #@session.game.questions = Question.find(:all, :order => "created_at ASC", :limit => 7 )
+      questions.all? do |question|
+          @session.game.questions << question
+      end
+
     end
 
+
     logger.debug @session
+
+
 
     json = ActiveSupport::JSON.decode(request.raw_post)
 

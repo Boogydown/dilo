@@ -2,13 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d94f8073-bddb-4bf4-9484-2e74aa97776d" name="Default" comment="players and">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db/migrate/20110924220330_modify_questions.rb" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db/migrate/20110924230830_add_session_id_to_games.rb" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db/migrate/20110926035413_remove_id_from_game_questions.rb" />
       <change type="DELETED" beforePath="C:\Documents and Settings\setaja\RubymineProjects\dilo\.idea\dataSources.ids" afterPath="" />
-      <change type="DELETED" beforePath="C:\Documents and Settings\setaja\RubymineProjects\dilo\.idea\workspace.xml" afterPath="" />
       <change type="DELETED" beforePath="C:\Documents and Settings\setaja\RubymineProjects\dilo\public\index.html" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/players_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/players_controller.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/sessions_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/sessions_controller.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/game.rb" afterPath="$PROJECT_DIR$/app/models/game.rb" />
@@ -40,10 +39,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="sessions_controller.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="sessions_controller.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/controllers/sessions_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="0" selection-start="1286" selection-end="1286" vertical-scroll-proportion="0.14820847">
+            <state line="58" column="0" selection-start="1286" selection-end="1286" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="20110924220330_modify_questions.rb" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/db/migrate/20110924220330_modify_questions.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="6" column="32" selection-start="163" selection-end="163" vertical-scroll-proportion="0.16612378">
               <folding />
             </state>
           </provider>
@@ -112,15 +120,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="game_question.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/models/game_question.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="2" selection-start="61" selection-end="61" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="seeds.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db/seeds.rb">
           <provider selected="true" editor-type-id="text-editor">
@@ -152,7 +151,6 @@
         <option value="$PROJECT_DIR$/app/views/players/show.html.erb" />
         <option value="$PROJECT_DIR$/app/views/sessions/index.html.erb" />
         <option value="$PROJECT_DIR$/quizzes/510 spanish verbs.txt" />
-        <option value="$PROJECT_DIR$/db/migrate/20110924220330_modify_questions.rb" />
         <option value="$PROJECT_DIR$/db/seeds.rb" />
         <option value="$PROJECT_DIR$/db/migrate/20110924230830_add_session_id_to_games.rb" />
         <option value="$PROJECT_DIR$/app/controllers/players_controller.rb" />
@@ -164,6 +162,7 @@
         <option value="$PROJECT_DIR$/app/models/game.rb" />
         <option value="$PROJECT_DIR$/app/controllers/games_controller.rb" />
         <option value="$PROJECT_DIR$/app/controllers/sessions_controller.rb" />
+        <option value="$PROJECT_DIR$/db/migrate/20110924220330_modify_questions.rb" />
       </list>
     </option>
   </component>
@@ -814,7 +813,7 @@
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="working on game questions." />
+    <option name="LAST_COMMIT_MESSAGE" value="modify questions" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -836,6 +835,8 @@
     <MESSAGE value="you can now do the following:&#10;&#10;1. create a player - get playerid back&#10;2. create a session(with playerid) get session id back&#10;3. update session state(using session id)" />
     <MESSAGE value="rounding up some question data we can use." />
     <MESSAGE value="working on game questions." />
+    <MESSAGE value="workspace changes" />
+    <MESSAGE value="modify questions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -852,11 +853,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/RailsInstaller/Ruby1.8.7/lib/ruby/gems/1.8/gems/activerecord-3.0.9/lib/active_record/base.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="443" column="6" selection-start="21121" selection-end="21121" vertical-scroll-proportion="0.3319149" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/models/player.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
@@ -945,7 +941,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/sessions_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="0" selection-start="1286" selection-end="1286" vertical-scroll-proportion="0.14820847">
+        <state line="58" column="0" selection-start="1286" selection-end="1286" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db/migrate/20110924220330_modify_questions.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="32" selection-start="163" selection-end="163" vertical-scroll-proportion="0.16612378">
           <folding />
         </state>
       </provider>

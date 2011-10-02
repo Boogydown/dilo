@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dilo Markup</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css"/>
+        <link rel="stylesheet" href="dilo.css"/>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js"></script>
+        <script type="text/javascript" src="../javascripts/dilo-ui.js"></script>
+    </head>
+    <body>
+        <div data-role="page" id="login" data-title="Login to Dilo">
+            <div data-role="header">Welcome to Dilo</div>
+            <div data-role="content" class="centered">
+                <form id="loginForm" action="" onsubmit="return false;">
+                    Username: <input id="usernameEntry" type="text"></input>
+                    <button type="submit" id="loginDone" onclick="location.href='#waiting'">Submit</button>
+                </form>
+                <div id="statusMsg"></div>
+            </div>
+        </div>
+        <div data-role="page" id="waiting" data-title="waiting...">
+            <div data-role="content" class="centered">
+                <div id="matching-block">
+                    <div class="player-name">UserFirstName UserLastName</div>
+                      <div id="waiting-timer">
+                          <div><img src="../images/timer.png"/></div>
+                          <div>finding opponent...</div>
+                      </div>
+                </div>
+                  <div id="vocab-study">
+                    <div class="small-prompt centered">Study your vocab</div>
+                    <div class="word-prompt">
+                        <div class="prompt">el gato</div>
+                        <div class="translation">the cat</div>
+                    </div>
+                    <div class="word-prompt">
+                        <div class="prompt">su madre</div>
+                        <div class="translation">your mother</div>
+                    </div>
+                    <div class="word-prompt">
+                        <div class="prompt">ropa para hombres</div>
+                        <div class="translation">clothes for men</div>
+                    </div>
+                    <div class="word-prompt">
+                        <div class="prompt">y mucho mas</div>
+                        <div class="translation">and much more</div>
+                    </div>
+                    <div class="word-prompt">
+                        <div class="prompt">la paella</div>
+                        <div class="translation">the paella pan</div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <div data-role="page" id="countdown" data-title="COUNTDOWN TO DILO!!!">
+            <div data-role="content" class="centered">
+                <div id="downer">
+                      <h1>3</h1>
+                      <h1>2</h1>
+                      <h1>1</h1>
+                </div>
+            </div>
+        </div>
+        <div data-role="page" id="question" data-title="Dilo Challenge!">
+            <div data-role="content" class="centered">
+                <div id="stem">el gato</div>
+                <div id="choice0" class="answerChoice" correct="true">the cat</div>
+                <div id="choice1" class="answerChoice">the dog</div>
+                <div id="choice2" class="answerChoice">the paella pan</div>
+                <div id="choice3" class="answerChoice">your mom</div>
+            <div data-role="footer">
+                <div id="scorebar">2000</div>
+            </div>
+        </div>
+    </body>
+</html>

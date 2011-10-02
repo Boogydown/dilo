@@ -4,9 +4,7 @@
     <list default="true" id="d94f8073-bddb-4bf4-9484-2e74aa97776d" name="Default" comment="players and">
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/SETAJA.xml" />
       <change type="DELETED" beforePath="C:\Documents and Settings\setaja\RubymineProjects\dilo\.idea\dataSources.ids" afterPath="" />
-      <change type="DELETED" beforePath="C:\Documents and Settings\setaja\RubymineProjects\dilo\.idea\dataSources.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Documents and Settings\setaja\RubymineProjects\dilo\.idea\workspace.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Dilo.iml" afterPath="$PROJECT_DIR$/.idea/Dilo.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/views/loginView.js" afterPath="$PROJECT_DIR$/public/javascripts/views/loginView.js" />
     </list>
     <ignored path="Dilo.iws" />
@@ -33,7 +31,7 @@
       <file leaf-file-name="sessions_controller.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/controllers/sessions_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="88" column="20" selection-start="2199" selection-end="2199" vertical-scroll-proportion="0.9364407">
+            <state line="88" column="0" selection-start="2199" selection-end="2199" vertical-scroll-proportion="0.9364407">
               <folding />
             </state>
           </provider>
@@ -901,7 +899,7 @@
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="trimming the data a bit, removing timestamps mostly." />
+    <option name="LAST_COMMIT_MESSAGE" value="workspace update." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -929,6 +927,7 @@
     <MESSAGE value="adding for everyone." />
     <MESSAGE value="actual question is no in gamequestions now too." />
     <MESSAGE value="trimming the data a bit, removing timestamps mostly." />
+    <MESSAGE value="workspace update." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1022,7 +1021,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/sessions_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="20" selection-start="2199" selection-end="2199" vertical-scroll-proportion="0.9364407">
+        <state line="88" column="0" selection-start="2199" selection-end="2199" vertical-scroll-proportion="0.9364407">
           <folding />
         </state>
       </provider>

@@ -1,24 +1,10 @@
-/*
- * shared styles
- */
-
-.centered
-{
+.centered {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
 }
 
-/*
- * login screen styles
- */
-
-/*
- * waiting screen styles
- */
-
-#matching-block
-{
+#matching-block {
 	border: 2px solid #000000;
     background-color: #ffff00;
 	display: block;
@@ -28,13 +14,11 @@
 	width:auto;
 }
 
-#vocab-study
-{
+#vocab-study {
     background-color: #ffffff;
 }
 
-#vocab-study .small-prompt
-{
+#vocab-study .small-prompt {
     display:block;
     background-color:#606060;
     color:#ffffff;
@@ -42,28 +26,19 @@
     font-size:.8em;
 }
 
-#vocab-study div.word-prompt
-{
+#vocab-study div.word-prompt {
     display:none;
 }
 
-.prompt
-{
+.prompt {
     font-size:1.5em;
 }
 
-.translation
-{
+.translation {
   color:#C80000;
 }
 
-
-/*
- * countdown screen styles
- */
-
-#downer
-{
+#downer {
 	display: block;
 	margin-top: 10px;
     margin-bottom:10px;
@@ -71,8 +46,7 @@
 	width: 100%;
 }
 
-#downer h1
-{
+#downer h1 {
 	color: #333;
 	display: none;
 	font-weight: bold;
@@ -80,17 +54,11 @@
 	text-align: center;
 }
 
-#downer h1:first-child{
+#downer h1:first-child {
 	display: block;
 }
 
-
-/*
- * question screen styles
- */
-
-#stem
-{
+#stem {
     display:block;
     color:#ffffff;
     opacity:.5;
@@ -99,8 +67,7 @@
     padding: 10px;
 }
 
-.answerChoice
-{
+.answerChoice {
     display: block;
 	padding: 10px;
     font-size:1.5em;
@@ -108,17 +75,16 @@
     margin-bottom:10px;
 }
 
-.unguessed
-{
+.unguessed {
     background-color: #ffff00;
     color:#C80000;
 }
 
-.correct-guess
-{
+.correct-guess {
     background-color:#009933;
     color:#ffffff;
 }
+
 .incorrect-guess {
     background-color:#c80000;
     color:#ffffff;
@@ -132,8 +98,7 @@
     opacity:.6;
 }
 
-#scorebar
-{
+#scorebar {
     width:100%;
     background-color:#ffffff;
     color:#000000;

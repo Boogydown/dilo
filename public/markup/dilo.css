@@ -1,8 +1,12 @@
+/* shared styles */
+
 .centered {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
 }
+
+/* waiting screen styles */
 
 #matching-block {
 	border: 2px solid #000000;
@@ -38,6 +42,8 @@
   color:#C80000;
 }
 
+/* countdown styles */
+
 #downer {
 	display: block;
 	margin-top: 10px;
@@ -58,6 +64,8 @@
 	display: block;
 }
 
+/* question styles */
+
 #stem {
     display:block;
     color:#ffffff;
@@ -75,28 +83,38 @@
     margin-bottom:10px;
 }
 
-.unguessed {
+.choice-ready
+{
     background-color: #ffff00;
     color:#C80000;
 }
 
-.correct-guess {
+.not-guessed-correct
+{
+    background-color: #ffff00;
+    opacity:.6;
+}
+
+.not-guessed-incorrect
+{
+    background-color: #ffff00;
+    opacity:.6;
+}
+
+.guessed-correct
+{
     background-color:#009933;
     color:#ffffff;
 }
 
-.incorrect-guess {
+.guessed-incorrect
+{
     background-color:#c80000;
     color:#ffffff;
     opacity:.5;
 }
 
-.opponent-incorrect-guess {}
-.opponent-correct-guess {}
-.guessed {
-    background-color: #ffff00;
-    opacity:.6;
-}
+.guessed-waiting {}
 
 #scorebar {
     width:100%;

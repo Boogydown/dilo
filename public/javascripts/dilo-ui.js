@@ -55,18 +55,18 @@ $(document).ready(function() {
 
     // question screen scripts
     $('#question').live('pagecreate', function(event){
-        $(".answerChoice").addClass("unguessed");
+        $(".answerChoice").addClass("choice-ready");
 
         $(".answerChoice").bind('click', function(event) {
-             $(this).removeClass("unguessed");
+             $(this).removeClass("choice-ready");
 
             if($(this).attr("correct") == "true")
-                $(this).addClass("correct-guess");
+                $(this).addClass("guessed-correct");
              else
-                $(this).addClass("incorrect-guess");
+                $(this).addClass("guessed-incorrect");
 
-             $(this).siblings(".answerChoice").removeClass("unguessed");
-             $(this).siblings(".answerChoice").addClass("guessed");
+             $(this).siblings(".answerChoice").removeClass("choice-ready");
+             $(this).siblings(".answerChoice").addClass("not-guessed-incorrect");
 
              $(".answerChoice").unbind(event);
              clearInterval(scoreCountdown);

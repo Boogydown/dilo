@@ -3,7 +3,15 @@
 <html>
 <head>
     <title>Hello Dilo World</title>
-    <script type="text/javascript" src="javascripts/jquery-1.6.2.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
+     <script type="text/javascript">
+       /* disable $.mobile.hashListeningEnabled - messing with backbone */
+       $(document).bind("mobileinit",function(){
+            $.mobile.hashListeningEnabled = false;
+       });
+    </script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js"></script>
     <script type="text/javascript" src="javascripts/json2.js"></script>
     <script type="text/javascript" src="javascripts/underscore.js"></script>
     <script type="text/javascript" src="javascripts/backbone.js"></script>
@@ -15,18 +23,31 @@
     <script type="text/javascript" src="javascripts/views/GameView.js"></script>
 
     <script type="application/_template" id="loginTemplate">
-        <form id="loginForm" action="" onsubmit="return false;">
-            Username: <input id="usernameEntry" type="text"></input>
-            <button type="submit" id="loginDone">Submit</button>
-        </form>
-        <div id="statusMsg"></div>
-        <button id="startGameBtn" onclick="location.href='#play'" style="display:none">Start Game!</button>
+        <div id="login">
+            <div data-role="header">
+                <h1>Welcome to Dilo!</h1>
+            </div>
+            <div data-role="content">
+                <form id="loginForm" action="" onsubmit="return false;">
+                    Username: <input id="usernameEntry" type="text"></input>
+                    <button type="submit" id="loginDone">Submit</button>
+                </form>
+                <div id="statusMsg"></div>
+            </div>
+            <button id="startGameBtn" onclick="location.href='#play'" style="display:none">Start Game!</button>
+        </div>
     </script>
 
     <script type="application/_template" id="gameTemplate">
-        <h1>Dilo</h1>
-        <h3>How fast can you answer?</h3>
-        <div id="questionArea"></div>
+        <div id="game">
+            <div data-role="header">
+                <h1>Dilo</h1>
+                <h3>How fast can you answer?</h3>
+            </div>
+            <div data-role="content">
+                <div id="questionArea"></div>
+            </div>
+        </div>
     </script>
 
     <script type="application/_template" id="questionTemplate_MC">
@@ -37,10 +58,22 @@
         <div id="choice3" class="answerChoice"><b>D. </b><%= responseContent.choices[3] %></div>
     </script>
 
+
+    <script type="application/_template" id="gameQuestionTemplate_MC">
+        <%= game.questions[0].prompt %><br/>
+        <div id="choice0" class="answerChoice"><b>A. </b><%= game.game_questions[0].multiple_choices[0].content %></div>
+        <div id="choice1" class="answerChoice"><b>B. </b><%= game.game_questions[0].multiple_choices[1].content %></div>
+        <div id="choice2" class="answerChoice"><b>C. </b><%= game.game_questions[0].multiple_choices[2].content %></div>
+        <div id="choice3" class="answerChoice"><b>D. </b><%= game.game_questions[0].multiple_choices[3].content %></div>
+
+    </script>
+
+
+
 </head>
 <body>
     <!-- This is the main div for the app.  When a View is rendered it replaces this element's contents -->
-    <div id="app"></div>
+    <div id="app" data-role="page"></div>
 
     <!-- Kickoff the main app on document-ready! -->
     <script type="text/javascript">

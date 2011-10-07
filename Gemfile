@@ -21,6 +21,8 @@ gem 'pg'
 # gem 'bj'
 # gem 'nokogiri'
 gem 'sqlite3-ruby', :require => 'sqlite3'
+
+gem 'acts_as_api'
 # gem 'aws-s3', :require => 'aws/s3'
 
 # Bundle gems for the local environment. Make sure to

@@ -13,12 +13,15 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.xml
   def show
-    @game = Game.find(params[:id])
+    @game = Game.find(params[:id], :include => {:game_questions, :multiple_choices})
     #@game.questions[0].choices =  generate_choices(@game.questions)
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json  { render :json => @game }
+      #format.json  { render_for_api :json => @game.to_json }
+      format.json { render_for_api :questions_and_choices, :json => @game, :root => :game }
+
+
       format.xml  { render :xml => @game }
     end
   end

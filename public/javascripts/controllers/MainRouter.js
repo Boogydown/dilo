@@ -29,22 +29,22 @@ App.Routers.MainRouter = Backbone.Router.extend({
 
     showGame : function () {
         if ( this.session && this.session.get("state") != "active" ) {
-            alert("You must login and pair up, first!");
+//            alert("You must login and pair up, first!");
             location.href = "#home";
             return;
         }
 
         // some basic, hard-coded question
-        var sampleQ = new App.Models.QuestionModel({
-            stemContent: {prompt:"Who is the coolest of the Dilo dev team?"},
-            responseContent: {choices : ["James", "Jason", "Dimitri", "Jonathan"]},
-            correctResponse: 2
-        });
+//        var sampleQ = new App.Models.QuestionModel({
+//            stemContent: {prompt:"Who is the coolest of the Dilo dev team?"},
+//            responseContent: {choices : ["James", "Jason", "Dimitri", "Jonathan"]},
+//            correctResponse: 2
+//        });
 
         // create the game view...
         this.curView = new App.Views.GameView({
             el: this.mainEl,
-            model: sampleQ,
+            model: new App.Models.QuestionModel({id:this.session.get("game").id}),
             session: this.session,
             player: this.player
         });

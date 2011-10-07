@@ -14,16 +14,28 @@ App.Views.GameView = Backbone.View.extend({
     },
 
     initialize : function (options) {
-        _.bindAll( this, "acSelected", "renderQuestion", "sessionStateChange" );
+        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "onGameReturned" );
         this.session = options.session;
         this.player = options.player;
     },
 
     start : function (){
+//        var gameModel = new App.Models.PlayerModel({id:this.session.get("game").id});
+        this.model.fetch( {success:this.onGameReturned});
         this.gameOver = false;
-        this.session.pollFetch( {success:this.sessionStateChange}, "state", 100, 30000 );
+
+    },
+
+    onGameReturned : function() {
+//        var sessionState = this.session.get( "state" ).split(":");
+//        this.model.stemContent =  {prompt:"Who is the coolest of the Dilo dev team?"};
+//        this.model.responseContent =  {choices : ["James", "Jason", "Dimitri", "Jonathan"]};
+//        this.model.set({stemContent: {prompt:"Who is the coolest of the Dilo dev team?"}}, {responseContent :{choices : ["James", "Jason", "Dimitri", "Jonathan"]}}, silent: true );
+
+//        this.session.pollFetch( {success:this.sessionStateChange}, "state", 100, 30000 );
         this.render();
     },
+
 
     sessionStateChange : function() {
         var sessionState = this.session.get( "state" ).split(":");
@@ -42,7 +54,7 @@ App.Views.GameView = Backbone.View.extend({
     },
 
     renderQuestion : function (  ) {
-        return _.template( $("#questionTemplate_MC").html(), this.model.attributes );
+        return _.template( $("#gameQuestionTemplate_MC").html(), this.model.attributes );
     },
 
     acSelected : function ( ev ){

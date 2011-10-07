@@ -100,13 +100,16 @@ App.Models.SessionModel = App.Models.PollModel.extend({
         questionsCollection : null,
         currentQuestion : 0,
         state : "waiting",
-        finalResponse : null
+        finalResponse : null,
+        game: {
+            id:0
+        }
     }
 });
 
 App.Models.QuestionModel = App.Models.PollModel.extend({
-    //url : "http://127.0.0.1:3000/questions",
-    railsModel : "questions",
+//    url : "http://127.0.0.1:3000/questions",
+    railsModel : "games",
     defaults : {
         userID: "",
         stemContent: {},
@@ -114,7 +117,8 @@ App.Models.QuestionModel = App.Models.PollModel.extend({
         correctResponse: "",
         scoreResponse: function(response, context){return context.get("pendingResponse") == context.get("correctResponse");},
         pendingResponse: "",
-        submittedResponses: []
+        submittedResponses: [],
+        game_questions: []
     },
 
     initialize : function() {

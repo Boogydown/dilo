@@ -45,19 +45,29 @@ class SessionsController < ApplicationController
 
 
   # @param questions [questions]
-  def generate_choices(questions, current)
-    choices = Hash.new
+  def generate_choices(questions, gameQuestion, current)
+    #choices = Hash.new
     selectable = []
     selectable = questions - [questions[current]]
     randomized = selectable.sample(3)
+    #
+    #choices[0] = randomized[0].answer
+    #choices[1] = randomized[1].answer
+    #choices[2] = randomized[2].answer
+    #choices[3] = questions[current].answer
+    #choices
 
-    choices[0] = randomized[0].answer
-    choices[1] = randomized[1].answer
-    choices[2] = randomized[2].answer
-    choices[3] = questions[current].answer
+    for i in 0..2
+    option = MultipleChoice.new
+    option.content = randomized[i].answer
+    gameQuestion.multiple_choices << option
+    end
+
+    option = MultipleChoice.new
+    option.content = questions[current].answer
+    gameQuestion.multiple_choices << option
 
 
-    ActiveSupport::JSON.encode(choices)
 
   end
 
@@ -77,21 +87,18 @@ class SessionsController < ApplicationController
       @session.state = 'active'
       @session.game = Game.new
       questions = Question.find(:all, :order => "created_at ASC", :limit => 7 )
-      #@session.save
-      #@session.game.questions = Question.find(:all, :order => "created_at ASC", :limit => 7 )
       questions.all? do |question|
           @session.game.questions << question
       end
 
       @session.game.game_questions.each_with_index do |gameQuestion, index|
-        gameQuestion.update_attributes(:distractors => generate_choices(questions, index))
+        generate_choices(questions, gameQuestion, index)
+        #@session.game.questions[index].choices = distractors
+        #gameQuestion.update_attributes(:distractors => ActiveSupport::JSON.encode(distractors))
       end
 
-      #@session.save
-      logger.debug @session.game.id
-      #gameQuestions = GameQuestion.where("game_id = ?", @session.game.id )
-      #@session.game.save
 
+      logger.debug @session.game.id
 
     end
 

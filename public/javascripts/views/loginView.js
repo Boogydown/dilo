@@ -54,7 +54,7 @@ App.Views.LoginView = Backbone.View.extend({
                 this.opponent = new App.Models.PlayerModel( this.session.get("players")[this.oIndex] );
                 $("#statusMsg").html("<p>Paired with player " + this.opponent.get("name") + " with session id " + this.session.id + "!</p>" +
                                      "<p>Click button to start!</p>");
-                $("#startGameBtn", this.el).show();
+                location.href = '#play';
                 break;
         }
     },

@@ -87,7 +87,14 @@ class SessionsController < ApplicationController
       @session.state = 'active'
       @session.game = Game.new
       @session.current_question = 0
-      questions = Question.find(:all, :order => "created_at ASC", :limit => 7 )
+      #questions = Question.find(:all, :order => "created_at ASC", :limit => 7 )
+      questions = []
+
+      for i in 0..7
+        questions <<  Question.random
+      end
+
+
       questions.all? do |question|
           @session.game.questions << question
       end

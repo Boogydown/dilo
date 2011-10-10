@@ -9,15 +9,10 @@ class Question < ActiveRecord::Base
 
   attr_accessor  :choices
 
-  #def as_json(options={})
-  #  super( :include =>[:choices])
-  #end
-  #
-  #QUESTION_JSON_OPTS = { :include => :prompt }
-  #
-  #def as_json(options={})
-  #  super(QUESTION_JSON_OPTS)
-  #end
+  def self.random
+    self.find(:first, :offset => rand(self.all.size-1))
+  end
+
   acts_as_api
 
   api_accessible :questions_and_choices do |t|

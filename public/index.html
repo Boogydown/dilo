@@ -42,7 +42,7 @@
         <div id="game">
             <div data-role="header">
                 <h1>Dilo</h1>
-                <h3>How fast can you answer?</h3>
+                <h3>How fast can you answer?
             </div>
             <div data-role="content">
                 <div id="questionArea"></div>
@@ -51,7 +51,7 @@
     </script>
 
     <script type="application/_template" id="questionTemplate_MC">
-        <%= stemContent.prompt %><br/>
+        <h3><%= stemContent.prompt %></h3>
         <div id="choice0" class="answerChoice"><b>A. </b><%= responseContent.choices[0] %></div>
         <div id="choice1" class="answerChoice"><b>B. </b><%= responseContent.choices[1] %></div>
         <div id="choice2" class="answerChoice"><b>C. </b><%= responseContent.choices[2] %></div>
@@ -60,7 +60,9 @@
 
 
     <script type="application/_template" id="gameQuestionTemplate_MC">
-        <%= questions[itemNumber].prompt %><br/>
+        <h3><%= questions[itemNumber].prompt %></h3>
+        <br/>
+        <br/>
         <div id="choice0" class="answerChoice"><b>A. </b><%= game_questions[itemNumber].multiple_choices[0].content %></div>
         <div id="choice1" class="answerChoice"><b>B. </b><%= game_questions[itemNumber].multiple_choices[1].content %></div>
         <div id="choice2" class="answerChoice"><b>C. </b><%= game_questions[itemNumber].multiple_choices[2].content %></div>

@@ -43,14 +43,8 @@ App.Views.GameView = Backbone.View.extend({
             this.endGame();
         }
 
-//        if(this.session.get("game").game_questions[0].responses)
-
-//        var changedAttributes = this.session.changedAttributes();
-//        if(changedAttributes.game_questions[0].responses.player.id !=  )
         this.model.set({itemNumber :this.session.get("current_question"), silent: true});
         this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 100, 30000 );
-
-//        var itemNumber = this.session.get( "current_question" ).split(":");
         this.render();
     },
 

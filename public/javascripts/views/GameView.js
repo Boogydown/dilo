@@ -29,7 +29,7 @@ App.Views.GameView = Backbone.View.extend({
     onGameReturned : function() {
         this.model.set({itemNumber :this.session.get("current_question"), silent: true});
 //        this.session.pollFetch( {success:this.sessionStateChange}, "state", 100, 30000 );
-        this.session.pollFetch( {success:this.sessionStateChange}, null, 100, 30000 );
+        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 100, 30000 );
 
         this.render();
     },
@@ -45,8 +45,13 @@ App.Views.GameView = Backbone.View.extend({
 
 //        if(this.session.get("game").game_questions[0].responses)
 
-        var changedAttributes = this.session.changedAttributes();
+//        var changedAttributes = this.session.changedAttributes();
 //        if(changedAttributes.game_questions[0].responses.player.id !=  )
+        this.model.set({itemNumber :this.session.get("current_question"), silent: true});
+        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 100, 30000 );
+
+//        var itemNumber = this.session.get( "current_question" ).split(":");
+        this.render();
     },
 
     //========= start question-specific logic =============

@@ -16,6 +16,7 @@ class Session < ActiveRecord::Base
     t.add :state
     t.add :players
     t.add :game
+    t.add :current_question
   end
 
   api_accessible :in_progress_session do |t|
@@ -23,6 +24,7 @@ class Session < ActiveRecord::Base
       t.add :state
       #t.add :players
       t.add :game
+      t.add :current_question
   end
 
 

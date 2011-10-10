@@ -60,7 +60,10 @@
 
 
     <script type="application/_template" id="gameQuestionTemplate_MC">
-        <h3><%= questions[itemNumber].prompt %></h3>
+        <!--<h3><%= questions[itemNumber].prompt%></h3>-->
+        <h3><%= questions[itemNumber].prompt%> -  <%= questions[itemNumber].answer %></h3>
+        <h4><%= (itemNumber + 1)  %> of  <%=(questions.length)%></h4>
+
         <br/>
         <br/>
         <div id="choice0" class="answerChoice"><b>A. </b><%= game_questions[itemNumber].multiple_choices[0].content %></div>

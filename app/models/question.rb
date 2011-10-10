@@ -17,6 +17,8 @@ class Question < ActiveRecord::Base
 
   api_accessible :questions_and_choices do |t|
     t.add :prompt
+    t.add :answer
+
     t.add :id
 
   end

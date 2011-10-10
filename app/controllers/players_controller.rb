@@ -75,17 +75,29 @@ class PlayersController < ApplicationController
     end
   end
 
+  def get_index_of_game_question(game_questions, id)
+      game_question_index = 0
+      game_questions.each_with_index do |gameQuestion, index|
+        if(gameQuestion.id = id)
+             game_question_index = index
+        end
+      end
+      game_question_index
+  end
+
   # PUT /players/1
   # PUT /players/1.xml
   def update
     @player = Player.find(params[:id])
     json = ActiveSupport::JSON.decode(request.raw_post)
 
-    session = Session.find( json["sessionId"])
+    session = Session.find( json["sessionId"], :include=>[:game])
+    game = Game.find(session.game.id, :include=>[:game_questions])
+
     #game_question = session.game.game_questions.find(json["currentGameQuestion"])
     #@player =session.players.find(params[:id])
 
-    game_question = GameQuestion.find(json["currentGameQuestion"])
+    game_question = GameQuestion.find(json["currentGameQuestion"], :include=>[:multiple_choices])
     #response = Response.where("player_id = ? AND game_question_id=?", @player.id, game_question.id).limit(1).first
 
 
@@ -93,11 +105,19 @@ class PlayersController < ApplicationController
     response = Response.new
     response.game_question = game_question
     response.response_index = json["newResponse"]
-    if(option_is_correct(session.game.game_questions[session.current_question].multiple_choices, response.response_index))
-      game_question.state = "complete"
-      game_question.save
+
+    #g_index = get_index_of_game_question(game.game_questions,json["currentGameQuestion"] )
+
+
+
+    if(option_is_correct(game_question.multiple_choices, response.response_index))
+      if(session.current_question  < json["current_question"] + 1)
+      #game_question.state = "complete"
+      #game_question.save
       session.current_question = session.current_question + 1
       session.save
+      end
+
     end
     @player.responses <<  response
 

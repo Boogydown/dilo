@@ -27,7 +27,7 @@ App.Views.GameView = Backbone.View.extend({
     },
 
     onGameReturned : function() {
-        this.model.set({itemNumber :this.session.get("current_question"), silent: true});
+        this.model.set({"itemNumber" :this.session.get("current_question"), silent: true});
 //        this.session.pollFetch( {success:this.sessionStateChange}, "state", 100, 30000 );
         this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 100, 30000 );
 
@@ -43,7 +43,7 @@ App.Views.GameView = Backbone.View.extend({
             this.endGame();
         }
 
-        this.model.set({itemNumber :this.session.get("current_question"), silent: true});
+        this.model.set({"itemNumber" :this.session.get("current_question"), silent: true});
         this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 100, 30000 );
         this.render();
     },
@@ -75,10 +75,11 @@ App.Views.GameView = Backbone.View.extend({
         //this.player.set("session_id", this.session.id);
         this.player.set({"currentGameId": this.session.get("game").id});
 
-        var question = this.model.get("game_questions")[0].id;
+        var question = this.model.get("game_questions")[this.model.get("itemNumber")].id;
         this.player.set({"currentGameQuestion": question});
         this.player.set({"newResponse": resp});
         this.player.set({"sessionId": this.session.id});
+        this.player.set({"current_question":this.session.get("current_question")});
 
         this.player.save();
 

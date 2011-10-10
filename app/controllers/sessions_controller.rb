@@ -96,7 +96,7 @@ class SessionsController < ApplicationController
       #questions = Question.find(:all, :order => "created_at ASC", :limit => 7 )
       questions = []
 
-      for i in 0..7
+      for i in 0..3
         questions <<  Question.random
       end
 

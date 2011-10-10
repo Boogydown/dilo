@@ -50,22 +50,28 @@ class SessionsController < ApplicationController
     selectable = []
     selectable = questions - [questions[current]]
     randomized = selectable.sample(3)
-    #
-    #choices[0] = randomized[0].answer
-    #choices[1] = randomized[1].answer
-    #choices[2] = randomized[2].answer
-    #choices[3] = questions[current].answer
-    #choices
+    multiple_choices = []
 
+    #randomly select 3 distractors(incorrect choices)
     for i in 0..2
     option = MultipleChoice.new
     option.content = randomized[i].answer
-    gameQuestion.multiple_choices << option
+    multiple_choices << option
+    #gameQuestion.multiple_choices << option
     end
 
+    #add the correct choice
     option = MultipleChoice.new
     option.content = questions[current].answer
-    gameQuestion.multiple_choices << option
+    option.correct = true
+    #gameQuestion.multiple_choices << option
+    multiple_choices << option
+
+    unsorted = multiple_choices.to_a.sort_by {rand}
+
+    unsorted.all? do |choice|
+        gameQuestion.multiple_choices << choice
+    end
 
 
 

@@ -19,6 +19,10 @@ class GameQuestion < ActiveRecord::Base
   end
 
 
+
+
+
+
   acts_as_api
 
   api_accessible :questions_and_choices do |t|

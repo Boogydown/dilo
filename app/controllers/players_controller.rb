@@ -80,16 +80,22 @@ class PlayersController < ApplicationController
   def update
     @player = Player.find(params[:id])
     json = ActiveSupport::JSON.decode(request.raw_post)
+
+    session = Session.find( json["sessionId"])
+    #game_question = session.game.game_questions.find(json["currentGameQuestion"])
+    #@player =session.players.find(params[:id])
+
     game_question = GameQuestion.find(json["currentGameQuestion"])
     #response = Response.where("player_id = ? AND game_question_id=?", @player.id, game_question.id).limit(1).first
+
+
 
     response = Response.new
     response.game_question = game_question
     response.response_index = json["newResponse"]
-    if(response.response_index == 3)
+    if(option_is_correct(session.game.game_questions[session.current_question].multiple_choices, response.response_index))
       game_question.state = "complete"
       game_question.save
-      session = Session.find( json["sessionId"])
       session.current_question = session.current_question + 1
       session.save
     end
@@ -111,6 +117,18 @@ class PlayersController < ApplicationController
       end
     end
   end
+  def option_is_correct(multiple_choices, choice_index)
+
+      return_val = false
+      multiple_choices.each_with_index do |choice, index|
+          if(choice.correct && index == choice_index)
+            return_val = true
+          end
+      end
+      return_val
+
+  end
+
 
   # DELETE /players/1
   # DELETE /players/1.xml

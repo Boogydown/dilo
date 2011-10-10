@@ -60,11 +60,11 @@
 
 
     <script type="application/_template" id="gameQuestionTemplate_MC">
-        <%= game.questions[0].prompt %><br/>
-        <div id="choice0" class="answerChoice"><b>A. </b><%= game.game_questions[0].multiple_choices[0].content %></div>
-        <div id="choice1" class="answerChoice"><b>B. </b><%= game.game_questions[0].multiple_choices[1].content %></div>
-        <div id="choice2" class="answerChoice"><b>C. </b><%= game.game_questions[0].multiple_choices[2].content %></div>
-        <div id="choice3" class="answerChoice"><b>D. </b><%= game.game_questions[0].multiple_choices[3].content %></div>
+        <%= questions[itemNumber].prompt %><br/>
+        <div id="choice0" class="answerChoice"><b>A. </b><%= game_questions[itemNumber].multiple_choices[0].content %></div>
+        <div id="choice1" class="answerChoice"><b>B. </b><%= game_questions[itemNumber].multiple_choices[1].content %></div>
+        <div id="choice2" class="answerChoice"><b>C. </b><%= game_questions[itemNumber].multiple_choices[2].content %></div>
+        <div id="choice3" class="answerChoice"><b>D. </b><%= game_questions[itemNumber].multiple_choices[3].content %></div>
 
     </script>
 

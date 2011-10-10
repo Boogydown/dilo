@@ -22,6 +22,17 @@ class Game < ActiveRecord::Base
     t.add :game_questions
   end
 
+  api_accessible :complete_session do |t|
+    #t.add :questions
+    #t.add :game_questions
+    t.add :id
+    end
+
+  api_accessible :in_progress_session do |t|
+    t.add :game_questions
+    t.add :id
+  end
+
 
   #def as_json(options={})
   #  super( :include =>[:questions, :game_questions], :except=>[:name, :created_at,:updated_at])

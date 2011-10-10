@@ -84,8 +84,8 @@ App.Models.PlayerModel = App.Models.PollModel.extend({
         level:0,
         ranking:0,
         classID:"",
-        sessionModelID:""
-//            questionModelCollection:
+        sessionModelID:"",
+        responses:[]
 
     }
 });
@@ -98,11 +98,12 @@ App.Models.SessionModel = App.Models.PollModel.extend({
         playerId : "",
         questionLogic : null,
         questionsCollection : null,
-        currentQuestion : 0,
+        current_question : 0,
         state : "waiting",
-        finalResponse : null,
+        final_response : null,
         game: {
-            id:0
+            id:0,
+            game_questions:[]
         }
     }
 });

@@ -7,4 +7,27 @@ class Session < ActiveRecord::Base
     super( :include =>[:players, :game], :except=>[:name, :created_at,:updated_at])
   end
 
+
+
+  acts_as_api
+
+  api_accessible :complete_session do |t|
+    t.add :id
+    t.add :state
+    t.add :players
+    t.add :game
+  end
+
+  api_accessible :in_progress_session do |t|
+      t.add :id
+      t.add :state
+      #t.add :players
+      t.add :game
+  end
+
+
+
+
+
+
 end

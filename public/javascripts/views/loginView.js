@@ -47,7 +47,7 @@ App.Views.LoginView = Backbone.View.extend({
             case "waiting" :
                 $("#statusMsg").append("<p>Waiting for other player...</p>");
                 this.model.set({opponentIndex:1});
-                this.session.pollFetch({success:this.sessionCreated, error:this.syncError}, "state", 300, 20000 );
+                this.session.pollFetch({success:this.sessionCreated, error:this.syncError}, "state", 300, 60000 );
                 break;
 
             case "active" :
@@ -60,6 +60,6 @@ App.Views.LoginView = Backbone.View.extend({
     },
 
     syncError : function (model, response) {
-        alert("Server failure!\n" + response);
+//        alert("Server failure!\n" + response);
     }
 });

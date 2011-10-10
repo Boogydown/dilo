@@ -74,6 +74,8 @@ class GamesController < ApplicationController
   # PUT /games/1.xml
   def update
     @game = Game.find(params[:id])
+    json = ActiveSupport::JSON.decode(request.raw_post)
+    logger.debug json
 
     respond_to do |format|
       if @game.update_attributes(params[:game])

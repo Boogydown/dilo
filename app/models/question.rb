@@ -22,8 +22,14 @@ class Question < ActiveRecord::Base
 
   api_accessible :questions_and_choices do |t|
     t.add :prompt
+    t.add :id
+
   end
 
+  api_accessible :complete_session do |t|
+    t.add :prompt
+    t.add :id
 
+  end
 
 end

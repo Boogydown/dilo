@@ -79,9 +79,22 @@ class PlayersController < ApplicationController
   # PUT /players/1.xml
   def update
     @player = Player.find(params[:id])
+    json = ActiveSupport::JSON.decode(request.raw_post)
+    game_question = GameQuestion.find(json["currentGameQuestion"])
+    #response = Response.where("player_id = ? AND game_question_id=?", @player.id, game_question.id).limit(1).first
+
+    response = Response.new
+    response.game_question = game_question
+    response.response_index = json["newResponse"]
+    if(response.response_index == 3)
+      game_question.state = "complete"
+      game_question.save()
+    end
+    @player.responses <<  response
+
 
     respond_to do |format|
-      if @player.update_attributes(params[:player])
+      if @player.save
         format.html { redirect_to(@player, :notice => 'Player was successfully updated.') }
         format.xml  { head :ok }
         format.json  { head :ok }

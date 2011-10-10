@@ -14,7 +14,7 @@ App.Views.GameView = Backbone.View.extend({
     },
 
     initialize : function (options) {
-        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "onGameReturned" );
+        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "onGameReturned", "onAnswerSaved" );
         this.session = options.session;
         this.player = options.player;
     },
@@ -27,12 +27,10 @@ App.Views.GameView = Backbone.View.extend({
     },
 
     onGameReturned : function() {
-//        var sessionState = this.session.get( "state" ).split(":");
-//        this.model.stemContent =  {prompt:"Who is the coolest of the Dilo dev team?"};
-//        this.model.responseContent =  {choices : ["James", "Jason", "Dimitri", "Jonathan"]};
-//        this.model.set({stemContent: {prompt:"Who is the coolest of the Dilo dev team?"}}, {responseContent :{choices : ["James", "Jason", "Dimitri", "Jonathan"]}}, silent: true );
-
+        this.model.set({itemNumber :this.session.get("current_question"), silent: true});
 //        this.session.pollFetch( {success:this.sessionStateChange}, "state", 100, 30000 );
+        this.session.pollFetch( {success:this.sessionStateChange}, null, 100, 30000 );
+
         this.render();
     },
 
@@ -44,6 +42,11 @@ App.Views.GameView = Backbone.View.extend({
             alert( "You lost to " + sessionState[1] );
             this.endGame();
         }
+
+//        if(this.session.get("game").game_questions[0].responses)
+
+        var changedAttributes = this.session.changedAttributes();
+//        if(changedAttributes.game_questions[0].responses.player.id !=  )
     },
 
     //========= start question-specific logic =============
@@ -68,8 +71,20 @@ App.Views.GameView = Backbone.View.extend({
     submit : function (){
         // copy over from pending to submitted...
         var resp = this.model.get( "pendingResponse" );
-        this.model.get( "submittedResponses" ).push( resp );
-        // score it and notify the server
+//        this.model.get( "submittedResponses" ).push( resp );
+        this.player.get( "responses" ).push( resp );
+        //this.player.set("session_id", this.session.id);
+        this.player.set({"currentGameId": this.session.get("game").id});
+
+        var question = this.model.get("game_questions")[0].id;
+        this.player.set({"currentGameQuestion": question});
+        this.player.set({"newResponse": resp});
+
+        this.player.save();
+
+    },
+     onAnswerSaved : function (){
+
         var correct = this.model.get( "scoreResponse" )(resp, this.model);
         if ( correct && !this.gameOver){
             this.session.poll.stop();
@@ -80,7 +95,6 @@ App.Views.GameView = Backbone.View.extend({
             alert("Wrong!");
         }
     },
-
     endGame : function() {
        $(this.el).html("<h1>Game Over</h1>");
     }

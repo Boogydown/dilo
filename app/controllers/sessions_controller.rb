@@ -19,8 +19,8 @@ class SessionsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @session }
-      format.json  { render :json => @session  }
-
+      #format.json  { render :json => @session  }
+      format.json { render_for_api :in_progress_session, :json => @session, :root => :session }
 
     end
   end
@@ -86,6 +86,7 @@ class SessionsController < ApplicationController
     else
       @session.state = 'active'
       @session.game = Game.new
+      @session.current_question = 0
       questions = Question.find(:all, :order => "created_at ASC", :limit => 7 )
       questions.all? do |question|
           @session.game.questions << question
@@ -120,7 +121,8 @@ class SessionsController < ApplicationController
       if @session.save
         format.html { redirect_to(@session, :notice => 'Session was successfully created.') }
         format.xml  { render :xml => @session, :status => :created, :location => @session }
-        format.json  { render :json => @session, :status => :created, :location => @session }
+        #format.json  { render :json => @session, :status => :created, :location => @session }
+        format.json { render_for_api :complete_session, :json => @session, :root => :session }
 
       else
         format.html { render :action => "new" }
@@ -135,8 +137,14 @@ class SessionsController < ApplicationController
   def update
     @session = Session.find(params[:id])
 
+
     json = ActiveSupport::JSON.decode(request.raw_post)
-    @session.state = json['state']
+    logger.debug json
+
+    #@session.pla
+
+    #json = ActiveSupport::JSON.decode(request.raw_post)
+    #@session.state = json['state']
 
     respond_to do |format|
       if @session.save

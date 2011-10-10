@@ -79,6 +79,7 @@ App.Views.GameView = Backbone.View.extend({
         var question = this.model.get("game_questions")[0].id;
         this.player.set({"currentGameQuestion": question});
         this.player.set({"newResponse": resp});
+        this.player.set({"sessionId": this.session.id});
 
         this.player.save();
 

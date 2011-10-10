@@ -88,7 +88,10 @@ class PlayersController < ApplicationController
     response.response_index = json["newResponse"]
     if(response.response_index == 3)
       game_question.state = "complete"
-      game_question.save()
+      game_question.save
+      session = Session.find( json["sessionId"])
+      session.current_question = session.current_question + 1
+      session.save
     end
     @player.responses <<  response
 

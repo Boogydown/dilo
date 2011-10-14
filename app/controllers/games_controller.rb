@@ -13,7 +13,7 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.xml
   def show
-    @game = Game.find(params[:id], :include => {:game_questions, :multiple_choices})
+    @game = Game.find(params[:id], :include => [:game_questions])
     #@game.questions[0].choices =  generate_choices(@game.questions)
 
     respond_to do |format|

@@ -14,46 +14,44 @@ App.Views.GameView = Backbone.View.extend({
     },
 
     initialize : function (options) {
-        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "onGameReturned" );
+        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion" );
         this.session = options.session;
         this.player = options.player;
     },
 
     start : function (){
-        this.model.fetch( {success:this.onGameReturned} );
+        this.model.fetch( {success:this.loadQuestion} );
         this.gameOver = false;
     },
 
-    onGameReturned : function() {
-        this.model.set({"itemNumber" :this.session.get("current_question"), silent: true});
-        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 1, 60000 );
+	loadQuestion : function( qNum ) {
+		isNaN(parseInt(qNum)) && (qNum = 0);
+        this.model.set({"itemNumber" : qNum}, {silent: true});
         this.render();
+        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 1, 60000 );
     },
 
     sessionStateChange : function() {
         var sessionState = this.session.get( "state" ).split(":");
         if ( sessionState[0] == "won" ){
 			var winner = sessionState[1];
+			var myName = this.player.get("name");
 			this.setPlayerStates( { 
 				me: { 
-					won: winner == this.player.name /*,
+					won: winner == myName /*,
 					response : ____.pendingResponse*/
 				},
 				opponent: {
-					won : winner != this.player.name /*,
+					won : winner != myName /*,
 					response : ____.pendingResponse*/
 				}
 			});
             //this.endGame();
         }
 		
-		//TODO: set timestamp for next question load
-		//TODO: create this.loadQuestion( ... to do this:
-        this.model.set({"itemNumber" :this.session.get("current_question")}, {silent: true});
-        this.render();
-        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 1, 60000 );
-    },
-
+		setTimeout( this.loadQuestion, 2400, this.session.get("current_question") );
+	},
+	
     //========= start question-specific logic =============
 	QUESTION_TIME : 15000,
     render : function () {
@@ -78,9 +76,9 @@ App.Views.GameView = Backbone.View.extend({
 	
 	setPlayerStates : function ( states ) {
 		if ( states.me.won )
-			$("#wonMessage", $("#gameQuestionTemplate_MC")).show();
+			$("#wonMessage").show();
 		else
-			$("#lostMessage", $("#gameQuestionTemplate_MC")).show();
+			$("#lostMessage").show();
 	},
     //=========== end question-specific logic ===============
 

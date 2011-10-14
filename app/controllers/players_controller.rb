@@ -100,10 +100,10 @@ class PlayersController < ApplicationController
     response.response_index = json["newResponse"]
 
     if(option_is_correct(game_question.multiple_choices, response.response_index))
-      if(session.current_question  < json["current_question"] + 1)
-      session.current_question = session.current_question + 1
-	  session.state = "won:#{@player.name}"
-      session.save
+      if(session.current_question == json["current_question"] )
+       session.current_question = session.current_question + 1
+	   session.state = "won:#{@player.name}"
+       session.save
       end
 
     end

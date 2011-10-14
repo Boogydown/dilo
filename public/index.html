@@ -64,7 +64,7 @@
         <h3><%= questions[itemNumber].prompt%> -  <%= questions[itemNumber].answer %></h3>
         <h4><%= (itemNumber + 1)  %> of  <%=(questions.length)%></h4>
         <br/>
-		<div id="winMessage" style="display:none">You Won!</div><div id="lostMessage" style="display:none">You Lost!</div>
+		<div id="wonMessage" style="display:none">You Won!</div><div id="lostMessage" style="display:none">You Lost!</div>
         <br/>
         <div id="choice0" class="answerChoice"><b>A. </b><%= game_questions[itemNumber].multiple_choices[0].content %></div>
         <div id="choice1" class="answerChoice"><b>B. </b><%= game_questions[itemNumber].multiple_choices[1].content %></div>

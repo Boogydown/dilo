@@ -54,7 +54,7 @@ $(document).ready(function() {
     });
 
     // question screen scripts
-    $('#question').live('pagecreate', function(event){
+    $('#question').live('pageinit', function(event){
         $(".answerChoice").addClass("choice-ready");
 
         $(".answerChoice").bind('click', function(event) {

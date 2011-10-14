@@ -93,28 +93,16 @@ class PlayersController < ApplicationController
 
     session = Session.find( json["sessionId"], :include=>[:game])
     game = Game.find(session.game.id, :include=>[:game_questions])
-
-    #game_question = session.game.game_questions.find(json["currentGameQuestion"])
-    #@player =session.players.find(params[:id])
-
     game_question = GameQuestion.find(json["currentGameQuestion"], :include=>[:multiple_choices])
-    #response = Response.where("player_id = ? AND game_question_id=?", @player.id, game_question.id).limit(1).first
-
-
-
+	
     response = Response.new
     response.game_question = game_question
     response.response_index = json["newResponse"]
 
-    #g_index = get_index_of_game_question(game.game_questions,json["currentGameQuestion"] )
-
-
-
     if(option_is_correct(game_question.multiple_choices, response.response_index))
       if(session.current_question  < json["current_question"] + 1)
-      #game_question.state = "complete"
-      #game_question.save
       session.current_question = session.current_question + 1
+	  session.state = "won:#{@player.name}"
       session.save
       end
 

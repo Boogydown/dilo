@@ -26,7 +26,23 @@ App.Models.RailsModel = Backbone.Model.extend({
  */
 App.Models.PollModel = App.Models.RailsModel.extend({
     // put into the prototype, thus it's static and will prevent more than one pollFetch at a time (for now)
-    poll : {},
+    poll : {
+        polling: false,
+        next: function() {
+            if ( this.polling ){
+				console.log( "next poll for " + this.changeStr );
+                setTimeout( this.model.fetch, this.interval, this.options );
+			}
+        },
+        stop: function( timedout ) {
+			if ( ! this.polling ) console.log( "poll stopping (timedout:" + timedout + ")" );
+            this.model.unbind( this.changeStr, this.model._pollChangedHandler);			
+            if ( timedout && this.polling )
+                this.options.error();
+			clearTimeout( this.timeoutID );
+			this.polling = false;
+        }
+    },
 
     /* Poll the server for changes
      * @param options - options to pass along to the fetch; success only called if the poll is successful
@@ -36,38 +52,32 @@ App.Models.PollModel = App.Models.RailsModel.extend({
     */
     pollFetch : function( options, attribute, interval, timeout) {
         if ( this.poll.polling ) throw new Error("Can only poll one at a time");
+		console.log( "starting new poll for " + attribute + " @ " + interval + " (" + timeout );
         _.bindAll( this, "_pollChangedHandler", "fetch" );
         options || (options = {});
         interval || (interval = 300);
         timeout || (timeout = 10000);
-        var changeStr = "change" + (attribute ? ":" + attribute :"");
-        var model = this;
-        this.poll = {
-            polling: true,
-            interval: interval,
-            success: options.success,
-            options: options,
-            next: function() {
-                if ( this.polling )
-                    setTimeout( model.fetch, this.interval, this.options );
-            },
-            stop: function( timedout ) {
-                model.unbind( changeStr, model._pollChangedHandler);
-                if ( timedout && this.polling ) {
-                    this.polling = false;
-                    options.error();
-                }
-                this.polling = false;
-            }
-        };
+		
+		// setup our static poll object
+        this.poll.polling = true;
+        this.poll.model = this;
+        this.poll.changeStr = "change" + (attribute ? ":" + attribute :"");
+        this.poll.interval = interval;
+        this.poll.success = options.success;
+        this.poll.options = options;
+		
+		// bind the "this" of poll's two methods to poll, itself
         _.bindAll( this.poll, "next", "stop" );
+		
         //listen for the change, either general or attribute-specific
-        this.bind( changeStr, this._pollChangedHandler );
+        this.bind( this.poll.changeStr, this._pollChangedHandler );
 
         // this fetch success will trigger the next polling fetch
         options.success = this.poll.next;
         this.fetch( options );
-        setTimeout( this.poll.stop, timeout, true );
+		
+		// set our timeout
+        this.poll.timeoutID = setTimeout( this.poll.stop, timeout, true );
     },
 
     _pollChangedHandler : function() {

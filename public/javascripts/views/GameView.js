@@ -14,41 +14,48 @@ App.Views.GameView = Backbone.View.extend({
     },
 
     initialize : function (options) {
-        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "onGameReturned", "onAnswerSaved" );
+        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "onGameReturned" );
         this.session = options.session;
         this.player = options.player;
     },
 
     start : function (){
-//        var gameModel = new App.Models.PlayerModel({id:this.session.get("game").id});
-        this.model.fetch( {success:this.onGameReturned});
+        this.model.fetch( {success:this.onGameReturned} );
         this.gameOver = false;
-
     },
 
     onGameReturned : function() {
         this.model.set({"itemNumber" :this.session.get("current_question"), silent: true});
-//        this.session.pollFetch( {success:this.sessionStateChange}, "state", 100, 30000 );
-        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 100, 30000 );
-
+        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 1, 60000 );
         this.render();
     },
-
 
     sessionStateChange : function() {
         var sessionState = this.session.get( "state" ).split(":");
         if ( sessionState[0] == "won" ){
-            this.gameOver = true;
-            alert( "You lost to " + sessionState[1] );
-            this.endGame();
+			var winner = sessionState[1];
+			this.setPlayerStates( { 
+				me: { 
+					won: winner == this.player.name /*,
+					response : ____.pendingResponse*/
+				},
+				opponent: {
+					won : winner != this.player.name /*,
+					response : ____.pendingResponse*/
+				}
+			});
+            //this.endGame();
         }
-
-        this.model.set({"itemNumber" :this.session.get("current_question"), silent: true});
-        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 100, 30000 );
+		
+		//TODO: set timestamp for next question load
+		//TODO: create this.loadQuestion( ... to do this:
+        this.model.set({"itemNumber" :this.session.get("current_question")}, {silent: true});
         this.render();
+        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 1, 60000 );
     },
 
     //========= start question-specific logic =============
+	QUESTION_TIME : 15000,
     render : function () {
         // replace element with contents of template processed with the questionModel data
         $(this.el).html( _.template( $("#gameTemplate").html(), this ) );
@@ -56,36 +63,44 @@ App.Views.GameView = Backbone.View.extend({
     },
 
     renderQuestion : function (  ) {
+		this.timeStart = new Date().getTime();
+		$("#wonMessage",$("#gameQuestionTemplate_MC")).hide();
+		$("#lostMessage",$("#gameQuestionTemplate_MC")).hide();
         return _.template( $("#gameQuestionTemplate_MC").html(), this.model.attributes );
     },
 
     acSelected : function ( ev ){
         var myDiv = ev.currentTarget;
-        this.model.set( {pendingResponse:myDiv.id.substr(myDiv.id.length - 1)} );
+        this.model.set( {pendingResponse:myDiv.id.substr(myDiv.id.length - 1)}, {silent:true} );
         // in non-MC items (i.e. non single-action items), this will probably save pendingResponse to server
         this.submit();
     },
+	
+	setPlayerStates : function ( states ) {
+		if ( states.me.won )
+			$("#wonMessage", $("#gameQuestionTemplate_MC")).show();
+		else
+			$("#lostMessage", $("#gameQuestionTemplate_MC")).show();
+	},
     //=========== end question-specific logic ===============
 
     submit : function (){
         // copy over from pending to submitted...
         var resp = this.model.get( "pendingResponse" );
-//        this.model.get( "submittedResponses" ).push( resp );
         this.player.get( "responses" ).push( resp );
-        //this.player.set("session_id", this.session.id);
-        this.player.set({"currentGameId": this.session.get("game").id});
 
-        var question = this.model.get("game_questions")[this.model.get("itemNumber")].id;
-        this.player.set({"currentGameQuestion": question});
-        this.player.set({"newResponse": resp});
-        this.player.set({"sessionId": this.session.id});
-        this.player.set({"current_question":this.session.get("current_question")});
-
-        this.player.save();
-
+        this.player.save({
+			"currentGameId": this.session.get("game").id,
+			"currentGameQuestion": this.model.get("game_questions")[this.model.get("itemNumber")].id,
+			"newResponse": resp,
+			"sessionId": this.session.id,
+			"time": Math.ceil((this.QUESTION_TIME - (new Date().getTime() - this.timeStart)) / 10),
+			"current_question":this.session.get("current_question")
+		});
+		console.log("sent: " + JSON.stringify(this.player) );
     },
-     onAnswerSaved : function (){
-
+	
+/*    onAnswerSaved : function (){
         var correct = this.model.get( "scoreResponse" )(resp, this.model);
         if ( correct && !this.gameOver){
             this.session.poll.stop();
@@ -96,7 +111,9 @@ App.Views.GameView = Backbone.View.extend({
             alert("Wrong!");
         }
     },
+*/
     endGame : function() {
-       $(this.el).html("<h1>Game Over</h1>");
+		this.gameOver = true;
+		$(this.el).html("<h1>Game Over</h1>");
     }
 });

@@ -3,9 +3,6 @@ class Question < ActiveRecord::Base
   has_many :games, :through => :game_questions
   #has_and_belongs_to_many :games
   has_many :responses
-  def initialize
-           @choices = Hash.new
-  end
 
   attr_accessor  :choices
 

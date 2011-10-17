@@ -22,7 +22,7 @@ class Session < ActiveRecord::Base
   api_accessible :in_progress_session do |t|
       t.add :id
       t.add :state
-      #t.add :players
+      t.add :players
       t.add :game
       t.add :current_question
   end

@@ -10,9 +10,8 @@ class Response < ActiveRecord::Base
     end
 
   api_accessible :in_progress_session do |t|
-    t.add :player
-    t.add :content
     t.add :response_index
+    t.add :game_question_id
 
   end
 

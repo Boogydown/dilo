@@ -18,9 +18,12 @@
 
     <script type="text/javascript" src="javascripts/diloapp.js"></script>
     <script type="text/javascript" src="javascripts/models/CoreModels.js"></script>
+    <script type="text/javascript" src="javascripts/models/SessionModel.js"></script>
+    <script type="text/javascript" src="javascripts/models/QuestionModel.js"></script>
     <script type="text/javascript" src="javascripts/controllers/MainRouter.js"></script>
     <script type="text/javascript" src="javascripts/views/loginView.js"></script>
     <script type="text/javascript" src="javascripts/views/GameView.js"></script>
+    <script type="text/javascript" src="javascripts/views/TimerView.js"></script>
 
     <script type="application/_template" id="loginTemplate">
         <div id="login">
@@ -40,13 +43,20 @@
 
     <script type="application/_template" id="gameTemplate">
         <div id="game">
+			<div id="scores">
+				My Score: <div id="myScore">00000</div>
+				Their Score: <div id="theirScore">00000</div>
+			</div>
+			<div id="winner"></div>
             <div data-role="header">
                 <h1>Dilo</h1>
-                <h3>How fast can you answer?
+                <h3>How fast can you answer?</h3>
             </div>
             <div data-role="content">
                 <div id="questionArea"></div>
             </div>
+			<hr/>
+			<div id="timerBar" style="background-color:#DDDD00; width:100%; height:30px;"></div>
         </div>
     </script>
 
@@ -63,9 +73,6 @@
         <h3><%= questions[itemNumber].prompt%></h3>
         <!--<h3><%= questions[itemNumber].prompt%> -  <%= questions[itemNumber].answer %></h3>-->
         <h4><%= (itemNumber + 1)  %> of  <%=(questions.length)%></h4>
-        <br/>
-		<div id="wonMessage" style="display:none">You Won!</div><div id="lostMessage" style="display:none">You Lost!</div>
-        <br/>
         <div id="choice0" class="answerChoice"><b>A. </b><%= game_questions[itemNumber].multiple_choices[0].content %></div>
         <div id="choice1" class="answerChoice"><b>B. </b><%= game_questions[itemNumber].multiple_choices[1].content %></div>
         <div id="choice2" class="answerChoice"><b>C. </b><%= game_questions[itemNumber].multiple_choices[2].content %></div>

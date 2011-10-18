@@ -13,7 +13,8 @@ class Player < ActiveRecord::Base
   end
 
   api_accessible :in_progress_session do |t|
-     t.add :id
+    t.add :id
+    t.add :responses
   end
 
 

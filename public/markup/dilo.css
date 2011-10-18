@@ -1,6 +1,7 @@
 /* shared styles */
 #loginPage, #countdownPage, #questionPage, #waitingPage {
     width:320px;
+    background-color: #CBCAB6;
 }
 
 .centered
@@ -84,17 +85,22 @@
 .scorebox
 {
     display:inline-block;
-    width:45%;
+    width:152px;
+    height:74px;
 }
 
 #player1
 {
     float:left;
+    background-image:url('dilo_css_sprite.png');
+    background-position: 0px -670px;
 }
 
 #player2
 {
     float:right;
+    background-image:url('dilo_css_sprite.png');
+    background-position: -165px -670px;
 }
 
 .scorerow, .namerow
@@ -123,16 +129,24 @@
     margin-right: auto;
     text-align: center;
     vertical-align:middle;
+    font-family:LuckiestGuy;
+    font-size: 18pt;
 }
 
 
 #stem {
-    color:#ffffff;
-    font-size:1.5em;
+    opacity:.8;
     background-image:url('dilo_css_sprite.png');
     background-position: 0px -500px;
     width:320px;
     height:83px;
+}
+
+#prompt
+{
+    color:#ffffff;
+    font-size:24pt;
+    font-family: CurseCasual;
 }
 
 .answerChoice {

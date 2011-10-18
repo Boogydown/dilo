@@ -15,15 +15,13 @@ App.Routers.MainRouter = Backbone.Router.extend({
     initialize : function () {
         _.bindAll( this, "showHome", "showGame");
         this.session = new App.Models.SessionModel();
-        this.player = new App.Models.PlayerModel();
     },
 
     showHome : function () {
         // create the login view and immediately render it
         ( this.curView = new App.Views.LoginView({
             el:this.mainEl,
-            session: this.session,
-            model: this.player
+            model: this.session
         }) ).render();
     },
 
@@ -46,7 +44,8 @@ App.Routers.MainRouter = Backbone.Router.extend({
             el: this.mainEl,
             model: new App.Models.QuestionModel({id:this.session.get("game").id}),
             session: this.session,
-            player: this.player
+            player: this.player,
+			opponent: this.opponent
         });
 
         ///...and start it!

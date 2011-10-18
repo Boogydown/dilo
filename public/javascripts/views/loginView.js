@@ -10,8 +10,6 @@ App.Views.LoginView = Backbone.View.extend({
 
     initialize: function (options) {
         _.bindAll(this, "sendPlayer", "playerCreated", "sessionCreated", "syncError");
-        this.session = options.session;
-        this.model.set({opponentIndex:0});
     },
 
     render : function() {
@@ -21,7 +19,7 @@ App.Views.LoginView = Backbone.View.extend({
 
     sendPlayer : function(  ) {
         // model is player; populate name with value taken from input node of id usernameEntry
-        this.model.save({
+        this.model.myPlayer.save({
             name:$("#usernameEntry").val()
         },{
             success: this.playerCreated,
@@ -31,10 +29,10 @@ App.Views.LoginView = Backbone.View.extend({
     },
 
     playerCreated : function () {
-        $("#statusMsg").html("<p>Hello "+ this.model.get("name") + "!  You are player #" + this.model.id +
+        $("#statusMsg").html("<p>Hello "+ this.model.myPlayer.get("name") + "!  You are player #" + this.model.myPlayer.id +
                              "</p><p>We are pairing you with a partner...</p>");
-        this.session.save({
-            playerId: this.model.id
+        this.model.save({
+            playerId: this.model.myPlayer.id
         },{
             success: this.sessionCreated,
             error: this.syncError
@@ -42,24 +40,27 @@ App.Views.LoginView = Backbone.View.extend({
     },
 
     sessionCreated : function () {
-        var state = this.session.get("state");
+        var state = this.model.get("state");
         switch ( state ){
             case "waiting" :
                 $("#statusMsg").append("<p>Waiting for other player...</p>");
-                this.model.set({opponentIndex:1});
-                this.session.pollFetch({success:this.sessionCreated, error:this.syncError}, "state", 300, 60000 );
+				// "waiting" means we were the first to create this session, so we're the [0] player in the session's players array
+				this.model.myIndex = 0;
+                this.model.pollFetch({success:this.sessionCreated, error:this.syncError}, "state", 300, 60000 );
                 break;
 
             case "active" :
-                this.opponent = new App.Models.PlayerModel( this.session.get("players")[this.oIndex] );
-                $("#statusMsg").html("<p>Paired with player " + this.opponent.get("name") + " with session id " + this.session.id + "!</p>" +
+                $("#statusMsg").html("<p>Paired with player " + this.model.theirPlayer.get("name") + 
+									 " with session id " + this.model.id + "!</p>" +
                                      "<p>Click button to start!</p>");
+				// we don't do myIndex=1 here because regardless of your index you always get an "active" state, so 
+				//	everyone's myIndex would be 1.  We, instead, just make this default inside SessionModel
                 location.href = '#play';
                 break;
         }
     },
 
     syncError : function (model, response) {
-//        alert("Server failure!\n" + response);
+		console.log("Server failure!\n" + response);
     }
 });

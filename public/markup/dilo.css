@@ -1,7 +1,7 @@
 /* shared styles */
 #loginPage, #countdownPage, #questionPage, #waitingPage {
     width:320px;
-    background-color: #CBCAB6;
+    background-image:url('dilo_bg.jpg');
 }
 
 .centered

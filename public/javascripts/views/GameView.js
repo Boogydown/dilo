@@ -66,6 +66,24 @@ App.Views.GameView = Backbone.View.extend({
 		// since different question types each have their own unique rendering logic, we'll separate
 		//	the general game view from the question-specific view
         $("#questionArea", $(this.el) ).html( this.renderQuestion() );
+
+        $(".answerChoice", $(this.el)).addClass("unselected");
+
+        $(".answerChoice", $(this.el)).bind('click', function(event) {
+            $(this).removeClass("unselected");
+
+            if($(this).attr("correct") == "true")
+                $(this).addClass("player1-correct")
+            else
+                $(this).addClass("player1-incorrect")
+
+            $(this).siblings(".answerChoice").removeClass("unselected");
+            $(this).siblings(".answerChoice").filter('[correct="true"]').addClass("unselected-correct")
+            $(this).siblings(".answerChoice").filter('[correct!="true"]').addClass("unselected-incorrect");
+
+            $(".answerChoice").unbind(event);
+            // clearInterval(scoreCountdown);
+        });
     },
 
 	

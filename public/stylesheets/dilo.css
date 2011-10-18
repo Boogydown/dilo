@@ -1,7 +1,9 @@
 /* shared styles */
-#loginPage, #countdownPage, #questionPage, #waitingPage {
+body {
     width:320px;
-    background-image:url('dilo_bg.jpg');
+    background-image:url('../images/dilo_bg.jpg');
+    background-repeat:no-repeat;
+    font-family: CurseCasual;
 }
 
 .centered
@@ -92,14 +94,14 @@
 #player1
 {
     float:left;
-    background-image:url('dilo_css_sprite.png');
+    background-image:url('../images/dilo_css_sprite.png');
     background-position: 0px -670px;
 }
 
 #player2
 {
     float:right;
-    background-image:url('dilo_css_sprite.png');
+    background-image:url('../images/dilo_css_sprite.png');
     background-position: -165px -670px;
 }
 
@@ -136,7 +138,7 @@
 
 #stem {
     opacity:.8;
-    background-image:url('dilo_css_sprite.png');
+    background-image:url('../images/dilo_css_sprite.png');
     background-position: 0px -500px;
     width:320px;
     height:83px;
@@ -153,7 +155,7 @@
     font-family: CurseCasual;
     font-size: 18pt;
     vertical-align: middle;
-    background-image:url('dilo_css_sprite.png');
+    background-image:url('../images/dilo_css_sprite.png');
     width:320px;
     height:55px;
 }
@@ -169,8 +171,8 @@
 .answerChoice.player2-correct { background-position: 0px -385px; }
 .answerChoice.player2-incorrect { background-position: 0px -440px; }
 
-@font-face { font-family: LuckiestGuy; src: url('LuckiestGuy.ttf'); }
-@font-face { font-family: CurseCasual; src: url('Curse Casual JVE.ttf'); }
+@font-face { font-family: LuckiestGuy; src: url('../fonts/LuckiestGuy.ttf'); }
+@font-face { font-family: CurseCasual; src: url('../fonts/Curse Casual JVE.ttf'); }
 
 #scorebar {
     width:100%;

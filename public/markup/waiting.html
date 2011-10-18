@@ -1,10 +1,68 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
-<head>
-    <title></title>
-</head>
-<body>
+    <head>
+        <title>Dilo Markup</title>
 
-</body>
+        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css"/>
+        <link rel="stylesheet" href="../markup/dilo.css"/>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js"></script>
+        <script type="text/javascript" src="../javascripts/dilo-ui.js"></script>
+
+        <script type="text/javascript">
+            /*
+             * waiting screen scripts
+             */
+
+            $(document).ready(function() {
+                $("#vocab-study .word-prompt:first").css("display", "block");
+
+                var goToCountdown = function() {
+                    location.href="countdown.html";
+                }
+
+                window.setInterval(function() {
+                    $("#vocab-study").timer(".word-prompt", goToCountdown);
+                }, 1300);
+            });
+        </script>
+    </head>
+    <body>
+        <div data-role="page" id="waitingPage" data-title="waiting...">
+            <div data-role="content" class="centered">
+                <div id="matching-block">
+                    <div class="player-name">UserFirstName UserLastName</div>
+                      <div id="waiting-timer">
+                          <div><img src="../images/timer.png"/></div>
+                          <div>finding opponent...</div>
+                      </div>
+                </div>
+                  <div id="vocab-study">
+                    <div class="small-prompt centered">Study your vocab</div>
+                    <div class="word-prompt">
+                        <div class="prompt">el gato</div>
+                        <div class="translation">the cat</div>
+                    </div>
+                    <div class="word-prompt">
+                        <div class="prompt">su madre</div>
+                        <div class="translation">your mother</div>
+                    </div>
+                    <div class="word-prompt">
+                        <div class="prompt">ropa para hombres</div>
+                        <div class="translation">clothes for men</div>
+                    </div>
+                    <div class="word-prompt">
+                        <div class="prompt">y mucho mas</div>
+                        <div class="translation">and much more</div>
+                    </div>
+                    <div class="word-prompt">
+                        <div class="prompt">la paella</div>
+                        <div class="translation">the paella pan</div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </body>
 </html>

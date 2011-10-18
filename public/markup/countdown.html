@@ -1,10 +1,43 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
-<head>
-    <title></title>
-</head>
-<body>
+    <head>
+        <title>Dilo Markup</title>
 
-</body>
+        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css"/>
+        <link rel="stylesheet" href="../markup/dilo.css"/>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js"></script>
+        <script type="text/javascript" src="../javascripts/dilo-ui.js"></script>
+        <script type="text/javascript">
+              /*
+              * countdown scripts
+              */
+
+            $(document).ready(function() {
+                $("#downer h1:first").css("display", "block");
+
+                var goToQuestion = function() {
+                    location.href='question.html';
+                }
+
+                window.setInterval(function() {
+                    $("#downer").timer("h1", goToQuestion);
+                }, 1300);
+            });
+
+        </script>
+    </head>
+    <body>
+        <div data-role="page" id="countdownPage" data-title="COUNTDOWN TO DILO!!!">
+            <div data-role="content" class="centered">
+                <div id="downer">
+                      <h1>3</h1>
+                      <h1>2</h1>
+                      <h1>1</h1>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>

@@ -1,9 +1,18 @@
 /* shared styles */
+#loginPage, #countdownPage, #questionPage, #waitingPage {
+    width:320px;
+}
 
-.centered {
+.centered
+{
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+}
+
+.hideAtInit
+{
+    display:none;
 }
 
 /* waiting screen styles */
@@ -66,58 +75,91 @@
 
 /* question styles */
 
-#stem {
+#scores
+{
     display:block;
+    width:100%;
+}
+
+.scorebox
+{
+    display:inline-block;
+    width:45%;
+}
+
+#player1
+{
+    float:left;
+}
+
+#player2
+{
+    float:right;
+}
+
+.scorerow, .namerow
+{
+    display:block;
+}
+
+.scoreIcon
+{
+    float:left;
+}
+
+.scoreNumber
+{
+    float:right;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    vertical-align:middle;
+}
+
+.scoreScore
+{
+    display:inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    vertical-align:middle;
+}
+
+
+#stem {
     color:#ffffff;
-    opacity:.5;
-    background-color:#000000;
     font-size:1.5em;
-    padding: 10px;
+    background-image:url('dilo_css_sprite.png');
+    background-position: 0px -500px;
+    width:320px;
+    height:83px;
 }
 
 .answerChoice {
-    display: block;
-	padding: 10px;
-    font-size:1.5em;
-    margin-top:10px;
-    margin-bottom:10px;
+    font-family: CurseCasual;
+    font-size: 18pt;
+    vertical-align: middle;
+    background-image:url('dilo_css_sprite.png');
+    width:320px;
+    height:55px;
 }
 
-.choice-ready
-{
-    background-color: #ffff00;
-    color:#C80000;
-}
+.answerChoice.unselected { background-position:0px 0px; }
+.answerChoice.unselected-correct { background-position:0px -55px; }
+.answerChoice.unselected-incorrect { visibility: hidden; }
+.answerChoice.disabled { background-position: 0px -110px; }
+.answerChoice.player1 { background-position: 0px -165px; }
+.answerChoice.player1-correct { background-position: 0px -220px; }
+.answerChoice.player1-incorrect { background-position: 0px -275px; }
+.answerChoice.player2 { background-position: 0px -330px; }
+.answerChoice.player2-correct { background-position: 0px -385px; }
+.answerChoice.player2-incorrect { background-position: 0px -440px; }
 
-.not-guessed-correct
-{
-    background-color: #ffff00;
-    opacity:.6;
-}
-
-.not-guessed-incorrect
-{
-    background-color: #ffff00;
-    opacity:.6;
-}
-
-.guessed-correct
-{
-    background-color:#009933;
-    color:#ffffff;
-}
-
-.guessed-incorrect
-{
-    background-color:#c80000;
-    color:#ffffff;
-    opacity:.5;
-}
-
-.guessed-waiting {}
+@font-face { font-family: LuckiestGuy; src: url('LuckiestGuy.ttf'); }
+@font-face { font-family: CurseCasual; src: url('Curse Casual JVE.ttf'); }
 
 #scorebar {
     width:100%;
-    background-color:#ffffff;
+    background-color:#009933;
     color:#000000;
 }

@@ -21,16 +21,20 @@ App.Views.GameView = Backbone.View.extend({
 		isNaN(parseInt(qNum)) && (qNum = 0);
         this.model.set({"itemNumber" : qNum}, {silent: true});
         this.render();
-		// this must come after at least the first render since its div isn't in the DOM 'til after it
+		
+		// this must come after at least the first render since its div isn't in the DOM 'til afterward
 		if ( !this.timer ) {
 			this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
 			this.timer.bind( "complete", this.timerDone );
 		}
+		
 		this.timer.start( this.QUESTION_TIME );
         this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 1, 60000 );
     },
 
+	// session pollfetch listener.  States originating from the server callback to here...
     sessionStateChange : function() {
+		this.timer.stop();
         var sessionState = this.session.get( "state" ).split(":");
 		switch ( sessionState[0] ) {
 			case "won":
@@ -46,7 +50,8 @@ App.Views.GameView = Backbone.View.extend({
 						won: winner != myID,
 						score: this.session.theirPlayer.get("score"),
 						response : _.last(this.session.theirPlayer.get( "responses" ))
-					}
+					},
+					questionData: this.model.getCurQuestion()
 				};
 				$("#myScore").text( stats.me.score );
 				$("#theirScore").text( stats.them.score );
@@ -64,31 +69,15 @@ App.Views.GameView = Backbone.View.extend({
         $(this.el).html( _.template( $("#gameTemplate").html(), this ) );
 		
 		// since different question types each have their own unique rendering logic, we'll separate
-		//	the general game view from the question-specific view
+		//	the general game view from the question-logic-specific view (i.e. MC, FillInTheBlank, DnD, etc)
         $("#questionArea", $(this.el) ).html( this.renderQuestion() );
-
-        $(".answerChoice", $(this.el)).addClass("unselected");
-
-        $(".answerChoice", $(this.el)).bind('click', function(event) {
-            $(this).removeClass("unselected");
-
-            if($(this).attr("correct") == "true")
-                $(this).addClass("player1-correct")
-            else
-                $(this).addClass("player1-incorrect")
-
-            $(this).siblings(".answerChoice").removeClass("unselected");
-            $(this).siblings(".answerChoice").filter('[correct="true"]').addClass("unselected-correct")
-            $(this).siblings(".answerChoice").filter('[correct!="true"]').addClass("unselected-incorrect");
-
-            $(".answerChoice").unbind(event);
-            // clearInterval(scoreCountdown);
-        });
     },
 
 	
     //========= start question-specific logic =============
 	QUESTION_TIME : 15000,
+	
+	// bind events to the answer choices
     events : {
         "click #choice0" : "acSelected",
         "click #choice1" : "acSelected",
@@ -96,10 +85,28 @@ App.Views.GameView = Backbone.View.extend({
         "click #choice3" : "acSelected"
     },
 	
+	// render multiple-choice-specific question logic
     renderQuestion : function (  ) {
-        return _.template( $("#gameQuestionTemplate_MC").html(), this.model.attributes );
+        return _.template( $("#gameQuestionTemplate_MC").html(), this.model.getCurQuestion() );
+		
+		// question styling...
+		// TODO: these should be implemented into acSelected and showPlayerStates
+        $(".answerChoice", $(this.el)).addClass("unselected");
+        $(".answerChoice", $(this.el)).bind('click', function(event) {
+            $(this).removeClass("unselected");
+            if($(this).attr("correct") == "true")
+                $(this).addClass("player1-correct")
+            else
+                $(this).addClass("player1-incorrect")
+            $(this).siblings(".answerChoice").removeClass("unselected");
+            $(this).siblings(".answerChoice").filter('[correct="true"]').addClass("unselected-correct")
+            $(this).siblings(".answerChoice").filter('[correct!="true"]').addClass("unselected-incorrect");
+            $(".answerChoice").unbind(event);
+        });
+		
     },
 
+	// immediate reaction to UI
     acSelected : function ( ev ){
         var myDiv = ev.currentTarget;
         this.model.set( {pendingResponse:myDiv.id.substr(myDiv.id.length - 1)}, {silent:true} );
@@ -107,6 +114,7 @@ App.Views.GameView = Backbone.View.extend({
         this.submit();
     },
 	
+	// reaction to server-returned states
 	showPlayerStates : function ( states ) {
 		//TODO: show opponent's and my responses
 	},
@@ -117,9 +125,10 @@ App.Views.GameView = Backbone.View.extend({
         var resp = this.model.get( "pendingResponse" );
         this.session.myPlayer.get( "responses" ).push( resp );
 		var myTime = this.timer.stop();
+		var qData = this.model.getCurQuestion();
         this.session.myPlayer.save({
 			"currentGameId": this.session.get("game").id,
-			"currentGameQuestion": this.model.get("game_questions")[this.model.get("itemNumber")].id,
+			"currentGameQuestion": qData.id,
 			"newResponse": resp,
 			"sessionId": this.session.id,
 			"time": myTime,
@@ -132,22 +141,5 @@ App.Views.GameView = Backbone.View.extend({
 		//TODO: notify of time out!
 		alert("Time out!");
 		// TODO: session should return state "lost" or "timed out"
-	},
-	
-/*    onAnswerSaved : function (){
-        var correct = this.model.get( "scoreResponse" )(resp, this.model);
-        if ( correct && !this.gameOver){
-            this.session.poll.stop();
-            this.session.save({state:"won:" + this.player.id});
-            alert("You won!");
-            this.endGame();
-        } else {
-            alert("Wrong!");
-        }
-    },
-*/
-    endGame : function() {
-		this.gameOver = true;
-		$(this.el).html("<h1>Game Over</h1>");
-    }
+	}	
 });

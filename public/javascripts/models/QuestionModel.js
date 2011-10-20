@@ -15,5 +15,19 @@ App.Models.QuestionModel = App.Models.PollModel.extend({
     initialize : function() {
         // we want to use a new array, not the static one kept in defaults
         this.set( {submittedResponses : []} );
-    }
+    },
+	
+	getCurQuestion : function() {
+		var itemNum = this.get("itemNumber");
+		var questions = this.get("questions");
+		var gquestion = this.get("game_questions")[itemNum];
+		return { 
+			id: gquestion.id,
+			itemNumber: itemNum + 1,
+			totalQuestions: questions.length,
+			prompt: questions[itemNum].prompt, 
+			choices: gquestion.multiple_choices, 
+			answer: questions[itemNum].answer
+		};
+	}
 });

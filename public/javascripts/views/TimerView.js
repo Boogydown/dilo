@@ -12,10 +12,11 @@ App.Views.TimerView = Backbone.View.extend({
 	initialize : function( options ){
 		_.bindAll( this, "start", "stop", "_updateTimer" );
 		this.interval = options.interval || 100;
-		this.timerID = -1;
+		this.timerID = null;
 	},
 	
 	start : function( time ) {
+		if ( this.timerID ) return;
 		this.totalTime = time || 15000;
 		this.timeToStop = this.totalTime + new Date().getTime();
 		$(this.el).css("width","100%");
@@ -23,9 +24,8 @@ App.Views.TimerView = Backbone.View.extend({
 	},
 	
 	stop : function () {
-		if ( this.timerID != -1 )
-			clearInterval( this.timerID );
-		this.timerID = -1;
+		if ( this.timerID != null ) clearInterval( this.timerID );
+		this.timerID = null;
 		// return remaining time
 		return Math.ceil((this.timeToStop - new Date().getTime()) / 10);
 	},

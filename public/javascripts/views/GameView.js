@@ -27,7 +27,8 @@ App.Views.GameView = Backbone.View.extend({
 			this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
 			this.timer.bind( "complete", this.timerDone );
 		}
-		
+		// re-align to new element (cuz we re-render at each question)
+		this.timer.el = $("#timerBar").get(0);
 		this.timer.start( this.QUESTION_TIME );
         this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 1, 60000 );
     },
@@ -66,7 +67,7 @@ App.Views.GameView = Backbone.View.extend({
 
     render : function () {
         // replace element with contents of template processed with the questionModel data
-        $(this.el).html( _.template( $("#gameTemplate").html(), this ) );
+        $(this.el).html( _.template( $("#gameTemplate").html(), this.session ) );
 		
 		// since different question types each have their own unique rendering logic, we'll separate
 		//	the general game view from the question-logic-specific view (i.e. MC, FillInTheBlank, DnD, etc)

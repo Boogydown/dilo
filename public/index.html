@@ -50,26 +50,26 @@
                     <div class="scorerow">
                         <div class="scoreIcon"></div>
                         <div class="scoreNumber">
-                            <div id="myScore" class="scoreScore">10000</div>
+                            <div id="myScore" class="scoreScore"><%= myPlayer.get("score") %></div>
                         </div>
                     </div>
                     <br clear="all"/>
                     <br clear="all"/>
                     <div class="namerow">
-                         <div class="playerName centered">Firstname Lastname</div>
+                         <div class="playerName centered"><%= myPlayer.get("name") %></div>
                     </div>
                 </div>
                 <div id="player2" class="scorebox">
                      <div class="scorerow">
                         <div class="scoreIcon"></div>
                         <div class="scoreNumber">
-                            <div id="theirScore" class="scoreScore">10000</div>
+                            <div id="theirScore" class="scoreScore"><%= theirPlayer.get("score") %></div>
                         </div>
                     </div>
                     <br clear="all"/>
                     <br clear="all"/>
                     <div class="namerow">
-                         <div class="playerName centered">Firstname Lastname</div>
+                         <div class="playerName centered"><%= theirPlayer.get("name") %></div>
                     </div>
                 </div>
                 <!-- end scores -->

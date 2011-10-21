@@ -104,6 +104,9 @@ class PlayersController < ApplicationController
         session.current_question = session.current_question + 1
 	      session.state = "won:#{@player.id}"
         game_question.winner = @player.id
+        game_question.winner_score = json["time"]
+        @player.score = @player.score + json["time"]
+
         game_question.save
 
         session.save

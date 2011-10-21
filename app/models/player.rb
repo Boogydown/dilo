@@ -15,6 +15,7 @@ class Player < ActiveRecord::Base
   api_accessible :in_progress_session do |t|
     t.add :id
     t.add :responses
+    t.add :score
   end
 
 

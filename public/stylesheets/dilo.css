@@ -9,7 +9,7 @@ body {
 #topbar {
     background-color: #7FBDC0;
     width:100%;
-    min-height:300px;
+    min-height:500px;
     height:auto;
     z-index:-1;
 }
@@ -18,7 +18,7 @@ body {
     background-color:#8A7B72;
     width:100%;
     height:auto;
-    min-height:300px;
+    min-height:500px;
     position:absolute;
     bottom:0;
     z-index:-1;

@@ -1,6 +1,6 @@
 /* shared styles */
 body {
-   text-align: center;
+   text-align:center;
    height:100%;
    margin: 0px 0px 0px 0px;
    padding: 0px 0px 0px 0px;
@@ -27,13 +27,12 @@ body {
 #middlebar {
     height:480px;
     position:absolute;
+    margin-top:-240px;
     top:50%;
     width:100%;
-    margin-top:-240px;
     background-image:url('../images/web_bg_grad.jpg');
     background-repeat:repeat-x;
 }
-
 
 #maincontent {
     width:320px;

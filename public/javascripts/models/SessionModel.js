@@ -15,12 +15,14 @@ App.Models.SessionModel = App.Models.PollModel.extend({
         }
     },
 	
-	initialize : function () {
-		_.bindAll( this, "setPlayers" );
+	initialize : function ( options ) {
+		_.bindAll( this, "setPlayers", "setGameQuestions" );
         this.myPlayer = new App.Models.PlayerModel();
         this.theirPlayer = new App.Models.PlayerModel();
+		this.questionsModel = options.questionsModel;
 		this.myIndex = 1;
-		this.bind( "change", this.setPlayers );
+		this.bind( "change:players", this.setPlayers );
+		//this.bind( "change:game", this.setGameQuestions );
 	},
 	
 	setPlayers : function () {
@@ -31,6 +33,11 @@ App.Models.SessionModel = App.Models.PollModel.extend({
 			this.myPlayer.set( players[this.myIndex] );
 			this.theirPlayer.set( players[1 - this.myIndex] );
 		}
+	},
+	
+	setGameQuestions : function() {
+		if ( this.questionsModel )
+			this.questionsModel.set( this.get( "game" ) );
 	}
 	
 });

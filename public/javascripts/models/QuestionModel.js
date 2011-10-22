@@ -23,11 +23,13 @@ App.Models.QuestionModel = App.Models.PollModel.extend({
 		var gquestion = this.get("game_questions")[itemNum];
 		return { 
 			id: gquestion.id,
-			itemNumber: itemNum + 1,
+			itemNumber: itemNum /* + 1 - 1 */,
 			totalQuestions: questions.length,
 			prompt: questions[itemNum].prompt, 
 			choices: gquestion.multiple_choices, 
-			answer: questions[itemNum].answer
+			answer: questions[itemNum].answer,
+			winner: gquestion.winner,
+			winnerScore: gquestion.winner_score
 		};
 	}
 });

@@ -102,7 +102,7 @@ class PlayersController < ApplicationController
     if(option_is_correct(game_question.multiple_choices, response.response_index))
       if(session.current_question == json["current_question"] )
         session.current_question = session.current_question + 1
-	      session.state = "won:#{@player.id}"
+	      session.state = "won"
         game_question.winner = @player.id
         game_question.winner_score = json["time"]
         @player.score = @player.score + json["time"]

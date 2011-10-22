@@ -9,6 +9,7 @@ App.Views.GameView = Backbone.View.extend({
     initialize : function (options) {
         _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion" );
         this.session = options.session;
+		this.session.questionsModel = this.model;
 		this.player = this.session.myPlayer;
     },
 
@@ -19,50 +20,69 @@ App.Views.GameView = Backbone.View.extend({
 
 	loadQuestion : function( qNum ) {
 		isNaN(parseInt(qNum)) && (qNum = 0);
-        this.model.set({"itemNumber" : qNum}, {silent: true});
-        this.render();
+		if ( qNum != this.model.get("itemNumber")) {
+			this.model.set({"itemNumber" : qNum}, {silent: true});
+			this.render();
 		
-		// this must come after at least the first render since its div isn't in the DOM 'til afterward
-		if ( !this.timer ) {
-			this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
-			this.timer.bind( "complete", this.timerDone );
+			// this must come after at least the first render since its div isn't in the DOM 'til afterward
+			if ( !this.timer ) {
+				this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
+				this.timer.bind( "complete", this.timerDone );
+			}
+			// re-align to new element (cuz we re-render at each question)
+			this.timer.el = $("#timerBar").get(0);
+			this.timer.start( this.QUESTION_TIME );
 		}
-		// re-align to new element (cuz we re-render at each question)
-		this.timer.el = $("#timerBar").get(0);
-		this.timer.start( this.QUESTION_TIME );
-        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 1, 60000 );
+        this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
     },
 
 	// session pollfetch listener.  States originating from the server callback to here...
     sessionStateChange : function() {
-		this.timer.stop();
-        var sessionState = this.session.get( "state" ).split(":");
-		switch ( sessionState[0] ) {
+		var timeToWaitBeforeLoadingNextQuestion = 0;
+		switch ( this.session.get( "state" ) ) {
 			case "won":
-				var winner = sessionState[1];
+				this.timer.stop();
+				var qData = this.model.getCurQuestion();
+				
+				// HACK
+				qData.winner = this.session.get( "game" ).game_questions[ qData.itemNumber ].winner;
+				
 				var myID = this.session.myPlayer.id;
 				var stats = { 
 					me: { 
-						won: winner == myID,
+						won: qData.winner == myID,
 						score: this.session.myPlayer.get("score"),
 						response : _.last(this.session.myPlayer.get( "responses" ))
 					},
 					them: {
-						won: winner != myID,
+						won: qData.winner != myID,
 						score: this.session.theirPlayer.get("score"),
 						response : _.last(this.session.theirPlayer.get( "responses" ))
 					},
-					questionData: this.model.getCurQuestion()
+					questionData: qData
 				};
-				$("#myScore").text( stats.me.score );
-				$("#theirScore").text( stats.them.score );
 				$("#winner").text( stats.me.won ? "You won!" : "You lost!" );
 				this.showPlayerStates( stats );
+				
+				// wait a bit before loading next question... 
+				timeToWaitBeforeLoadingNextQuestion = 2400;
+				break;
+			case "timedOut":
+				//TODO: this is where we mark both as losers and advance to next Questio
+				// wait a bit before loading next question... 
+				timeToWaitBeforeLoadingNextQuestion = 2400;
+				break;
+			case "incorrect":
+			default:
+				//TODO: regardless of who was incorrect, just check players' responses and all are wrong
+				// timer does NOT stop, and we don't update the questions (i.e. session.current_question is still same #)
+
+				// immediately start pollfetch again...
+				timeToWaitBeforeLoadingNextQuestion = 0;
 				break;
 		}
 		
-		// wait a bit before loading next question...
-		setTimeout( this.loadQuestion, 2400, this.session.get("current_question") );
+		setTimeout( this.loadQuestion, timeToWaitBeforeLoadingNextQuestion, this.session.get("current_question") );						
 	},
 
     render : function () {
@@ -76,7 +96,7 @@ App.Views.GameView = Backbone.View.extend({
 
 	
     //========= start question-specific logic =============
-	QUESTION_TIME : 15000,
+	QUESTION_TIME : 45000,
 	
 	// bind events to the answer choices
     events : {
@@ -125,7 +145,7 @@ App.Views.GameView = Backbone.View.extend({
         // copy over from pending to submitted...
         var resp = this.model.get( "pendingResponse" );
         this.session.myPlayer.get( "responses" ).push( resp );
-		var myTime = this.timer.stop();
+		var myTime = this.timer.getTime();
 		var qData = this.model.getCurQuestion();
         this.session.myPlayer.save({
 			"currentGameId": this.session.get("game").id,

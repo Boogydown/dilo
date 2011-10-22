@@ -34,6 +34,7 @@ class GameQuestion < ActiveRecord::Base
 
   api_accessible :in_progress_session do |t|
     t.add :id
+	t.add :winner
     t.add :responses
   end
 

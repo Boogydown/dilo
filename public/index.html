@@ -50,26 +50,26 @@
                     <div class="scorerow">
                         <div class="scoreIcon"></div>
                         <div class="scoreNumber">
-                            <div id="myScore" class="scoreScore">10000</div>
+                            <div id="myScore" class="scoreScore"><%= myPlayer.get("score") %></div>
                         </div>
                     </div>
                     <br clear="all"/>
                     <br clear="all"/>
                     <div class="namerow">
-                         <div class="playerName centered">Firstname Lastname</div>
+                         <div class="playerName centered"><%= myPlayer.get("name") %></div>
                     </div>
                 </div>
                 <div id="player2" class="scorebox">
                      <div class="scorerow">
                         <div class="scoreIcon"></div>
                         <div class="scoreNumber">
-                            <div id="theirScore" class="scoreScore">10000</div>
+                            <div id="theirScore" class="scoreScore"><%= theirPlayer.get("score") %></div>
                         </div>
                     </div>
                     <br clear="all"/>
                     <br clear="all"/>
                     <div class="namerow">
-                         <div class="playerName centered">Firstname Lastname</div>
+                         <div class="playerName centered"><%= theirPlayer.get("name") %></div>
                     </div>
                 </div>
                 <!-- end scores -->
@@ -95,15 +95,15 @@
     <script type="application/_template" id="gameQuestionTemplate_MC">
              <!-- begin stem -->
                     <div id="stem">
-                         <div>Question <%= (itemNumber + 1)  %>/<%=(questions.length)%></div>
-                         <div id="prompt"><%= questions[itemNumber].prompt%></div>
+                         <div>Question <%= itemNumber %>/<%= totalQuestions %></div>
+                         <div id="prompt"><%= prompt%></div>
                     </div>
              <!-- end stem -->
-            <!--<h3><%= questions[itemNumber].prompt%> -  <%= questions[itemNumber].answer %></h3>-->
-            <div id="choice0" class="answerChoice"><%= game_questions[itemNumber].multiple_choices[0].content %></div>
-            <div id="choice1" class="answerChoice"><%= game_questions[itemNumber].multiple_choices[1].content %></div>
-            <div id="choice2" class="answerChoice"><%= game_questions[itemNumber].multiple_choices[2].content %></div>
-            <div id="choice3" class="answerChoice"><%= game_questions[itemNumber].multiple_choices[3].content %></div>
+            <!--<h3><%= prompt%> -  <%= answer %></h3>-->
+            <div id="choice0" class="answerChoice"><%= choices[0].content %></div>
+            <div id="choice1" class="answerChoice"><%= choices[1].content %></div>
+            <div id="choice2" class="answerChoice"><%= choices[2].content %></div>
+            <div id="choice3" class="answerChoice"><%= choices[3].content %></div>
         </div>
     </script>
 

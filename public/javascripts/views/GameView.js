@@ -46,26 +46,27 @@ App.Views.GameView = Backbone.View.extend({
 				
 				// HACK
 				qData.winner = this.session.get( "game" ).game_questions[ qData.itemNumber ].winner;
-				
-				var myID = this.session.myPlayer.id;
-				var stats = { 
-					me: { 
-						won: qData.winner == myID,
-						score: this.session.myPlayer.get("score"),
-						response : _.last(this.session.myPlayer.get( "responses" ))
-					},
-					them: {
-						won: qData.winner != myID,
-						score: this.session.theirPlayer.get("score"),
-						response : _.last(this.session.theirPlayer.get( "responses" ))
-					},
-					questionData: qData
-				};
-				$("#winner").text( stats.me.won ? "You won!" : "You lost!" );
-				this.showPlayerStates( stats );
-				
-				// wait a bit before loading next question... 
-				timeToWaitBeforeLoadingNextQuestion = 2400;
+				if(qData.winner)
+                {
+                    var myID = this.session.myPlayer.id;
+                    var stats = {
+                        me: {
+                            won: qData.winner == myID,
+                            score: this.session.myPlayer.get("score"),
+                            response : _.last(this.session.myPlayer.get( "responses" ))
+                        },
+                        them: {
+                            won: qData.winner != myID,
+                            score: this.session.theirPlayer.get("score"),
+                            response : _.last(this.session.theirPlayer.get( "responses" ))
+                        },
+                        questionData: qData
+                    };
+                    $("#winner").text( stats.me.won ? "You won!" : "You lost!" );
+                    this.showPlayerStates( stats );
+                    // wait a bit before loading next question...
+				    timeToWaitBeforeLoadingNextQuestion = 2400;
+                }
 				break;
 			case "timedOut":
 				//TODO: this is where we mark both as losers and advance to next Questio

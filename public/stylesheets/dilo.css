@@ -145,7 +145,7 @@ body {
     background-position: -165px -670px;
 }
 
-.scorerow, .namerow
+.scorerow
 {
     display:block;
 }
@@ -172,9 +172,17 @@ body {
     text-align: center;
     vertical-align:middle;
     font-family:LuckiestGuy;
-    font-size: 18pt;
+    font-size: 22pt;
+    padding-right: 10px;
+    margin-top: 10px;
 }
 
+.namerow
+{
+    display:block;
+    padding-top: 1px;
+    font-size: 16pt;
+}
 
 #stem {
     opacity:1.0;
@@ -182,6 +190,8 @@ body {
     background-position: 0px -500px;
     width:320px;
     height:83px;
+    margin-top: 25px;
+    margin-bottom: 25px;
 }
 
 #prompt

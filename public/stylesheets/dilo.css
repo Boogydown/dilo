@@ -1,6 +1,46 @@
 /* shared styles */
 body {
+   text-align: center;
+   height:100%;
+   margin: 0px 0px 0px 0px;
+   padding: 0px 0px 0px 0px;
+}
+
+#topbar {
+    background-color: #7FBDC0;
+    width:100%;
+    min-height:500px;
+    height:auto;
+    z-index:-1;
+}
+
+#bottombar {
+    background-color:#8A7B72;
+    width:100%;
+    height:auto;
+    min-height:500px;
+    position:absolute;
+    bottom:0;
+    z-index:-1;
+}
+
+#middlebar {
+    height:480px;
+    position:absolute;
+    top:50%;
+    width:100%;
+    margin-top:-240px;
+    background-image:url('../images/web_bg_grad.jpg');
+    background-repeat:repeat-x;
+}
+
+
+#maincontent {
     width:320px;
+    height:480px;
+    position:absolute;
+    left:50%;
+    margin-left:-160px;
     background-image:url('../images/dilo_bg.jpg');
     background-repeat:no-repeat;
     font-family: CurseCasual;

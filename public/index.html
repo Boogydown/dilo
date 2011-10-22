@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Welcome to Dilo!</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css"/>
     <link rel="stylesheet" href="stylesheets/dilo.css" />
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
@@ -112,14 +113,21 @@
 
 </head>
 <body>
-    <!-- This is the main div for the app.  When a View is rendered it replaces this element's contents -->
-    <div id="app" data-role="page"></div>
+    <div id="topbar"></div>
+    <div id="middlebar">
+        <div id="maincontent">
+            <!-- This is the main div for the app.  When a View is rendered it replaces this element's contents -->
+            <div id="app" data-role="page"></div>
 
-    <!-- Kickoff the main app on document-ready! -->
-    <script type="text/javascript">
-        $(function() {
-            App.init();
-        });
-    </script>
+            <!-- Kickoff the main app on document-ready! -->
+            <script type="text/javascript">
+                $(function() {
+                    App.init();
+                });
+            </script>
+        </div>
+    </div>
+    <br clear="all"/>
+    <div id="bottombar"/></div>
 </body>
 </html>

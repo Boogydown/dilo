@@ -21,7 +21,7 @@ class SessionsController < ApplicationController
       format.xml  { render :xml => @session }
       #format.json  { render :json => @session  }
       format.json { render_for_api :in_progress_session, :json => @session, :root => :session }
-
+		
     end
   end
 
@@ -55,14 +55,14 @@ class SessionsController < ApplicationController
     #randomly select 3 distractors(incorrect choices)
     for i in 0..2
     option = MultipleChoice.new
-    option.content = randomized[i].answer
+    option.content = trim_to_comma(randomized[i].answer)
     multiple_choices << option
     #gameQuestion.multiple_choices << option
     end
 
     #add the correct choice
     option = MultipleChoice.new
-    option.content = questions[current].answer
+    option.content = trim_to_comma(questions[current].answer)
     option.correct = true
     #gameQuestion.multiple_choices << option
     multiple_choices << option
@@ -72,9 +72,13 @@ class SessionsController < ApplicationController
     unsorted.all? do |choice|
         gameQuestion.multiple_choices << choice
     end
+  end
 
-
-
+  def trim_to_comma(answer)
+    if(!answer.index(',').nil?)
+      answer = answer[0, answer.index(',')]
+    end
+    answer
   end
 
 

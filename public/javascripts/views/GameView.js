@@ -29,7 +29,7 @@ App.Views.GameView = Backbone.View.extend({
 		}
 		
 		this.timer.start( this.QUESTION_TIME );
-        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 1, 60000 );
+        this.session.pollFetch( {success:this.sessionStateChange}, "current_question", 1, 120000 );
     },
 
 	// session pollfetch listener.  States originating from the server callback to here...
@@ -75,7 +75,7 @@ App.Views.GameView = Backbone.View.extend({
 
 	
     //========= start question-specific logic =============
-	QUESTION_TIME : 15000,
+	QUESTION_TIME : 1511000,
 	
 	// bind events to the answer choices
     events : {
@@ -95,11 +95,11 @@ App.Views.GameView = Backbone.View.extend({
         $(".answerChoice", $(this.el)).bind('click', function(event) {
             $(this).removeClass("unselected");
             if($(this).attr("correct") == "true")
-                $(this).addClass("player1-correct")
+                $(this).addClass("player1-correct");
             else
-                $(this).addClass("player1-incorrect")
+                $(this).addClass("player1-incorrect");
             $(this).siblings(".answerChoice").removeClass("unselected");
-            $(this).siblings(".answerChoice").filter('[correct="true"]').addClass("unselected-correct")
+            $(this).siblings(".answerChoice").filter('[correct="true"]').addClass("unselected-correct");
             $(this).siblings(".answerChoice").filter('[correct!="true"]').addClass("unselected-incorrect");
             $(".answerChoice").unbind(event);
         });

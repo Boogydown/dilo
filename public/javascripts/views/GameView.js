@@ -49,7 +49,7 @@ App.Views.GameView = Backbone.View.extend({
 				if(qData.winner)
                 {
                     var myID = this.session.myPlayer.id;
-                    var stats = {
+                    var states = {
                         me: {
                             won: qData.winner == myID,
                             score: this.session.myPlayer.get("score"),
@@ -62,8 +62,8 @@ App.Views.GameView = Backbone.View.extend({
                         },
                         questionData: qData
                     };
-                    $("#winner").text( stats.me.won ? "You won!" : "You lost!" );
-                    this.showPlayerStates( stats );
+                    //$("#winner").text( states.me.won ? "You won!" : "You lost!" );
+                    this.showPlayerStates( states );
                     // wait a bit before loading next question...
 				    timeToWaitBeforeLoadingNextQuestion = 2400;
                 }
@@ -93,11 +93,16 @@ App.Views.GameView = Backbone.View.extend({
 		// since different question types each have their own unique rendering logic, we'll separate
 		//	the general game view from the question-logic-specific view (i.e. MC, FillInTheBlank, DnD, etc)
         $("#questionArea", $(this.el) ).html( this.renderQuestion() );
+		
+		// question styling...
+		// TODO: these should be implemented into acSelected and showPlayerStates
+		$(".answerChoice", $(this.el)).addClass("unselected");
+		
     },
 
 	
     //========= start question-specific logic =============
-	QUESTION_TIME : 45000,
+	QUESTION_TIME : 120000,
 	
 	// bind events to the answer choices
     events : {
@@ -111,27 +116,20 @@ App.Views.GameView = Backbone.View.extend({
     renderQuestion : function (  ) {
         return _.template( $("#gameQuestionTemplate_MC").html(), this.model.getCurQuestion() );
 		
-		// question styling...
-		// TODO: these should be implemented into acSelected and showPlayerStates
-        $(".answerChoice", $(this.el)).addClass("unselected");
-        $(".answerChoice", $(this.el)).bind('click', function(event) {
-            $(this).removeClass("unselected");
-            if($(this).attr("correct") == "true")
-                $(this).addClass("player1-correct")
-            else
-                $(this).addClass("player1-incorrect")
-            $(this).siblings(".answerChoice").removeClass("unselected");
-            $(this).siblings(".answerChoice").filter('[correct="true"]').addClass("unselected-correct")
-            $(this).siblings(".answerChoice").filter('[correct!="true"]').addClass("unselected-incorrect");
-            $(".answerChoice").unbind(event);
-        });
-		
     },
 
 	// immediate reaction to UI
     acSelected : function ( ev ){
-        var myDiv = ev.currentTarget;
-        this.model.set( {pendingResponse:myDiv.id.substr(myDiv.id.length - 1)}, {silent:true} );
+		var target = ev.currentTarget;
+        var correctIndex = this.model.getCorrectIndex();
+		if("choice" + correctIndex != target.id)
+		{
+			$(target).addClass("player1-incorrect");
+		}
+		
+		//myDiv.style.border = "3px solid red";
+		//myDiv.className = ".answerChoice.disabled";
+		this.model.set( {pendingResponse:target.id.substr(target.id.length - 1)}, {silent:true} );
         // in non-MC items (i.e. non single-action items), this will probably save pendingResponse to server
         this.submit();
     },
@@ -139,7 +137,35 @@ App.Views.GameView = Backbone.View.extend({
 	// reaction to server-returned states
 	showPlayerStates : function ( states ) {
 		//TODO: show opponent's and my responses
+		/*var states = {
+						me: {
+							won: qData.winner == myID,
+							score: this.session.myPlayer.get("score"),
+							response : _.last(this.session.myPlayer.get( "responses" ))
+						},
+						them: {
+							won: qData.winner != myID,
+							score: this.session.theirPlayer.get("score"),
+							response : _.last(this.session.theirPlayer.get( "responses" ))
+						},
+						questionData: qData
+		*/
+		var correctIndex = this.model.getCorrectIndex();
+			
+		if (states.me.won)
+		{
+			$("#choice" + correctIndex).addClass("player1-correct")
+		}
+		else
+		{
+			$("#choice" + correctIndex).addClass("player2-correct")
+			
+		}
+		
+		
+		
 	},
+	
     //=========== end question-specific logic ===============
 
     submit : function (){

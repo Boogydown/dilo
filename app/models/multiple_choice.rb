@@ -11,11 +11,13 @@ class MultipleChoice < ActiveRecord::Base
   api_accessible :questions_and_choices do |t|
     t.add :id
     t.add :content
+	t.add :correct
   end
 
   api_accessible :complete_session do |t|
     t.add :id
     t.add :content
+	t.add :correct
 
   end
 

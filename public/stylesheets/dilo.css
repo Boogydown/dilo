@@ -23,7 +23,7 @@ body
     background-color: #7FBDC0;
     width:100%;
     position:absolute;
-    min-height:500px;
+    min-height:50%;
     height:auto;
     top:0;
     z-index:-1;
@@ -33,7 +33,7 @@ body
     background-color:#8A7B72;
     width:100%;
     height:auto;
-    min-height:500px;
+    min-height:50%;
     position:absolute;
     bottom:0;
     z-index:-1;

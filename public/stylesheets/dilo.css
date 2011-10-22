@@ -201,6 +201,14 @@ body {
     font-family: CurseCasual;
 }
 
+#answer
+{
+	color:#ffffff;
+	font-size:16pt;
+	font-family: CurseCasual;
+}
+
+
 .answerChoice {
     font-family: CurseCasual;
     font-size: 24pt;

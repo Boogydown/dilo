@@ -49,6 +49,10 @@ App.Views.GameView = Backbone.View.extend({
 				if(qData.winner)
                 {
                     var myID = this.session.myPlayer.id;
+					
+					var id = $("#answer");
+					id[0].style.visibility = "visible";
+		
                     var states = {
                         me: {
                             won: qData.winner == myID,
@@ -98,6 +102,10 @@ App.Views.GameView = Backbone.View.extend({
 		// TODO: these should be implemented into acSelected and showPlayerStates
 		$(".answerChoice", $(this.el)).addClass("unselected");
 		
+		var id = $("#answer");
+		id[0].style.visibility = "hidden";
+		
+	
     },
 
 	

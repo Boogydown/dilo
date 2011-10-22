@@ -27,6 +27,10 @@ App.Views.TimerView = Backbone.View.extend({
 		if ( this.timerID != null ) clearInterval( this.timerID );
 		this.timerID = null;
 		// return remaining time
+		return this.getTime();
+	},
+	
+	getTime : function() {
 		return Math.ceil((this.timeToStop - new Date().getTime()) / 10);
 	},
 	

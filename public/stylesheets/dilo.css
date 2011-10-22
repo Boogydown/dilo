@@ -1,7 +1,20 @@
 /* shared styles */
-body {
+html, body {
+  width:100%;
+  height:100%;
+
+}
+
+html
+{
+  display:table;
+}
+
+body
+{
    text-align:center;
-   height:100%;
+   display:table-cell;
+   vertical-align:middle;
    margin: 0px 0px 0px 0px;
    padding: 0px 0px 0px 0px;
 }
@@ -9,8 +22,10 @@ body {
 #topbar {
     background-color: #7FBDC0;
     width:100%;
+    position:absolute;
     min-height:500px;
     height:auto;
+    top:0;
     z-index:-1;
 }
 
@@ -26,10 +41,7 @@ body {
 
 #middlebar {
     height:480px;
-    position:absolute;
-    margin-top:-240px;
-    top:50%;
-    width:100%;
+    margin:0 auto;
     background-image:url('../images/web_bg_grad.jpg');
     background-repeat:repeat-x;
 }
@@ -37,9 +49,8 @@ body {
 #maincontent {
     width:320px;
     height:480px;
-    position:absolute;
-    left:50%;
-    margin-left:-160px;
+    margin-left:auto;
+    margin-right:auto;
     background-image:url('../images/dilo_bg.jpg');
     background-repeat:no-repeat;
     font-family: CurseCasual;

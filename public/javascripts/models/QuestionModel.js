@@ -31,5 +31,18 @@ App.Models.QuestionModel = App.Models.PollModel.extend({
 			winner: gquestion.winner,
 			winnerScore: gquestion.winner_score
 		};
+	},
+	getCorrectIndex : function() 
+	{
+			var choices = this.getCurQuestion().choices;
+			for(var i =0;i< choices.length; i++)
+			{
+				if(choices[i].correct)
+					return i
+			}
+			
+			return -1;
+		
 	}
+	
 });

@@ -111,14 +111,21 @@
 
 </head>
 <body>
-    <!-- This is the main div for the app.  When a View is rendered it replaces this element's contents -->
-    <div id="app" data-role="page"></div>
+    <div id="topbar"></div>
+    <div id="middlebar">
+        <div id="maincontent">
+            <!-- This is the main div for the app.  When a View is rendered it replaces this element's contents -->
+            <div id="app" data-role="page"></div>
 
-    <!-- Kickoff the main app on document-ready! -->
-    <script type="text/javascript">
-        $(function() {
-            App.init();
-        });
-    </script>
+            <!-- Kickoff the main app on document-ready! -->
+            <script type="text/javascript">
+                $(function() {
+                    App.init();
+                });
+            </script>
+        </div>
+    </div>
+    <br clear="all"/>
+    <div id="bottombar"/></div>
 </body>
 </html>

@@ -39,10 +39,11 @@ App.Views.GameView = Backbone.View.extend({
 	// session pollfetch listener.  States originating from the server callback to here...
     sessionStateChange : function() {
 		var timeToWaitBeforeLoadingNextQuestion = 0;
+        var qData = this.model.getCurQuestion();
+        var states;
 		switch ( this.session.get( "state" ) ) {
 			case "won":
 				this.timer.stop();
-				var qData = this.model.getCurQuestion();
 				
 				// HACK
 				qData.winner = this.session.get( "game" ).game_questions[ qData.itemNumber ].winner;
@@ -53,7 +54,7 @@ App.Views.GameView = Backbone.View.extend({
 					var id = $("#answer");
 					id[0].style.visibility = "visible";
 		
-                    var states = {
+                    states = {
                         me: {
                             won: qData.winner == myID,
                             score: this.session.myPlayer.get("score"),
@@ -73,16 +74,48 @@ App.Views.GameView = Backbone.View.extend({
                 }
 				break;
 			case "timedOut":
-				//TODO: this is where we mark both as losers and advance to next Questio
-				// wait a bit before loading next question... 
+                this.timer.stop();
+				//TODO: this is where we mark both as losers and advance to next Question
+				states = {
+                        timedOut:true,
+                        me: {
+                            won: false,
+                            score: this.session.myPlayer.get("score"),
+                            response : _.last(this.session.myPlayer.get( "responses" ))
+                        },
+                        them: {
+                            won: false,
+                            score: this.session.theirPlayer.get("score"),
+                            response : _.last(this.session.theirPlayer.get( "responses" ))
+                        },
+                        questionData: qData
+                };
 				timeToWaitBeforeLoadingNextQuestion = 2400;
+                this.showPlayerStates( states );
 				break;
 			case "incorrect":
+                states = {
+                        timedOut:false,
+                        me: {
+                            won: false,
+                            score: this.session.myPlayer.get("score"),
+                            response : _.last(this.session.myPlayer.get( "responses" ))
+                        },
+                        them: {
+                            won: false,
+                            score: this.session.theirPlayer.get("score"),
+                            response : _.last(this.session.theirPlayer.get( "responses" ))
+                        },
+                        questionData: qData
+                };
+                this.showPlayerStates(states);
+                break;
 			default:
 				//TODO: regardless of who was incorrect, just check players' responses and all are wrong
 				// timer does NOT stop, and we don't update the questions (i.e. session.current_question is still same #)
 
 				// immediately start pollfetch again...
+                this.showPlayerStates( states );
 				timeToWaitBeforeLoadingNextQuestion = 0;
 				break;
 		}
@@ -104,13 +137,11 @@ App.Views.GameView = Backbone.View.extend({
 		
 		var id = $("#answer");
 		id[0].style.visibility = "hidden";
-		
-	
     },
 
 	
     //========= start question-specific logic =============
-	QUESTION_TIME : 120000,
+	QUESTION_TIME : 12000,
 	
 	// bind events to the answer choices
     events : {
@@ -130,11 +161,25 @@ App.Views.GameView = Backbone.View.extend({
     acSelected : function ( ev ){
 		var target = ev.currentTarget;
         var correctIndex = this.model.getCorrectIndex();
+
 		if("choice" + correctIndex != target.id)
-		{
-			$(target).addClass("player1-incorrect");
-		}
-		
+			$(target).addClass("player1");
+        else
+            $(target).addClass("player1-correct");
+
+        $(target).siblings(".answerChoice").addClass("disabled");
+
+        /* TODO: I've tried a bunch of different approaches but can't get
+           this function to unbind. Neet to talk with Dimitri about the
+           esoterica of backbone's event delegation internals.
+         */
+        $(this.el).undelegate("#choice0","click","acSelected");
+        $(this.el).undelegate("#choice1","click","acSelected");
+        $(this.el).undelegate("#choice2","click","acSelected");
+        $(this.el).undelegate("#choice3","click","acSelected");
+
+
+
 		//myDiv.style.border = "3px solid red";
 		//myDiv.className = ".answerChoice.disabled";
 		this.model.set( {pendingResponse:target.id.substr(target.id.length - 1)}, {silent:true} );
@@ -144,7 +189,7 @@ App.Views.GameView = Backbone.View.extend({
 	
 	// reaction to server-returned states
 	showPlayerStates : function ( states ) {
-		//TODO: show opponent's and my responses
+		// TODO: show opponent's and my responses
 		/*var states = {
 						me: {
 							won: qData.winner == myID,
@@ -158,20 +203,30 @@ App.Views.GameView = Backbone.View.extend({
 						},
 						questionData: qData
 		*/
+
+        // logic for the correct response
 		var correctIndex = this.model.getCorrectIndex();
-			
+
+        // if this player got the correct answer, show player1-correct.
 		if (states.me.won)
-		{
-			$("#choice" + correctIndex).addClass("player1-correct")
-		}
-		else
-		{
-			$("#choice" + correctIndex).addClass("player2-correct")
-			
-		}
-		
-		
-		
+			$("#choice" + correctIndex).addClass("player1-correct");
+
+        // if the other player got the correct answer, show player2-correct
+		else if(states.them.won)
+			$("#choice" + correctIndex).addClass("player2-correct");
+
+        // otherwise, if timedOut, show unselected correct
+        else if(states.timedOut)
+            $("#choice" + correctIndex).addClass("unselected-correct");
+
+        alert(states.me.response);
+        alert(states.them.response);
+
+        // logic for all the other choices (the siblings)
+
+        // if this player chose a sibling, apply player1-incorrect
+
+        // if the other player chose a sibling, apply player2-incorrect
 	},
 	
     //=========== end question-specific logic ===============
@@ -195,7 +250,6 @@ App.Views.GameView = Backbone.View.extend({
 	
 	timerDone : function (){
 		//TODO: notify of time out!
-		alert("Time out!");
 		// TODO: session should return state "lost" or "timed out"
 	}	
 });

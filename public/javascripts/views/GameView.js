@@ -7,7 +7,7 @@
  */
 App.Views.GameView = Backbone.View.extend({
     initialize : function (options) {
-        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion" );
+        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver" );
         this.session = options.session;
 		this.session.questionsModel = this.model;
 		this.player = this.session.myPlayer;
@@ -20,24 +20,40 @@ App.Views.GameView = Backbone.View.extend({
 
 	loadQuestion : function( qNum ) {
 		isNaN(parseInt(qNum)) && (qNum = 0);
-		if ( qNum != this.model.get("itemNumber")) {
-			this.model.set({"itemNumber" : qNum}, {silent: true});
-			this.render();
 		
-			// this must come after at least the first render since its div isn't in the DOM 'til afterward
-			if ( !this.timer ) {
-				this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
-				this.timer.bind( "complete", this.timerDone );
+		
+		if ( qNum != this.model.get("itemNumber")) 
+		{
+			this.model.set({"itemNumber" : qNum}, {silent: true});
+			
+			if(qNum < (this.model.get( "game_questions" ).length - 1))
+			{
+				this.render();
+			
+				// this must come after at least the first render since its div isn't in the DOM 'til afterward
+				if ( !this.timer ) {
+					this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
+					this.timer.bind( "complete", this.timerDone );
+				}
+				// re-align to new element (cuz we re-render at each question)
+				this.timer.el = $("#timerBar").get(0);
+				this.timer.start( this.QUESTION_TIME );
+				this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
 			}
-			// re-align to new element (cuz we re-render at each question)
-			this.timer.el = $("#timerBar").get(0);
-			this.timer.start( this.QUESTION_TIME );
+			else
+			{
+				this.diloGameOver();
+			}
+			
 		}
-        this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
+		else
+        	this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
     },
 
 	// session pollfetch listener.  States originating from the server callback to here...
     sessionStateChange : function() {
+		
+		console.log(this.model.get("itemNumber") + " of " + this.session.get( "game" ).game_questions.length )
 		var timeToWaitBeforeLoadingNextQuestion = 0;
         var qData = this.model.getCurQuestion();
         var states;
@@ -48,12 +64,11 @@ App.Views.GameView = Backbone.View.extend({
 				// HACK
 				qData.winner = this.session.get( "game" ).game_questions[ qData.itemNumber ].winner;
 				if(qData.winner)
-                {
-                    var myID = this.session.myPlayer.id;
+				{
+					var myID = this.session.myPlayer.id;
 					
 					var id = $("#answer");
 					id[0].style.visibility = "visible";
-		
                     states = {
                         me: {
                             won: qData.winner == myID,
@@ -120,9 +135,13 @@ App.Views.GameView = Backbone.View.extend({
 				break;
 		}
 		
-		setTimeout( this.loadQuestion, timeToWaitBeforeLoadingNextQuestion, this.session.get("current_question") );						
+		setTimeout( this.loadQuestion, timeToWaitBeforeLoadingNextQuestion, this.session.get("current_question") );	
+							
 	},
-
+	diloGameOver : function () {
+		$(this.el).html( _.template( $("#gameOverTemplate").html(), this.session ) );
+	},
+	
     render : function () {
         // replace element with contents of template processed with the questionModel data
         $(this.el).html( _.template( $("#gameTemplate").html(), this.session ) );
@@ -182,6 +201,7 @@ App.Views.GameView = Backbone.View.extend({
 
 		//myDiv.style.border = "3px solid red";
 		//myDiv.className = ".answerChoice.disabled";
+        alert("setting " + target.id.substr(target.id.length - 1 + " as response");
 		this.model.set( {pendingResponse:target.id.substr(target.id.length - 1)}, {silent:true} );
         // in non-MC items (i.e. non single-action items), this will probably save pendingResponse to server
         this.submit();
@@ -219,12 +239,14 @@ App.Views.GameView = Backbone.View.extend({
         else if(states.timedOut)
             $("#choice" + correctIndex).addClass("unselected-correct");
 
-        alert(states.me.response);
-        alert(states.them.response);
+        else
+            // in this case, we are waiting, so do nothing.
+
 
         // logic for all the other choices (the siblings)
 
         // if this player chose a sibling, apply player1-incorrect
+
 
         // if the other player chose a sibling, apply player2-incorrect
 	},
@@ -251,5 +273,6 @@ App.Views.GameView = Backbone.View.extend({
 	timerDone : function (){
 		//TODO: notify of time out!
 		// TODO: session should return state "lost" or "timed out"
+        this.session.state = "timedOut";
 	}	
 });

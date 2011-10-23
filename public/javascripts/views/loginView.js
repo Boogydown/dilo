@@ -29,9 +29,25 @@ App.Views.LoginView = Backbone.View.extend({
     },
 
     playerCreated : function () {
-        $("#statusMsg").html("<p>Hello "+ this.model.myPlayer.get("name") + "!  You are player #" + this.model.myPlayer.id +
-                             "</p><p>We are pairing you with a partner...</p>");
-        this.model.save({
+        		
+		$("#statusMsg").html("<p>Hello "+ this.model.myPlayer.get("name") + "</p><p>We are pairing you with a partner...</p>");
+        
+		var opts = {
+		  lines: 12, // The number of lines to draw
+		  length: 7, // The length of each line
+		  width: 4, // The line thickness
+		  radius: 10, // The radius of the inner circle
+		  color: '#000', // #rgb or #rrggbb
+		  speed: 1, // Rounds per second
+		  trail: 60, // Afterglow percentage
+		  shadow: false // Whether to render a shadow
+		};
+		var target = document.getElementById('spinner');
+		var spinner = new Spinner(opts).spin(target);
+		
+		
+		
+		this.model.save({
             playerId: this.model.myPlayer.id
         },{
             success: this.sessionCreated,
@@ -50,9 +66,10 @@ App.Views.LoginView = Backbone.View.extend({
                 break;
 
             case "active" :
-                $("#statusMsg").html("<p>Paired with player " + this.model.theirPlayer.get("name") + 
-									 " with session id " + this.model.id + "!</p>" +
-                                     "<p>Click button to start!</p>");
+                //$("#statusMsg").html("<p>Paired with player " + this.model.theirPlayer.get("name") + 
+				//					 " with session id " + this.model.id + "!</p>" +
+                //                     );
+									 
 				// we don't do myIndex=1 here because regardless of your index you always get an "active" state, so 
 				//	everyone's myIndex would be 1.  We, instead, just make this default inside SessionModel
                 location.href = '#play';

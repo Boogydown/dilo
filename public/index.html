@@ -16,6 +16,7 @@
     <script type="text/javascript" src="javascripts/json2.js"></script>
     <script type="text/javascript" src="javascripts/underscore.js"></script>
     <script type="text/javascript" src="javascripts/backbone.js"></script>
+    <script type="text/javascript" src="javascripts/spin.js"></script>
 
     <script type="text/javascript" src="javascripts/diloapp.js"></script>
     <script type="text/javascript" src="javascripts/models/CoreModels.js"></script>
@@ -34,14 +35,26 @@
             </div>
             <div data-role="content">
                 <form id="loginForm" action="" onsubmit="return false;">
-                    Username: <input id="usernameEntry" type="text"></input>
-                    <button type="submit" id="loginDone">Submit</button>
+                    
+					Username: <input id="usernameEntry" type="text"></input>
+                    <button type="submit" id="loginDone">Play!</button>
                 </form>
                 <div id="statusMsg"></div>
+				<div id="spinner"></div>
             </div>
             <button id="startGameBtn" onclick="location.href='#play'" style="display:none">Start Game!</button>
         </div>
     </script>
+	
+	<script type="application/_template" id="gameOverTemplate">
+		<div id="login">
+			<div data-role="header">
+				<h1>GameOver!</h1>
+			</div>
+		
+		</div>
+	</script>
+	
 
     <script type="application/_template" id="gameTemplate">
         <div id="game">
@@ -94,7 +107,7 @@
     <script type="application/_template" id="gameQuestionTemplate_MC">
              <!-- begin stem -->
                     <div id="stem">
-                         <div>Question <%= itemNumber %>/<%= totalQuestions %></div>
+                         <div>Question <%= (itemNumber + 1 )%>/<%= totalQuestions %></div>
                          <div id="prompt"><%= prompt%> </div>
                          <div id="answer"><%= answer%></div>
                     </div>

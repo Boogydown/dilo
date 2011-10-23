@@ -28,6 +28,11 @@ body
     top:0;
     z-index:-1;
 }
+#statusMsg
+{
+	font-size:24pt;
+	font-family: CurseCasual;
+}
 
 #bottombar {
     background-color:#8A7B72;
@@ -98,6 +103,10 @@ body
 
 .prompt {
     font-size:1.5em;
+}
+
+.loginForm {
+	font-size:1.5em;
 }
 
 .translation {
@@ -203,6 +212,7 @@ body
     margin-top: 25px;
     margin-bottom: 25px;
 }
+
 
 #prompt
 {

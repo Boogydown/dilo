@@ -7,7 +7,7 @@
  */
 App.Views.GameView = Backbone.View.extend({
     initialize : function (options) {
-        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion" );
+        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver" );
         this.session = options.session;
 		this.session.questionsModel = this.model;
 		this.player = this.session.myPlayer;
@@ -20,24 +20,40 @@ App.Views.GameView = Backbone.View.extend({
 
 	loadQuestion : function( qNum ) {
 		isNaN(parseInt(qNum)) && (qNum = 0);
-		if ( qNum != this.model.get("itemNumber")) {
-			this.model.set({"itemNumber" : qNum}, {silent: true});
-			this.render();
 		
-			// this must come after at least the first render since its div isn't in the DOM 'til afterward
-			if ( !this.timer ) {
-				this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
-				this.timer.bind( "complete", this.timerDone );
+		
+		if ( qNum != this.model.get("itemNumber")) 
+		{
+			this.model.set({"itemNumber" : qNum}, {silent: true});
+			
+			if(qNum < (this.model.get( "game_questions" ).length - 1))
+			{
+				this.render();
+			
+				// this must come after at least the first render since its div isn't in the DOM 'til afterward
+				if ( !this.timer ) {
+					this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
+					this.timer.bind( "complete", this.timerDone );
+				}
+				// re-align to new element (cuz we re-render at each question)
+				this.timer.el = $("#timerBar").get(0);
+				this.timer.start( this.QUESTION_TIME );
+				this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
 			}
-			// re-align to new element (cuz we re-render at each question)
-			this.timer.el = $("#timerBar").get(0);
-			this.timer.start( this.QUESTION_TIME );
+			else
+			{
+				this.diloGameOver();
+			}
+			
 		}
-        this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
+		else
+        	this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
     },
 
 	// session pollfetch listener.  States originating from the server callback to here...
     sessionStateChange : function() {
+		
+		console.log(this.model.get("itemNumber") + " of " + this.session.get( "game" ).game_questions.length )
 		var timeToWaitBeforeLoadingNextQuestion = 0;
 		switch ( this.session.get( "state" ) ) {
 			case "won":
@@ -47,30 +63,30 @@ App.Views.GameView = Backbone.View.extend({
 				// HACK
 				qData.winner = this.session.get( "game" ).game_questions[ qData.itemNumber ].winner;
 				if(qData.winner)
-                {
-                    var myID = this.session.myPlayer.id;
+				{
+					var myID = this.session.myPlayer.id;
 					
 					var id = $("#answer");
 					id[0].style.visibility = "visible";
 		
-                    var states = {
-                        me: {
-                            won: qData.winner == myID,
-                            score: this.session.myPlayer.get("score"),
-                            response : _.last(this.session.myPlayer.get( "responses" ))
-                        },
-                        them: {
-                            won: qData.winner != myID,
-                            score: this.session.theirPlayer.get("score"),
-                            response : _.last(this.session.theirPlayer.get( "responses" ))
-                        },
-                        questionData: qData
-                    };
-                    //$("#winner").text( states.me.won ? "You won!" : "You lost!" );
-                    this.showPlayerStates( states );
-                    // wait a bit before loading next question...
-				    timeToWaitBeforeLoadingNextQuestion = 2400;
-                }
+					var states = {
+						me: {
+							won: qData.winner == myID,
+							score: this.session.myPlayer.get("score"),
+							response : _.last(this.session.myPlayer.get( "responses" ))
+						},
+						them: {
+							won: qData.winner != myID,
+							score: this.session.theirPlayer.get("score"),
+							response : _.last(this.session.theirPlayer.get( "responses" ))
+						},
+						questionData: qData
+					};
+					//$("#winner").text( states.me.won ? "You won!" : "You lost!" );
+					this.showPlayerStates( states );
+					// wait a bit before loading next question...
+					timeToWaitBeforeLoadingNextQuestion = 2400;
+				}
 				break;
 			case "timedOut":
 				//TODO: this is where we mark both as losers and advance to next Questio
@@ -87,9 +103,13 @@ App.Views.GameView = Backbone.View.extend({
 				break;
 		}
 		
-		setTimeout( this.loadQuestion, timeToWaitBeforeLoadingNextQuestion, this.session.get("current_question") );						
+		setTimeout( this.loadQuestion, timeToWaitBeforeLoadingNextQuestion, this.session.get("current_question") );	
+							
 	},
-
+	diloGameOver : function () {
+		$(this.el).html( _.template( $("#gameOverTemplate").html(), this.session ) );
+	},
+	
     render : function () {
         // replace element with contents of template processed with the questionModel data
         $(this.el).html( _.template( $("#gameTemplate").html(), this.session ) );

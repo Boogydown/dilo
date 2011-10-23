@@ -188,6 +188,8 @@ App.Views.GameView = Backbone.View.extend({
 
         $(target).siblings(".answerChoice").addClass("disabled");
 
+        alert("setting " + target.id.substr(target.id.length - 1 + " as response");
+
         /* TODO: I've tried a bunch of different approaches but can't get
            this function to unbind. Neet to talk with Dimitri about the
            esoterica of backbone's event delegation internals.
@@ -201,7 +203,7 @@ App.Views.GameView = Backbone.View.extend({
 
 		//myDiv.style.border = "3px solid red";
 		//myDiv.className = ".answerChoice.disabled";
-        alert("setting " + target.id.substr(target.id.length - 1 + " as response");
+
 		this.model.set( {pendingResponse:target.id.substr(target.id.length - 1)}, {silent:true} );
         // in non-MC items (i.e. non single-action items), this will probably save pendingResponse to server
         this.submit();
@@ -209,46 +211,58 @@ App.Views.GameView = Backbone.View.extend({
 	
 	// reaction to server-returned states
 	showPlayerStates : function ( states ) {
-		// TODO: show opponent's and my responses
-		/*var states = {
-						me: {
-							won: qData.winner == myID,
-							score: this.session.myPlayer.get("score"),
-							response : _.last(this.session.myPlayer.get( "responses" ))
-						},
-						them: {
-							won: qData.winner != myID,
-							score: this.session.theirPlayer.get("score"),
-							response : _.last(this.session.theirPlayer.get( "responses" ))
-						},
-						questionData: qData
-		*/
 
-        // logic for the correct response
 		var correctIndex = this.model.getCorrectIndex();
 
-        // if this player got the correct answer, show player1-correct.
-		if (states.me.won)
-			$("#choice" + correctIndex).addClass("player1-correct");
+        /* logic for the correct response */
+        $("#choice" + correctIndex)
+            .removeClass(function() {
+                if(states.me.won || states.them.won || states.timedOut)
+                    return("player1 player1-correct disabled");
 
-        // if the other player got the correct answer, show player2-correct
-		else if(states.them.won)
-			$("#choice" + correctIndex).addClass("player2-correct");
+                // otherwise, we are waiting, so do nothing.
+            })
+            .addClass(function() {
+               // if this player got the correct answer, show player1-correct.
+		        if (states.me.won)
+                    return("player1-correct");
 
-        // otherwise, if timedOut, show unselected correct
-        else if(states.timedOut)
-            $("#choice" + correctIndex).addClass("unselected-correct");
+                // if the other player got the correct answer, show player2-correct
+		        else if(states.them.won)
+			        return("player2-correct");
 
-        else
-            // in this case, we are waiting, so do nothing.
+                // otherwise, if timedOut, show unselected correct
+                else if(states.timedOut)
+                    return("unselected-correct");
+
+                // otherwise, we are waiting, so do nothing.
+        });
+
+        /* logic for all the other choices (the siblings) */
+        $("#choice" + correctIndex).siblings(".answerChoice")
+            .removeClass(function(){
+                if(states.me.won || states.them.won || states.timedOut)
+                    return("disabled");
+
+                // otherwise, we are waiting, so do nothing.
+            })
+            .addClass(function(){
+                // todo:
+
+                // if this player chose a sibling, apply player1-incorrect
+                // if the other player chose a sibling, apply player2-incorrect
+
+                // if neither is true
+                     // and round is over, visibility:hidden
+                     // otherwise, we are waiting, so do nothing
+            });
 
 
-        // logic for all the other choices (the siblings)
-
-        // if this player chose a sibling, apply player1-incorrect
 
 
-        // if the other player chose a sibling, apply player2-incorrect
+
+
+
 	},
 	
     //=========== end question-specific logic ===============

@@ -53,6 +53,7 @@ App.Views.GameView = Backbone.View.extend({
 	// session pollfetch listener.  States originating from the server callback to here...
     sessionStateChange : function() {
 		
+		
 		console.log(this.model.get("itemNumber") + " of " + this.session.get( "game" ).game_questions.length )
 		var timeToWaitBeforeLoadingNextQuestion = 0;
 		switch ( this.session.get( "state" ) ) {
@@ -86,6 +87,8 @@ App.Views.GameView = Backbone.View.extend({
 					this.showPlayerStates( states );
 					// wait a bit before loading next question...
 					timeToWaitBeforeLoadingNextQuestion = 2400;
+					location.href = '#gameOver';
+					return;
 				}
 				break;
 			case "timedOut":
@@ -107,7 +110,9 @@ App.Views.GameView = Backbone.View.extend({
 							
 	},
 	diloGameOver : function () {
-		$(this.el).html( _.template( $("#gameOverTemplate").html(), this.session ) );
+		//$(this.el).html( _.template( $("#gameOverTemplate").html(), this.session ) );
+		location.href = '#gameOver';
+		
 	},
 	
     render : function () {

@@ -6,14 +6,17 @@ App.Routers.MainRouter = Backbone.Router.extend({
     curView : null,
     mainEl : "#app",
     session: {},
+	questionModel:{},
     routes: {
         "" : "showHome",
         "home" : "showHome",
-        "play" : "showGame"
+        "play" : "showGame",
+		"gameOver" : "showGameOver"
+		
     },
 
     initialize : function () {
-        _.bindAll( this, "showHome", "showGame");
+        _.bindAll( this, "showHome", "showGame", "showGame");
         this.session = new App.Models.SessionModel();
     },
 
@@ -27,19 +30,10 @@ App.Routers.MainRouter = Backbone.Router.extend({
 
     showGame : function () {
         if ( this.session && this.session.get("state") != "active" ) {
-//            alert("You must login and pair up, first!");
             location.href = "#home";
             return;
         }
-
-        // some basic, hard-coded question
-//        var sampleQ = new App.Models.QuestionModel({
-//            stemContent: {prompt:"Who is the coolest of the Dilo dev team?"},
-//            responseContent: {choices : ["James", "Jason", "Dimitri", "Jonathan"]},
-//            correctResponse: 2
-//        });
-
-        // create the game view...
+		// create the game view...
         this.curView = new App.Views.GameView({
             el: this.mainEl,
             model: new App.Models.QuestionModel({id:this.session.get("game").id}),
@@ -50,5 +44,14 @@ App.Routers.MainRouter = Backbone.Router.extend({
 
         ///...and start it!
         this.curView.start();
-    }
+    },
+	showGameOver : function () {
+		( 
+			this.curView = new App.Views.GameOverView({
+			el:this.mainEl,
+			session: this.session,
+			questionsModel: this.curView.model
+		}) ).render();
+	},
+	
 });

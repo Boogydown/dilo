@@ -128,9 +128,23 @@ App.Views.GameView = Backbone.View.extend({
 			default:
 				//TODO: regardless of who was incorrect, just check players' responses and all are wrong
 				// timer does NOT stop, and we don't update the questions (i.e. session.current_question is still same #)
+                states = {
+                        timedOut:false,
+                        me: {
+                            won: false,
+                            score: this.session.myPlayer.get("score"),
+                            response : _.last(this.session.myPlayer.get( "responses" ))
+                        },
+                        them: {
+                            won: false,
+                            score: this.session.theirPlayer.get("score"),
+                            response : _.last(this.session.theirPlayer.get( "responses" ))
+                        },
+                        questionData: qData
+                };
+                this.showPlayerStates(states);
 
 				// immediately start pollfetch again...
-                this.showPlayerStates( states );
 				timeToWaitBeforeLoadingNextQuestion = 0;
 				break;
 		}
@@ -218,13 +232,24 @@ App.Views.GameView = Backbone.View.extend({
 		var correctIndex = this.model.getCorrectIndex();
 		if(states)
 		{
-			/* logic for the correct response */
-			$("#choice" + correctIndex)
+			// just put an attr on it and make life easier for everyone.
+			$("#choice" + correctIndex).attr("correct","true");
+
+            if(states.me.response)
+                 $("#choice" + states.me.response.response_index).attr("myResponse","true");
+
+            if(states.them.response)
+                $("#choice" + states.them.response.response_index).attr("theirResponse","true");
+
+
+            $(".answerChoice").filter('[correct="true"]')
 				.removeClass(function() {
 					if(states.me.won || states.them.won || states.timedOut)
 						return("player1 player1-correct disabled");
 
 					// otherwise, we are waiting, so do nothing.
+                    else
+                        return("none");
 				})
 				.addClass(function() {
 				   // if this player got the correct answer, show player1-correct.
@@ -243,30 +268,33 @@ App.Views.GameView = Backbone.View.extend({
 			});
 
 			/* logic for all the other choices (the siblings) */
-			$("#choice" + correctIndex).siblings(".answerChoice")
+
+            $(".answerChoice").filter('[myResponse="true"]')
+				.removeClass(function(){
+					if(states.me.won || states.them.won || states.timedOut)
+						return("disabled");
+
+                    // otherwise, we are waiting, so do nothing.
+                    else
+                        return("none");
+				})
+				.filter('[correct!="true"]').addClass("player1-incorrect");
+
+			$(".answerChoice").filter('[theirResponse="true"]')
 				.removeClass(function(){
 					if(states.me.won || states.them.won || states.timedOut)
 						return("disabled");
 
 					// otherwise, we are waiting, so do nothing.
+                    else
+                        return("none");
 				})
-				.addClass(function(){
-					// todo:
-
-					// if this player chose a sibling, apply player1-incorrect
-					// if the other player chose a sibling, apply player2-incorrect
+				.filter('[correct!="true"]').addClass("player2-incorrect");
 
 					// if neither is true
 						 // and round is over, visibility:hidden
 						 // otherwise, we are waiting, so do nothing
-				});
 		}
-
-
-
-
-
-
 	},
 	
     //=========== end question-specific logic ===============
@@ -291,6 +319,7 @@ App.Views.GameView = Backbone.View.extend({
 	timerDone : function (){
 		//TODO: notify of time out!
 		// TODO: session should return state "lost" or "timed out"
-        //this.session.state = "timedOut";
+        this.session.state = "timedOut";
+        this.sessionStateChange();
 	}	
 });

@@ -53,13 +53,13 @@ App.Views.GameView = Backbone.View.extend({
 	// session pollfetch listener.  States originating from the server callback to here...
     sessionStateChange : function() {
 		
-		
 		console.log(this.model.get("itemNumber") + " of " + this.session.get( "game" ).game_questions.length )
 		var timeToWaitBeforeLoadingNextQuestion = 0;
+        var qData = this.model.getCurQuestion();
+        var states;
 		switch ( this.session.get( "state" ) ) {
 			case "won":
 				this.timer.stop();
-				var qData = this.model.getCurQuestion();
 				
 				// HACK
 				qData.winner = this.session.get( "game" ).game_questions[ qData.itemNumber ].winner;
@@ -69,39 +69,68 @@ App.Views.GameView = Backbone.View.extend({
 					
 					var id = $("#answer");
 					id[0].style.visibility = "visible";
-		
-					var states = {
-						me: {
-							won: qData.winner == myID,
-							score: this.session.myPlayer.get("score"),
-							response : _.last(this.session.myPlayer.get( "responses" ))
-						},
-						them: {
-							won: qData.winner != myID,
-							score: this.session.theirPlayer.get("score"),
-							response : _.last(this.session.theirPlayer.get( "responses" ))
-						},
-						questionData: qData
-					};
-					//$("#winner").text( states.me.won ? "You won!" : "You lost!" );
-					this.showPlayerStates( states );
-					// wait a bit before loading next question...
-					timeToWaitBeforeLoadingNextQuestion = 2400;
-					location.href = '#gameOver';
-					return;
-				}
+                    states = {
+                        me: {
+                            won: qData.winner == myID,
+                            score: this.session.myPlayer.get("score"),
+                            response : _.last(this.session.myPlayer.get( "responses" ))
+                        },
+                        them: {
+                            won: qData.winner != myID,
+                            score: this.session.theirPlayer.get("score"),
+                            response : _.last(this.session.theirPlayer.get( "responses" ))
+                        },
+                        questionData: qData
+                    };
+                    //$("#winner").text( states.me.won ? "You won!" : "You lost!" );
+                    this.showPlayerStates( states );
+                    // wait a bit before loading next question...
+				    timeToWaitBeforeLoadingNextQuestion = 2400;
+                }
 				break;
 			case "timedOut":
-				//TODO: this is where we mark both as losers and advance to next Questio
-				// wait a bit before loading next question... 
+                this.timer.stop();
+				//TODO: this is where we mark both as losers and advance to next Question
+				states = {
+                        timedOut:true,
+                        me: {
+                            won: false,
+                            score: this.session.myPlayer.get("score"),
+                            response : _.last(this.session.myPlayer.get( "responses" ))
+                        },
+                        them: {
+                            won: false,
+                            score: this.session.theirPlayer.get("score"),
+                            response : _.last(this.session.theirPlayer.get( "responses" ))
+                        },
+                        questionData: qData
+                };
 				timeToWaitBeforeLoadingNextQuestion = 2400;
+                this.showPlayerStates( states );
 				break;
 			case "incorrect":
+                states = {
+                        timedOut:false,
+                        me: {
+                            won: false,
+                            score: this.session.myPlayer.get("score"),
+                            response : _.last(this.session.myPlayer.get( "responses" ))
+                        },
+                        them: {
+                            won: false,
+                            score: this.session.theirPlayer.get("score"),
+                            response : _.last(this.session.theirPlayer.get( "responses" ))
+                        },
+                        questionData: qData
+                };
+                this.showPlayerStates(states);
+                break;
 			default:
 				//TODO: regardless of who was incorrect, just check players' responses and all are wrong
 				// timer does NOT stop, and we don't update the questions (i.e. session.current_question is still same #)
 
 				// immediately start pollfetch again...
+                this.showPlayerStates( states );
 				timeToWaitBeforeLoadingNextQuestion = 0;
 				break;
 		}
@@ -112,7 +141,6 @@ App.Views.GameView = Backbone.View.extend({
 	diloGameOver : function () {
 		//$(this.el).html( _.template( $("#gameOverTemplate").html(), this.session ) );
 		location.href = '#gameOver';
-		
 	},
 	
     render : function () {
@@ -129,13 +157,11 @@ App.Views.GameView = Backbone.View.extend({
 		
 		var id = $("#answer");
 		id[0].style.visibility = "hidden";
-		
-	
     },
 
 	
     //========= start question-specific logic =============
-	QUESTION_TIME : 120000,
+	QUESTION_TIME : 12000,
 	
 	// bind events to the answer choices
     events : {
@@ -155,13 +181,32 @@ App.Views.GameView = Backbone.View.extend({
     acSelected : function ( ev ){
 		var target = ev.currentTarget;
         var correctIndex = this.model.getCorrectIndex();
+
 		if("choice" + correctIndex != target.id)
-		{
-			$(target).addClass("player1-incorrect");
-		}
-		
+			$(target).addClass("player1");
+        else
+            $(target).addClass("player1-correct");
+
+        $(target).siblings(".answerChoice").addClass("disabled");
+
+        //alert("setting " + target.id.substr(target.id.length - 1 + " as response");
+
+
+
+        /* TODO: I've tried a bunch of different approaches but can't get
+           this function to unbind. Neet to talk with Dimitri about the
+           esoterica of backbone's event delegation internals.
+         */
+        $(this.el).undelegate("#choice0","click","acSelected");
+        $(this.el).undelegate("#choice1","click","acSelected");
+        $(this.el).undelegate("#choice2","click","acSelected");
+        $(this.el).undelegate("#choice3","click","acSelected");
+
+
+
 		//myDiv.style.border = "3px solid red";
 		//myDiv.className = ".answerChoice.disabled";
+
 		this.model.set( {pendingResponse:target.id.substr(target.id.length - 1)}, {silent:true} );
         // in non-MC items (i.e. non single-action items), this will probably save pendingResponse to server
         this.submit();
@@ -169,34 +214,59 @@ App.Views.GameView = Backbone.View.extend({
 	
 	// reaction to server-returned states
 	showPlayerStates : function ( states ) {
-		//TODO: show opponent's and my responses
-		/*var states = {
-						me: {
-							won: qData.winner == myID,
-							score: this.session.myPlayer.get("score"),
-							response : _.last(this.session.myPlayer.get( "responses" ))
-						},
-						them: {
-							won: qData.winner != myID,
-							score: this.session.theirPlayer.get("score"),
-							response : _.last(this.session.theirPlayer.get( "responses" ))
-						},
-						questionData: qData
-		*/
+
 		var correctIndex = this.model.getCorrectIndex();
-			
-		if (states.me.won)
+		if(states)
 		{
-			$("#choice" + correctIndex).addClass("player1-correct")
+			/* logic for the correct response */
+			$("#choice" + correctIndex)
+				.removeClass(function() {
+					if(states.me.won || states.them.won || states.timedOut)
+						return("player1 player1-correct disabled");
+
+					// otherwise, we are waiting, so do nothing.
+				})
+				.addClass(function() {
+				   // if this player got the correct answer, show player1-correct.
+					if (states.me.won)
+						return("player1-correct");
+
+					// if the other player got the correct answer, show player2-correct
+					else if(states.them.won)
+						return("player2-correct");
+
+					// otherwise, if timedOut, show unselected correct
+					else if(states.timedOut)
+						return("unselected-correct");
+
+					// otherwise, we are waiting, so do nothing.
+			});
+
+			/* logic for all the other choices (the siblings) */
+			$("#choice" + correctIndex).siblings(".answerChoice")
+				.removeClass(function(){
+					if(states.me.won || states.them.won || states.timedOut)
+						return("disabled");
+
+					// otherwise, we are waiting, so do nothing.
+				})
+				.addClass(function(){
+					// todo:
+
+					// if this player chose a sibling, apply player1-incorrect
+					// if the other player chose a sibling, apply player2-incorrect
+
+					// if neither is true
+						 // and round is over, visibility:hidden
+						 // otherwise, we are waiting, so do nothing
+				});
 		}
-		else
-		{
-			$("#choice" + correctIndex).addClass("player2-correct")
-			
-		}
-		
-		
-		
+
+
+
+
+
+
 	},
 	
     //=========== end question-specific logic ===============
@@ -220,7 +290,7 @@ App.Views.GameView = Backbone.View.extend({
 	
 	timerDone : function (){
 		//TODO: notify of time out!
-		alert("Time out!");
 		// TODO: session should return state "lost" or "timed out"
+        //this.session.state = "timedOut";
 	}	
 });

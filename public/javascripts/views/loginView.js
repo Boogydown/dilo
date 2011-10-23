@@ -30,7 +30,7 @@ App.Views.LoginView = Backbone.View.extend({
 
     playerCreated : function () {
         		
-		$("#statusMsg").html("<p>Hello "+ this.model.myPlayer.get("name") + "</p><p>We are pairing you with a partner...</p>");
+		$("#statusMsg").html("<p>Hello "+ this.model.myPlayer.get("name") + "!</p><br/><p>We are pairing you with a partner...</p>");
         
 		var opts = {
 		  lines: 12, // The number of lines to draw
@@ -60,6 +60,7 @@ App.Views.LoginView = Backbone.View.extend({
         switch ( state ){
             case "waiting" :
                 $("#statusMsg").append("<p>Waiting for other player...</p>");
+				
 				// "waiting" means we were the first to create this session, so we're the [0] player in the session's players array
 				this.model.myIndex = 0;
                 this.model.pollFetch({success:this.sessionCreated, error:this.syncError}, "state", 300, 60000 );

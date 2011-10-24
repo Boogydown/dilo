@@ -41,7 +41,7 @@ App.Views.GameView = Backbone.View.extend({
 
                 // this is a workaround to block repeat events
                 // until I can figure out how backbone unbinds events.
-                this.choiceSelected = false;
+                // this.choiceSelected = false;
 			}
 			else
 			{
@@ -195,8 +195,8 @@ App.Views.GameView = Backbone.View.extend({
 
 	// immediate reaction to UI
     acSelected : function ( ev ){
-        if(!this.choiceSelected)
-        {
+        // if(!this.choiceSelected)
+        // {
             var target = ev.currentTarget;
             var correctIndex = this.model.getCorrectIndex();
 
@@ -211,13 +211,15 @@ App.Views.GameView = Backbone.View.extend({
             this.model.set( {pendingResponse:target.id.substr(target.id.length - 1)}, {silent:true} );
             // in non-MC items (i.e. non single-action items), this will probably save pendingResponse to server
 
-            this.choiceSelected = true;
+            // this.choiceSelected = true;
             this.submit();
-        }
+        // }
     },
 	
 	// reaction to server-returned states
 	showPlayerStates : function ( states ) {
+
+        var thingToCheck = this.session.get("state");
 
 		var correctIndex = this.model.getCorrectIndex();
 		if(states)
@@ -307,7 +309,7 @@ App.Views.GameView = Backbone.View.extend({
     },
 	
 	timerDone : function (){
-		//TODO: notify of time out!
+		// TODO: notify of time out!
 		// TODO: session should return state "lost" or "timed out"
         // this.session.state.set("timedOut");
         // this.sessionStateChange();

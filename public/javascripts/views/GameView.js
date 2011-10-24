@@ -25,7 +25,7 @@ App.Views.GameView = Backbone.View.extend({
 		{
 			this.model.set({"itemNumber" : qNum}, {silent: true});
 			
-			if(qNum < (this.model.get( "game_questions" ).length - 1))
+			if(qNum < (this.model.get( "game_questions" ).length))
 			{
 				this.render();
 			

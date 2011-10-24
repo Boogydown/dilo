@@ -24,7 +24,9 @@ App.Views.LoginView = Backbone.View.extend({
     },
 
     sendPlayer : function(  ) {
-        // model is player; populate name with value taken from input node of id usernameEntry
+        
+		console.log($("#usernameEntry").val());
+		// model is player; populate name with value taken from input node of id usernameEntry
         this.model.myPlayer.save({
             name:$("#usernameEntry").val()
         },{

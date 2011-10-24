@@ -85,7 +85,7 @@ App.Views.GameOverView = Backbone.View.extend({
 
 	replay : function () {
 				
-		location.href = '#home';
+		location.href = '#replay';
 	},
 
 	sessionCreated : function () {

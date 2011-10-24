@@ -33,10 +33,12 @@ App.Routers.MainRouter = Backbone.Router.extend({
 	
 	replay : function () {
 		this.session = new App.Models.SessionModel();
-		( this.curView = new App.Views.LoginView({
+		this.curView = new App.Views.LoginView({
 			el:this.mainEl,
 			model: this.session
-		}) ).render();
+		});
+		 
+		this.curView.render();
 		
 	},
 

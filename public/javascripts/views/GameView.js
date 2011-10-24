@@ -33,11 +33,12 @@ App.Views.GameView = Backbone.View.extend({
 				if ( !this.timer ) {
 					this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
 					this.timer.bind( "complete", this.timerDone );
+                    this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
 				}
 				// re-align to new element (cuz we re-render at each question)
 				this.timer.el = $("#timerBar").get(0);
 				this.timer.start( this.QUESTION_TIME );
-				this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
+
 
                 // this is a workaround to block repeat events
                 // until I can figure out how backbone unbinds events.
@@ -49,8 +50,6 @@ App.Views.GameView = Backbone.View.extend({
 			}
 			
 		}
-		else
-        	this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
     },
 
 	// session pollfetch listener.  States originating from the server callback to here...
@@ -130,6 +129,10 @@ App.Views.GameView = Backbone.View.extend({
                 };
                 this.showPlayerStates(states);
                 break;
+            case "nextQuestion":
+                this.loadQuestion(this.session.get("current_question"));
+
+                break;
 			default:
 				//TODO: regardless of who was incorrect, just check players' responses and all are wrong
 				// timer does NOT stop, and we don't update the questions (i.e. session.current_question is still same #)
@@ -150,12 +153,10 @@ App.Views.GameView = Backbone.View.extend({
                 this.showPlayerStates(states);
 
 				// immediately start pollfetch again...
-				timeToWaitBeforeLoadingNextQuestion = 0;
+				timeToWaitBeforeLoadingNextQuestion = 2400;
 				break;
 		}
-		
-		setTimeout( this.loadQuestion, timeToWaitBeforeLoadingNextQuestion, this.session.get("current_question") );	
-							
+        this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 300000);
 	},
 	diloGameOver : function () {
 		//$(this.el).html( _.template( $("#gameOverTemplate").html(), this.session ) );
@@ -206,7 +207,7 @@ App.Views.GameView = Backbone.View.extend({
             $(target).removeClass("unselected");
 
             if("choice" + correctIndex != target.id)
-                $(target).addClass("player1");
+                $(target).addClass("player1-incorrect");
             else
                 $(target).addClass("player1-correct");
 
@@ -232,10 +233,10 @@ App.Views.GameView = Backbone.View.extend({
 			// just put an attr on it and make life easier for everyone.
 			$("#choice" + correctIndex).attr("correct","true");
 
-            if(states.me.response)
+            if(states.me.response && (states.me.response.game_question_id == states.questionData.id))
                  $("#choice" + states.me.response.response_index).attr("myResponse","true");
 
-            if(states.them.response)
+            if(states.them.response && (states.them.response.game_question_id == states.questionData.id))
                 $("#choice" + states.them.response.response_index).attr("theirResponse","true");
 
 
@@ -269,7 +270,7 @@ App.Views.GameView = Backbone.View.extend({
             $(".answerChoice").filter('[myResponse="true"]')
 				.removeClass(function(){
 					if(states.me.won || states.them.won || states.timedOut)
-						return("disabled unselected");
+						return("disabled unselected player1 player2");
 
                     // otherwise, we are waiting, so do nothing.
                     else
@@ -280,7 +281,7 @@ App.Views.GameView = Backbone.View.extend({
 			$(".answerChoice").filter('[theirResponse="true"]')
 				.removeClass(function(){
 					if(states.me.won || states.them.won || states.timedOut)
-						return("disabled");
+						return("disabled unselected player1 player2");
 
 					// otherwise, we are waiting, so do nothing.
                     else

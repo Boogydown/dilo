@@ -16,6 +16,12 @@ class SessionsController < ApplicationController
   def show
     @session = Session.find(params[:id])
 
+    if((@session.state == "won") && (@session.updated_at + 3 > Time.now))
+      @session.state = "nextQuestion"
+      @session.save
+    end
+
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @session }

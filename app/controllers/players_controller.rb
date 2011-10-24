@@ -106,13 +106,14 @@ class PlayersController < ApplicationController
         game_question.winner = @player.id
         game_question.winner_score = json["time"]
         @player.score = @player.score + json["time"]
-
-        game_question.save
-
-        session.save
       end
-
+    else
+      session.state = "incorrect"
     end
+
+    game_question.save
+    session.save
+
     @player.responses <<  response
 
 

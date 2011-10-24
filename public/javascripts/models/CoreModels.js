@@ -97,6 +97,5 @@ App.Models.PlayerModel = App.Models.PollModel.extend({
         classID:"",
         sessionModelID:"",
         responses:[]
-
     }
 });

@@ -203,6 +203,8 @@ App.Views.GameView = Backbone.View.extend({
             var target = ev.currentTarget;
             var correctIndex = this.model.getCorrectIndex();
 
+            $(target).removeClass("unselected");
+
             if("choice" + correctIndex != target.id)
                 $(target).addClass("player1");
             else
@@ -240,7 +242,7 @@ App.Views.GameView = Backbone.View.extend({
             $(".answerChoice").filter('[correct="true"]')
 				.removeClass(function() {
 					if(states.me.won || states.them.won || states.timedOut)
-						return("player1 player1-correct disabled");
+						return("player1 player1-correct unselected disabled");
 
 					// otherwise, we are waiting, so do nothing.
                     else
@@ -267,7 +269,7 @@ App.Views.GameView = Backbone.View.extend({
             $(".answerChoice").filter('[myResponse="true"]')
 				.removeClass(function(){
 					if(states.me.won || states.them.won || states.timedOut)
-						return("disabled");
+						return("disabled unselected");
 
                     // otherwise, we are waiting, so do nothing.
                     else

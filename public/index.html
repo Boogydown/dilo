@@ -29,6 +29,9 @@
 	<script type="text/javascript" src="javascripts/views/TimerView.js"></script>
     <script type="text/javascript" src="javascripts/dilo-ui.js"></script>
 
+	
+
+
     <script type="application/_template" id="loginTemplate">
         <div id="login">
             <div data-role="header">
@@ -37,7 +40,7 @@
             <div data-role="content">
                 <form id="loginForm" action="" onsubmit="return false;">
                     
-					Username: <input id="usernameEntry" type="text"></input>
+					<input id="usernameEntry" placeholder="User Name" type="text"></input>
                     <button type="submit" id="loginDone">Play!</button>
                 </form>
                 <div id="statusMsg"></div>
@@ -51,6 +54,9 @@
 		<div>
 			<div data-role="header">
 				<h1>GameOver!</h1>
+				<form id="replayForm" action="" onsubmit="return false;">
+					<button type="submit" id="loginDone">Play Again!</button>
+				</form>
 			</div>
 			<div id="results">
 			</div>

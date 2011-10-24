@@ -263,3 +263,39 @@ table#table1 {
 	margin-left:15%; 
 	margin-right:15%;
 }
+
+
+
+table#hor-minimalist-a
+{
+	width:95%; 
+	margin-left:2.5%; 
+	margin-right:2.5%;
+	border-collapse: collapse;
+	text-align: left;
+}
+table#hor-minimalist-a th
+{
+	padding: 10px 8px;
+	border-bottom: 2px solid #000000;
+}
+table#hor-minimalist-a td
+{
+	color: #000;
+	padding: 9px 8px 0px 8px;
+}
+table#hor-minimalist-a tbody tr:hover td
+{
+	color: #009;
+}
+
+
+input#usernameEntry 
+{ 
+	width: 100px; 
+	height: 24px; 
+	border: 1px solid #999999; 
+	padding: 5px; 
+	font-size: 24px;
+	font-family: CurseCasual;
+}

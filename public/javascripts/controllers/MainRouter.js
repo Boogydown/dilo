@@ -11,7 +11,8 @@ App.Routers.MainRouter = Backbone.Router.extend({
         "" : "showHome",
         "home" : "showHome",
         "play" : "showGame",
-		"gameOver" : "showGameOver"
+		"gameOver" : "showGameOver",
+		"replay" : "replay"
 		
     },
 
@@ -22,12 +23,24 @@ App.Routers.MainRouter = Backbone.Router.extend({
 
     showHome : function () {
         // create the login view and immediately render it
+		//this.session = new App.Models.SessionModel();
+		
         ( this.curView = new App.Views.LoginView({
             el:this.mainEl,
             model: this.session
         }) ).render();
     },
+	
+	replay : function () {
+		this.session = new App.Models.SessionModel();
+		( this.curView = new App.Views.LoginView({
+			el:this.mainEl,
+			model: this.session
+		}) ).render();
+		
+	},
 
+	
     showGame : function () {
         if ( this.session && this.session.get("state") != "active" ) {
             location.href = "#home";

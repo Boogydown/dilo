@@ -15,6 +15,12 @@ App.Views.LoginView = Backbone.View.extend({
     render : function() {
         // replace element with contents of processed template
         $(this.el).html( _.template( $("#loginTemplate").html(), this ));
+		if(this.model.myPlayer)
+		{
+			//$('#loginForm').hide();
+			//this.playerCreated();	
+		}
+		
     },
 
     sendPlayer : function(  ) {
@@ -56,6 +62,7 @@ App.Views.LoginView = Backbone.View.extend({
     },
 
     sessionCreated : function () {
+		$('#loginForm').hide();
         var state = this.model.get("state");
         switch ( state ){
             case "waiting" :

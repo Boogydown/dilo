@@ -61,6 +61,9 @@ App.Views.GameView = Backbone.View.extend({
 			case "won":
 				this.timer.stop();
 				
+				//location.href = '#gameOver';
+				//return;
+				
 				// HACK
 				qData.winner = this.session.get( "game" ).game_questions[ qData.itemNumber ].winner;
 				if(qData.winner)

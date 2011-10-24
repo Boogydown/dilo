@@ -2,41 +2,72 @@
  * User: James Setaro
  */
 App.Views.GameOverView = Backbone.View.extend({
-	//events : { "submit #loginForm" : "sendPlayer" },
+	events : { "submit #replayForm" : "replay" },
 
 	initialize: function (options) {
-		_.bindAll(this, "render");
+		_.bindAll(this, "render", "getCorrectChoice", "replay");
 		this.session = options.session;
 		this.questionsModel = options.questionsModel;
 		this.player = this.session.myPlayer;
 		
 	},
-
+	getCorrectChoice : function(choices) 
+	{
+			for(var i =0;i< choices.length; i++)
+			{
+				if(choices[i].correct)
+					return choices[i].content;
+			}
+			
+			return null;
+		
+	},
 	render : function() {
 		// replace element with contents of processed template
 		$(this.el).html( _.template( $("#gameOverTemplate").html(), this ));
-		$("#results").append("<p>Questions</p>");
+		
+		
+		$("#results").append("<br/><br/><br/>");
 		
 		var game_questions = this.session.get("game").game_questions;
 		var questions = this.questionsModel.get("questions");
+		var distractors = this.questionsModel.get("game_questions");
+		
 		var myID = this.session.myPlayer.id;
 		
 		var $wrap = $('<div>').attr('id', 'tableWrap');
-		var $tbl = $('<table>').attr('id', 'table1');
+		var $tbl = $('<table>').attr('id', 'hor-minimalist-a');
+		
+		
+		
+		
+		
+		$tbl.append($('<thead>').append(
+						$('<tr>')
+								.append($('<th scope="col">').text("Question"),
+										$('<th scope="col">').text("Answer"),
+										$('<th scope="col">').text("Winnner")
+										)
+					   ));
+		
 		for(var i = 0; i < game_questions.length; i++)
 		{
+			this.questionsModel.set({"itemNumber" : i}, {silent: true});
+			var currentQuestion = this.questionsModel.getCurQuestion();
 			
 			var gameQ = game_questions[i];
 			var question = questions[i];
 			
 			var winner = this.session.myPlayer.get("name");
+			
+			
 			if(myID != gameQ.winner)
 				winner = this.session.theirPlayer.get("name") 
 		
 			$tbl.append(
 						$('<tr>')
-								.append($('<td>').text(question.prompt),
-										$('<td>').text(question.answer),
+								.append($('<td>').text(currentQuestion.prompt),
+										$('<td>').text(this.getCorrectChoice(distractors[i].multiple_choices)),
 										$('<td>').text(winner)
 										)
 					   );
@@ -50,42 +81,11 @@ App.Views.GameOverView = Backbone.View.extend({
 		
 	},
 
-	sendPlayer : function(  ) {
-		// model is player; populate name with value taken from input node of id usernameEntry
-		this.model.myPlayer.save({
-			name:$("#usernameEntry").val()
-		},{
-			success: this.playerCreated,
-			error: this.syncError
-		});
-		return false;
-	},
+	
 
-	playerCreated : function () {
+	replay : function () {
 				
-		$("#statusMsg").html("<p>Hello "+ this.model.myPlayer.get("name") + "!</p><br/><p>We are pairing you with a partner...</p>");
-		
-		var opts = {
-		  lines: 12, // The number of lines to draw
-		  length: 7, // The length of each line
-		  width: 4, // The line thickness
-		  radius: 10, // The radius of the inner circle
-		  color: '#000', // #rgb or #rrggbb
-		  speed: 1, // Rounds per second
-		  trail: 60, // Afterglow percentage
-		  shadow: false // Whether to render a shadow
-		};
-		var target = document.getElementById('spinner');
-		var spinner = new Spinner(opts).spin(target);
-		
-		
-		
-		this.model.save({
-			playerId: this.model.myPlayer.id
-		},{
-			success: this.sessionCreated,
-			error: this.syncError
-		});
+		location.href = '#home';
 	},
 
 	sessionCreated : function () {

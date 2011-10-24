@@ -20,8 +20,7 @@ App.Views.GameView = Backbone.View.extend({
 
 	loadQuestion : function( qNum ) {
 		isNaN(parseInt(qNum)) && (qNum = 0);
-		
-		
+
 		if ( qNum != this.model.get("itemNumber")) 
 		{
 			this.model.set({"itemNumber" : qNum}, {silent: true});
@@ -39,6 +38,10 @@ App.Views.GameView = Backbone.View.extend({
 				this.timer.el = $("#timerBar").get(0);
 				this.timer.start( this.QUESTION_TIME );
 				this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
+
+                // this is a workaround to block repeat events
+                // until I can figure out how backbone unbinds events.
+                // this.choiceSelected = false;
 			}
 			else
 			{
@@ -52,7 +55,6 @@ App.Views.GameView = Backbone.View.extend({
 
 	// session pollfetch listener.  States originating from the server callback to here...
     sessionStateChange : function() {
-		
 		console.log(this.model.get("itemNumber") + " of " + this.session.get( "game" ).game_questions.length )
 		var timeToWaitBeforeLoadingNextQuestion = 0;
         var qData = this.model.getCurQuestion();
@@ -108,7 +110,7 @@ App.Views.GameView = Backbone.View.extend({
                         },
                         questionData: qData
                 };
-				timeToWaitBeforeLoadingNextQuestion = 2400;
+				timeToWaitBeforeLoadingNextQuestion = 1200;
                 this.showPlayerStates( states );
 				break;
 			case "incorrect":
@@ -131,9 +133,23 @@ App.Views.GameView = Backbone.View.extend({
 			default:
 				//TODO: regardless of who was incorrect, just check players' responses and all are wrong
 				// timer does NOT stop, and we don't update the questions (i.e. session.current_question is still same #)
+                states = {
+                        timedOut:false,
+                        me: {
+                            won: false,
+                            score: this.session.myPlayer.get("score"),
+                            response : _.last(this.session.myPlayer.get( "responses" ))
+                        },
+                        them: {
+                            won: false,
+                            score: this.session.theirPlayer.get("score"),
+                            response : _.last(this.session.theirPlayer.get( "responses" ))
+                        },
+                        questionData: qData
+                };
+                this.showPlayerStates(states);
 
 				// immediately start pollfetch again...
-                this.showPlayerStates( states );
 				timeToWaitBeforeLoadingNextQuestion = 0;
 				break;
 		}
@@ -182,52 +198,53 @@ App.Views.GameView = Backbone.View.extend({
 
 	// immediate reaction to UI
     acSelected : function ( ev ){
-		var target = ev.currentTarget;
-        var correctIndex = this.model.getCorrectIndex();
+        // if(!this.choiceSelected)
+        // {
+            var target = ev.currentTarget;
+            var correctIndex = this.model.getCorrectIndex();
 
-		if("choice" + correctIndex != target.id)
-			$(target).addClass("player1");
-        else
-            $(target).addClass("player1-correct");
+            if("choice" + correctIndex != target.id)
+                $(target).addClass("player1");
+            else
+                $(target).addClass("player1-correct");
 
-        $(target).siblings(".answerChoice").addClass("disabled");
-
-        //alert("setting " + target.id.substr(target.id.length - 1 + " as response");
-
-
-
-        /* TODO: I've tried a bunch of different approaches but can't get
-           this function to unbind. Neet to talk with Dimitri about the
-           esoterica of backbone's event delegation internals.
-         */
-        $(this.el).undelegate("#choice0","click","acSelected");
-        $(this.el).undelegate("#choice1","click","acSelected");
-        $(this.el).undelegate("#choice2","click","acSelected");
-        $(this.el).undelegate("#choice3","click","acSelected");
+            $(target).siblings(".answerChoice").addClass("disabled");
 
 
+            this.model.set( {pendingResponse:target.id.substr(target.id.length - 1)}, {silent:true} );
+            // in non-MC items (i.e. non single-action items), this will probably save pendingResponse to server
 
-		//myDiv.style.border = "3px solid red";
-		//myDiv.className = ".answerChoice.disabled";
-
-		this.model.set( {pendingResponse:target.id.substr(target.id.length - 1)}, {silent:true} );
-        // in non-MC items (i.e. non single-action items), this will probably save pendingResponse to server
-        this.submit();
+            // this.choiceSelected = true;
+            this.submit();
+        // }
     },
 	
 	// reaction to server-returned states
 	showPlayerStates : function ( states ) {
 
+        var thingToCheck = this.session.get("state");
+
 		var correctIndex = this.model.getCorrectIndex();
 		if(states)
 		{
-			/* logic for the correct response */
-			$("#choice" + correctIndex)
+			// just put an attr on it and make life easier for everyone.
+			$("#choice" + correctIndex).attr("correct","true");
+
+            if(states.me.response)
+                 $("#choice" + states.me.response.response_index).attr("myResponse","true");
+
+            if(states.them.response)
+                $("#choice" + states.them.response.response_index).attr("theirResponse","true");
+
+
+            $(".answerChoice").filter('[correct="true"]')
 				.removeClass(function() {
 					if(states.me.won || states.them.won || states.timedOut)
 						return("player1 player1-correct disabled");
 
 					// otherwise, we are waiting, so do nothing.
+                    else
+                        return("none");
 				})
 				.addClass(function() {
 				   // if this player got the correct answer, show player1-correct.
@@ -246,30 +263,33 @@ App.Views.GameView = Backbone.View.extend({
 			});
 
 			/* logic for all the other choices (the siblings) */
-			$("#choice" + correctIndex).siblings(".answerChoice")
+
+            $(".answerChoice").filter('[myResponse="true"]')
+				.removeClass(function(){
+					if(states.me.won || states.them.won || states.timedOut)
+						return("disabled");
+
+                    // otherwise, we are waiting, so do nothing.
+                    else
+                        return("none");
+				})
+				.filter('[correct!="true"]').addClass("player1-incorrect");
+
+			$(".answerChoice").filter('[theirResponse="true"]')
 				.removeClass(function(){
 					if(states.me.won || states.them.won || states.timedOut)
 						return("disabled");
 
 					// otherwise, we are waiting, so do nothing.
+                    else
+                        return("none");
 				})
-				.addClass(function(){
-					// todo:
-
-					// if this player chose a sibling, apply player1-incorrect
-					// if the other player chose a sibling, apply player2-incorrect
+				.filter('[correct!="true"]').addClass("player2-incorrect");
 
 					// if neither is true
 						 // and round is over, visibility:hidden
 						 // otherwise, we are waiting, so do nothing
-				});
 		}
-
-
-
-
-
-
 	},
 	
     //=========== end question-specific logic ===============
@@ -292,8 +312,9 @@ App.Views.GameView = Backbone.View.extend({
     },
 	
 	timerDone : function (){
-		//TODO: notify of time out!
+		// TODO: notify of time out!
 		// TODO: session should return state "lost" or "timed out"
-        //this.session.state = "timedOut";
+        // this.session.state.set("timedOut");
+        // this.sessionStateChange();
 	}	
 });

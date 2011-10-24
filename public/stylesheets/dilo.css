@@ -219,6 +219,7 @@ body
     color:#ffffff;
     font-size:24pt;
     font-family: CurseCasual;
+	margin-top: -8px;
 }
 
 #answer
@@ -226,6 +227,7 @@ body
 	color:#ffffff;
 	font-size:16pt;
 	font-family: CurseCasual;
+	margin-top: -5px;
 }
 
 

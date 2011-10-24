@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
   def show
     @session = Session.find(params[:id])
 
-    if((@session.state == "won") && (@session.updated_at + 3 > Time.now))
+    if((@session.state == "won") && (@session.updated_at.to_i + 3 > Time.now.to_i))
       @session.state = "nextQuestion"
       @session.save
     end

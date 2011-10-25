@@ -212,7 +212,9 @@ App.Views.GameView = Backbone.View.extend({
             else
                 $(target).addClass("player1-correct");
 
-            $(target).siblings(".answerChoice").addClass("disabled");
+            $(target).siblings(".answerChoice")
+                .removeClass("unselected")
+                .addClass("disabled");
 
 
             this.model.set( {pendingResponse:target.id.substr(target.id.length - 1)}, {silent:true} );
@@ -256,9 +258,13 @@ App.Views.GameView = Backbone.View.extend({
 			this.updateResponses(theirResponses, correctIndex);				
 		
 			if(states.me.won)
-				$("#choice" + correctIndex).addClass("player1-correct");
+				$("#choice" + correctIndex)
+                    .removeClass("disabled")
+                    .addClass("player1-correct");
 			else if(states.them.won)
-				$("#choice" + correctIndex).addClass("player2-correct");
+				$("#choice" + correctIndex)
+                    .removeClass("disabled")
+                    .addClass("player2-correct");
 		
 		}
 	},
@@ -266,7 +272,9 @@ App.Views.GameView = Backbone.View.extend({
 		for (var j = 0; j < responses.length; j++)
 		{
 			if(responses[j] != correctIndex)
-				$("#choice" + responses[j]).addClass("player2-incorrect");
+				$("#choice" + responses[j])
+                    .removeClass("disabled")
+                    .addClass("player2-incorrect");
 			
 		}
 	},

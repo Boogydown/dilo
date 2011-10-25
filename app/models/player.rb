@@ -15,6 +15,7 @@ class Player < ActiveRecord::Base
 
   api_accessible :in_progress_session do |t|
 	t.add :name  #we need the name every time for the player who created session: they didn't have their paired partner, yet
+	t.add :id
     t.add :responses
     t.add :score
   end

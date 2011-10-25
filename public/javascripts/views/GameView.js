@@ -7,7 +7,7 @@
  */
 App.Views.GameView = Backbone.View.extend({
     initialize : function (options) {
-        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver" );
+        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver", "getPlayerResponses" );
         this.session = options.session;
 		this.session.questionsModel = this.model;
 		this.player = this.session.myPlayer;
@@ -77,13 +77,14 @@ App.Views.GameView = Backbone.View.extend({
                         me: {
                             won: qData.winner == myID,
                             score: this.session.myPlayer.get("score"),
-                            response : _.last(this.session.myPlayer.get( "responses" ))
+                            response : _.last(this.session.myPlayer.get( "responses" )),
+							
                         },
                         them: {
                             won: qData.winner != myID,
                             score: this.session.theirPlayer.get("score"),
-                            response : _.last(this.session.theirPlayer.get( "responses" ))
-                        },
+                            response : _.last(this.session.theirPlayer.get( "responses" )),
+						},
                         questionData: qData
                     };
                     //$("#winner").text( states.me.won ? "You won!" : "You lost!" );
@@ -222,76 +223,51 @@ App.Views.GameView = Backbone.View.extend({
         // }
     },
 	
+	getPlayerResponses : function ( playerId, gameQuestionId ) {
+		var foundResponses = [];	
+		var players =  this.session.get("players");
+		for (var i = 0; i < players.length; i++)
+		{
+			if(players[i].id == playerId)
+			{
+				var responses = players[i].responses;
+				for (var j = 0; j < responses.length; j++)
+				{
+					if(responses[j].game_question_id == gameQuestionId)
+					{
+						foundResponses.push(responses[j].response_index);
+					}
+				}
+			}
+		}
+		return foundResponses;
+	},
 	// reaction to server-returned states
 	showPlayerStates : function ( states ) {
 
         var thingToCheck = this.session.get("state");
-
-		var correctIndex = this.model.getCorrectIndex();
 		if(states)
 		{
-			// just put an attr on it and make life easier for everyone.
-			$("#choice" + correctIndex).attr("correct","true");
-
-            if(states.me.response && (states.me.response.game_question_id == states.questionData.id))
-                 $("#choice" + states.me.response.response_index).attr("myResponse","true");
-
-            if(states.them.response && (states.them.response.game_question_id == states.questionData.id))
-                $("#choice" + states.them.response.response_index).attr("theirResponse","true");
-
-
-            $(".answerChoice").filter('[correct="true"]')
-				.removeClass(function() {
-					if(states.me.won || states.them.won || states.timedOut)
-						return("player1 player1-correct unselected disabled");
-
-					// otherwise, we are waiting, so do nothing.
-                    else
-                        return("none");
-				})
-				.addClass(function() {
-				   // if this player got the correct answer, show player1-correct.
-					if (states.me.won)
-						return("player1-correct");
-
-					// if the other player got the correct answer, show player2-correct
-					else if(states.them.won)
-						return("player2-correct");
-
-					// otherwise, if timedOut, show unselected correct
-					else if(states.timedOut)
-						return("unselected-correct");
-
-					// otherwise, we are waiting, so do nothing.
-			});
-
-			/* logic for all the other choices (the siblings) */
-
-            $(".answerChoice").filter('[myResponse="true"]')
-				.removeClass(function(){
-					if(states.me.won || states.them.won || states.timedOut)
-						return("disabled unselected player1 player2");
-
-                    // otherwise, we are waiting, so do nothing.
-                    else
-                        return("none");
-				})
-				.filter('[correct!="true"]').addClass("player1-incorrect");
-
-			$(".answerChoice").filter('[theirResponse="true"]')
-				.removeClass(function(){
-					if(states.me.won || states.them.won || states.timedOut)
-						return("disabled unselected player1 player2");
-
-					// otherwise, we are waiting, so do nothing.
-                    else
-                        return("none");
-				})
-				.filter('[correct!="true"]').addClass("player2-incorrect");
-
-					// if neither is true
-						 // and round is over, visibility:hidden
-						 // otherwise, we are waiting, so do nothing
+		
+			var myResponses = this.getPlayerResponses( this.session.myPlayer.id, this.session.get( "game" ).game_questions[ states.questionData.itemNumber ].id );
+			var theirResponses = this.getPlayerResponses( this.session.theirPlayer.id, this.session.get( "game" ).game_questions[ states.questionData.itemNumber ].id );
+			var correctIndex = this.model.getCorrectIndex();
+			
+			this.updateResponses(theirResponses, correctIndex);				
+		
+			if(states.me.won)
+				$("#choice" + correctIndex).addClass("player1-correct");
+			else if(states.them.won)
+				$("#choice" + correctIndex).addClass("player2-correct");
+		
+		}
+	},
+	updateResponses : function (responses, correctIndex){
+		for (var j = 0; j < responses.length; j++)
+		{
+			if(responses[j] != correctIndex)
+				$("#choice" + responses[j]).addClass("player2-incorrect");
+			
 		}
 	},
 	

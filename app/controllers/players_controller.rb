@@ -87,6 +87,7 @@ class PlayersController < ApplicationController
 
 	
 	require 'pusher'
+	#require 'json'
 	
   # PUT /players/1
   # PUT /players/1.xml
@@ -124,8 +125,15 @@ class PlayersController < ApplicationController
 	Pusher.secret = '7d5f57f7b3b6c39317fb'
 	channel_to_use = "player-channel" + session.id.to_s
 	#Pusher['player-channel'].trigger('response-created',  {:some => 'data'})
-	#Pusher['player-channel'].trigger('session-updated', session.attributes) 
-	Pusher[channel_to_use].trigger('session-updated', ActiveSupport::JSON.decode( render_for_api :in_progress_session, :json => session, :root => :session )) 
+	#Pusher['player-channel'].trigger('session-updated', session.attributes)
+	jsonEncoded =  render_for_api :in_progress_session, :json => session, :root => :session 
+	unencoded = nil
+	#if(RAILS_ENV == 'Production')
+	#	unencoded = JSON.parse(jsonEncoded)
+	#else
+	unencoded = ActiveSupport::JSON.decode(jsonEncoded.to_s)
+	
+	Pusher[channel_to_use].trigger('session-updated', unencoded ) 
 	
 	
 	

@@ -1,6 +1,9 @@
 Dilo::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  # add this line
+  config.logger = Logger.new(STDOUT)
+
   # The production environment is meant for finished, "live" apps.
   # Code is not reloaded between requests
   config.cache_classes = true

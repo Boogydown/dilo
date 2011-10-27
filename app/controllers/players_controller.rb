@@ -126,12 +126,13 @@ class PlayersController < ApplicationController
 	channel_to_use = "player-channel" + session.id.to_s
 	#Pusher['player-channel'].trigger('response-created',  {:some => 'data'})
 	#Pusher['player-channel'].trigger('session-updated', session.attributes)
-	jsonEncoded =  render_for_api :in_progress_session, :json => session, :root => :session 
-	unencoded = nil
+	#jsonEncoded =  render_for_api :in_progress_session, :json => session, :root => :session 
+	unencoded = session.as_api_response(:in_progress_session)
+	
 	#if(RAILS_ENV == 'Production')
 	#	unencoded = JSON.parse(jsonEncoded)
 	#else
-	unencoded = ActiveSupport::JSON.decode(jsonEncoded.to_s)
+	#unencoded = ActiveSupport::JSON.decode(jsonEncoded)
 	
 	Pusher[channel_to_use].trigger('session-updated', unencoded ) 
 	

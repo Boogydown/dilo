@@ -21,7 +21,7 @@ App.Views.GameView = Backbone.View.extend({
 		WEB_SOCKET_DEBUG = true;
 
 		var pusher = new Pusher('adfabbe2548895aaece0');
-		var channel = pusher.subscribe('player-channel');
+		var channel = pusher.subscribe('player-channel' + this.session.id);
 		channel.bind('session-updated', this.pusherDateRecieved); 
 		//{
 		//  alert(data);

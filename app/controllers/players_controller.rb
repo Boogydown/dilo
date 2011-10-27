@@ -122,10 +122,10 @@ class PlayersController < ApplicationController
 	Pusher.app_id = '9510'
 	Pusher.key = 'adfabbe2548895aaece0'
 	Pusher.secret = '7d5f57f7b3b6c39317fb'
-
+	channel_to_use = "player-channel" + session.id.to_s
 	#Pusher['player-channel'].trigger('response-created',  {:some => 'data'})
 	#Pusher['player-channel'].trigger('session-updated', session.attributes) 
-	Pusher['player-channel'].trigger('session-updated', ActiveSupport::JSON.decode( render_for_api :in_progress_session, :json => session, :root => :session )) 
+	Pusher[channel_to_use].trigger('session-updated', ActiveSupport::JSON.decode( render_for_api :in_progress_session, :json => session, :root => :session )) 
 	
 	
 	

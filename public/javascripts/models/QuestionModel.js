@@ -33,7 +33,8 @@ App.Models.QuestionModel = App.Models.PollModel.extend({
 			prompt_image: questions[itemNum].prompt_image
 			
 		};
-	},
+	}
+	,
 	getCorrectIndex : function() 
 	{
 			var choices = this.getCurQuestion().choices;

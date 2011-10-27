@@ -71,6 +71,16 @@ App.Views.GameView = Backbone.View.extend({
 		}
 	   },
 
+	getSessionGameQuestion : function (id, game_questions){
+		for (var j = 0; j < game_questions.length; j++)
+		{
+			if(game_questions[j].id == id)
+				return game_questions[j];
+		}
+		return null;
+		
+	},
+
 	pusherDateRecieved : function (data){
 		console.log(data);
 		this.session.set(data);
@@ -83,7 +93,17 @@ App.Views.GameView = Backbone.View.extend({
 		console.log(this.model.get("itemNumber") + " of " + this.session.get( "game" ).game_questions.length )
 		var timeToWaitBeforeLoadingNextQuestion = 0;
         var qData = this.model.getCurQuestion();
-        var states;
+        var gQuestion = this.getSessionGameQuestion(this.model.getCurQuestion().id, this.session.get( "game" ).game_questions);
+		qData.currentGameQuestion = gQuestion;		
+		var states;
+		
+		var currentState =  this.session.get( "state" );
+		
+		if(this.session.get( "current_question" ) != this.model.get("itemNumber"))
+			currentState = "won";
+		else
+			currentState = "";
+		
 		switch ( this.session.get( "state" ) ) {
 			case "won":
 				this.timer.stop();
@@ -92,7 +112,9 @@ App.Views.GameView = Backbone.View.extend({
 				//return;
 				
 				// HACK
-				qData.winner = this.session.get( "game" ).game_questions[ qData.itemNumber ].winner;
+				//qData.winner = this.session.get( "game" ).game_questions[ qData.itemNumber ].winner;
+				qData.winner = gQuestion.winner;
+				
 				if(qData.winner)
 				{
 					var myID = this.session.myPlayer.id;
@@ -278,8 +300,8 @@ App.Views.GameView = Backbone.View.extend({
 		if(states)
 		{
 		
-			var myResponses = this.getPlayerResponses( this.session.myPlayer.id, this.session.get( "game" ).game_questions[ states.questionData.itemNumber ].id );
-			var theirResponses = this.getPlayerResponses( this.session.theirPlayer.id, this.session.get( "game" ).game_questions[ states.questionData.itemNumber ].id );
+			var myResponses = this.getPlayerResponses( this.session.myPlayer.id, states.questionData.currentGameQuestion.id );
+			var theirResponses = this.getPlayerResponses( this.session.theirPlayer.id, states.questionData.currentGameQuestion.id );
 			var correctIndex = this.model.getCorrectIndex();
 			
 			this.updateResponses(theirResponses, correctIndex);				

@@ -104,7 +104,7 @@ App.Views.GameView = Backbone.View.extend({
 		else
 			currentState = "";
 		
-		switch ( this.session.get( "state" ) ) {
+		switch ( currentState ) {
 			case "won":
 				this.timer.stop();
 				

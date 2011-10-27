@@ -117,7 +117,12 @@ class PlayersController < ApplicationController
 
     game_question.save
     session.save
-
+	
+	logger.debug "game_question attributes hash: #{game_question.attributes.inspect}"
+	
+	session = Session.find( json["sessionId"], :include=>[:game])
+	
+	
     @player.responses <<  response
 
 	Pusher.app_id = '9510'
@@ -128,6 +133,9 @@ class PlayersController < ApplicationController
 	#Pusher['player-channel'].trigger('session-updated', session.attributes)
 	#jsonEncoded =  render_for_api :in_progress_session, :json => session, :root => :session 
 	unencoded = session.as_api_response(:in_progress_session)
+	
+	logger.debug "unencoded: #{unencoded}"
+	
 	
 	#if(RAILS_ENV == 'Production')
 	#	unencoded = JSON.parse(jsonEncoded)

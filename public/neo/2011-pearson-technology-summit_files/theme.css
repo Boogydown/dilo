@@ -1,0 +1,23 @@
+
+/* main default header */
+#jive-global-header {
+    background: #000 url(../../../images/jive-bg-sprites.png) repeat-x 0 -100px;
+    border-bottom: 1px #000 solid;
+    }
+
+/* custom uploaded logo */
+#jive-global-header img {
+    border: none;
+    display: block;
+    position: relative;
+    }
+/* custom entered text */
+h1#jive-global-header-title {
+    color: #fff;
+    font-size: 1.7778em;
+    padding: 15px 15px 13px;
+    }
+h1#jive-global-header-title a.jive-global-header-titlelink {
+    color: #fff;
+    text-decoration: none;
+}

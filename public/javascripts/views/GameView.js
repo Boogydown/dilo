@@ -7,10 +7,29 @@
  */
 App.Views.GameView = Backbone.View.extend({
     initialize : function (options) {
-        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver", "getPlayerResponses" );
+        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver", "getPlayerResponses", "pusherDateRecieved" );
         this.session = options.session;
 		this.session.questionsModel = this.model;
 		this.player = this.session.myPlayer;
+		
+		// Enable pusher logging - don't include this in production
+		Pusher.log = function(message) {
+		  if (window.console && window.console.log) window.console.log(message);
+		};
+
+		// Flash fallback logging - don't include this in production
+		WEB_SOCKET_DEBUG = true;
+
+		var pusher = new Pusher('adfabbe2548895aaece0');
+		var channel = pusher.subscribe('player-channel');
+		channel.bind('session-updated', this.pusherDateRecieved); 
+		//{
+		//  alert(data);
+		//});
+		
+		//var channel = pusher.subscribe('player-channel');
+		//this.sesssionBackpusher = new Backpusher(channel, this.session);
+		//this.sesssionBackpusher.bind('remote_update', this.pusherDateRecieved);
     },
 
     start : function (){
@@ -33,7 +52,7 @@ App.Views.GameView = Backbone.View.extend({
 				if ( !this.timer ) {
 					this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
 					this.timer.bind( "complete", this.timerDone );
-                    this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
+                    //this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 30000 );
 				}
 				// re-align to new element (cuz we re-render at each question)
 				this.timer.el = $("#timerBar").get(0);
@@ -50,7 +69,14 @@ App.Views.GameView = Backbone.View.extend({
 			}
 			
 		}
-    },
+	   },
+
+	pusherDateRecieved : function (data){
+		console.log(data);
+		this.session.set(data);
+		this.sessionStateChange();
+		
+	},
 
 	// session pollfetch listener.  States originating from the server callback to here...
     sessionStateChange : function() {
@@ -91,6 +117,7 @@ App.Views.GameView = Backbone.View.extend({
                     this.showPlayerStates( states );
                     // wait a bit before loading next question...
 				    timeToWaitBeforeLoadingNextQuestion = 2400;
+					this.loadQuestion(this.session.get("current_question"));
                 }
 				break;
 			case "timedOut":
@@ -129,7 +156,7 @@ App.Views.GameView = Backbone.View.extend({
                         questionData: qData
                 };
                 this.showPlayerStates(states);
-                break;
+				break;
             case "nextQuestion":
                 this.loadQuestion(this.session.get("current_question"));
 
@@ -157,7 +184,7 @@ App.Views.GameView = Backbone.View.extend({
 				timeToWaitBeforeLoadingNextQuestion = 2400;
 				break;
 		}
-        this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 300000);
+        //this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 300000);
 	},
 	diloGameOver : function () {
 		//$(this.el).html( _.template( $("#gameOverTemplate").html(), this.session ) );

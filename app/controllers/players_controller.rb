@@ -85,6 +85,9 @@ class PlayersController < ApplicationController
       game_question_index
   end
 
+	
+	require 'pusher'
+	
   # PUT /players/1
   # PUT /players/1.xml
   def update
@@ -99,16 +102,16 @@ class PlayersController < ApplicationController
     response.game_question = game_question
     response.response_index = json["newResponse"]
 
-    if(option_is_correct(game_question.multiple_choices, response.response_index))
-      if(session.current_question == json["current_question"] )
-        session.current_question = session.current_question + 1
-	      session.state = "won"
-        game_question.winner = @player.id
-        game_question.winner_score = json["time"]
-        @player.score = @player.score + json["time"]
-      end
-    else
-      session.state = "incorrect"
+    if(session.current_question == json["current_question"] )
+    	if(option_is_correct(game_question.multiple_choices, response.response_index))
+			session.current_question = session.current_question + 1
+			session.state = "won"
+			game_question.winner = @player.id
+			game_question.winner_score = json["time"]
+			@player.score = @player.score + json["time"]
+		#else
+	  	#	session.state = "incorrect"
+		end
     end
 
     game_question.save
@@ -116,7 +119,16 @@ class PlayersController < ApplicationController
 
     @player.responses <<  response
 
+	Pusher.app_id = '9510'
+	Pusher.key = 'adfabbe2548895aaece0'
+	Pusher.secret = '7d5f57f7b3b6c39317fb'
 
+	#Pusher['player-channel'].trigger('response-created',  {:some => 'data'})
+	#Pusher['player-channel'].trigger('session-updated', session.attributes) 
+	Pusher['player-channel'].trigger('session-updated', ActiveSupport::JSON.decode( render_for_api :in_progress_session, :json => session, :root => :session )) 
+	
+	
+	
     respond_to do |format|
       if @player.save
         format.html { redirect_to(@player, :notice => 'Player was successfully updated.') }

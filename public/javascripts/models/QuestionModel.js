@@ -29,7 +29,9 @@ App.Models.QuestionModel = App.Models.PollModel.extend({
 			choices: gquestion.multiple_choices, 
 			answer: questions[itemNum].answer,
 			winner: gquestion.winner,
-			winnerScore: gquestion.winner_score
+			winnerScore: gquestion.winner_score,
+			prompt_image: questions[itemNum].prompt_image
+			
 		};
 	},
 	getCorrectIndex : function() 

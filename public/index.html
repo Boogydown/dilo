@@ -28,8 +28,11 @@
 	<script type="text/javascript" src="javascripts/views/GameOverView.js"></script>    
 	<script type="text/javascript" src="javascripts/views/TimerView.js"></script>
     <script type="text/javascript" src="javascripts/dilo-ui.js"></script>
+<!--
 
-	
+    <script type="text/javascript" src="javascripts/backpusher.js"></script>
+-->
+	<script src="http://js.pusherapp.com/1.9/pusher.min.js"></script>
 
 
     <script type="application/_template" id="loginTemplate">
@@ -120,6 +123,8 @@
                     <div id="stem">
                          <div>Question <%= (itemNumber + 1 )%>/<%= totalQuestions %></div>
                          <div id="prompt"><%= prompt%> </div>
+						 <div id="prompt"><img src="<%= prompt_image%>" alt="James Setaro has no profile image available" width="165"></a>  </div>
+						 
                          <div id="answer"><%= answer%></div>
                     </div>
              <!-- end stem -->
@@ -149,6 +154,12 @@
             </script>
         </div>
     </div>
+
     <div id="bottombar"></div>
+
+
+
+
+
 </body>
 </html>

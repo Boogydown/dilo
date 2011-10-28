@@ -71,8 +71,8 @@ class SessionsController < ApplicationController
     option.content = trim_to_comma(questions[current].answer)
     option.correct = true
 	
-    gameQuestion.prompt = questions[current].prompt
-	gameQuestion.answer = trim_to_comma(questions[current].answer)
+    gameQuestion.gprompt = questions[current].prompt
+	gameQuestion.ganswer = trim_to_comma(questions[current].answer)
 	
 	multiple_choices << option
 	unsorted = multiple_choices.to_a.sort_by {rand}
@@ -80,6 +80,7 @@ class SessionsController < ApplicationController
     unsorted.all? do |choice|
         gameQuestion.multiple_choices << choice
     end
+	gameQuestion.save
   end
 
   def trim_to_comma(answer)

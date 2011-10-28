@@ -24,13 +24,13 @@ App.Models.QuestionModel = App.Models.PollModel.extend({
 		return { 
 			id: gquestion.id,
 			itemNumber: itemNum /* + 1 - 1 */,
-			totalQuestions: questions.length,
-			prompt: gquestion[itemNum].prompt, 
+			totalQuestions: gquestion.length,
+			prompt: gquestion.gprompt, 
 			choices: gquestion.multiple_choices, 
-			answer: gquestion[itemNum].answer,
+			answer: gquestion.ganswer,
 			winner: gquestion.winner,
 			winnerScore: gquestion.winner_score,
-			prompt_image: questions[itemNum].prompt_image
+			prompt_image: null//questions[itemNum].prompt_image
 			
 		};
 	}

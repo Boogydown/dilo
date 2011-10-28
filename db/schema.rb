@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(:version => 20111028021454) do
     t.string   "state"
     t.integer  "winner"
     t.integer  "winner_score", :default => 0
-    t.string   "prompt"
-    t.string   "answer"
+    t.string   "gprompt"
+    t.string   "ganswer"
   end
 
   create_table "games", :force => true do |t|

@@ -28,7 +28,9 @@ class GameQuestion < ActiveRecord::Base
   api_accessible :questions_and_choices do |t|
     t.add :multiple_choices
     t.add :id
-
+	  t.add :gprompt
+	  t.add :ganswer
+	
   end
 
 

@@ -9,7 +9,7 @@ class Question < ActiveRecord::Base
 
   def self.random
     #self.find(:first, :offset => rand(self.all.size-1))
-	self.find(:first, :offset => rand(500))
+	self.find(:first, :offset => rand(15))
 	
 	#self.find(:first, :offset => 501 + rand(20))
 	#self.find(:first, :offset => rand(self.all.size-1), :conditions => ["questionset_id=?",  1])

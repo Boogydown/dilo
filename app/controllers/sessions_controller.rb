@@ -70,10 +70,12 @@ class SessionsController < ApplicationController
     option = MultipleChoice.new
     option.content = trim_to_comma(questions[current].answer)
     option.correct = true
-    #gameQuestion.multiple_choices << option
-    multiple_choices << option
-
-    unsorted = multiple_choices.to_a.sort_by {rand}
+	
+    gameQuestion.prompt = questions[current].prompt
+	gameQuestion.answer = trim_to_comma(questions[current].answer)
+	
+	multiple_choices << option
+	unsorted = multiple_choices.to_a.sort_by {rand}
 
     unsorted.all? do |choice|
         gameQuestion.multiple_choices << choice

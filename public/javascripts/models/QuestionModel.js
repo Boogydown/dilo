@@ -19,15 +19,15 @@ App.Models.QuestionModel = App.Models.PollModel.extend({
 	
 	getCurQuestion : function() {
 		var itemNum = this.get("itemNumber");
-		var questions = this.get("questions");
+		//var questions = this.get("questions");
 		var gquestion = this.get("game_questions")[itemNum];
 		return { 
 			id: gquestion.id,
 			itemNumber: itemNum /* + 1 - 1 */,
 			totalQuestions: questions.length,
-			prompt: questions[itemNum].prompt, 
+			prompt: gquestion[itemNum].prompt, 
 			choices: gquestion.multiple_choices, 
-			answer: questions[itemNum].answer,
+			answer: gquestion[itemNum].answer,
 			winner: gquestion.winner,
 			winnerScore: gquestion.winner_score,
 			prompt_image: questions[itemNum].prompt_image

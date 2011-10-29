@@ -125,6 +125,7 @@ class PlayersController < ApplicationController
 				message = 'won'
 				#response.content = game_question.ganswer
 				game_question.save
+				@player.save
       else#busted game, both players guessed wrong
         if(player_responded_incorrectly(session.players[0].responses, game_question) && player_responded_incorrectly(session.players[1].responses, game_question))
 					session.current_question = session.current_question + 1

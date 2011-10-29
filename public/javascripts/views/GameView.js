@@ -137,6 +137,10 @@ App.Views.GameView = Backbone.View.extend({
 				this.loadQuestion(this.session.get("current_question"));
 				timeToWaitBeforeLoadingNextQuestion = 1200;
 				break;
+			case "bust":
+				this.loadQuestion(this.session.get("current_question"));
+				timeToWaitBeforeLoadingNextQuestion = 1200;
+				break;
 			default:
 				timeToWaitBeforeLoadingNextQuestion = 2400;
 				break;
@@ -207,11 +211,9 @@ App.Views.GameView = Backbone.View.extend({
                 .removeClass("unselected")
                 .addClass("disabled");
 
-
+			this.model.set( {responseContent: target.textContent}, {silent:true} );
+			
             this.model.set( {pendingResponse:target.id.substr(target.id.length - 1)}, {silent:true} );
-            // in non-MC items (i.e. non single-action items), this will probably save pendingResponse to server
-
-            // this.choiceSelected = true;
             this.submit();
         // }
     },
@@ -284,6 +286,7 @@ App.Views.GameView = Backbone.View.extend({
 			"newResponse": resp,
 			"sessionId": this.session.id,
 			"time": myTime,
+			"responseContent": this.model.get("responseContent"),
 			"current_question":this.session.get("current_question")
 		});
 		console.log("sent: " + JSON.stringify(this.session.myPlayer) );

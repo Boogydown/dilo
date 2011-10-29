@@ -94,19 +94,26 @@ class PlayersController < ApplicationController
   def update
     @player = Player.find(params[:id])
     json = ActiveSupport::JSON.decode(request.raw_post)
+	time_taken = json["time"]
+
+	if(time_taken > 0)
+		response = Response.new
+		response.game_question_id = json["currentGameQuestion"]
+		response.response_index = json["newResponse"]
+		response.content = json["responseContent"]
+		@player.responses <<  response
+		@player.save
+	end
 
     session = Session.find( json["sessionId"], :include=>[:game])
 	message = nil
 	 
-	time_taken = json["time"]
+	
 	if(time_taken > 0)
 	
 		game = Game.find(session.game.id, :include=>[:game_questions])
 		game_question = GameQuestion.find(json["currentGameQuestion"], :include=>[:multiple_choices])
 		
-		response = Response.new
-		response.game_question = game_question
-		response.response_index = json["newResponse"]
 
 		if(session.current_question == json["current_question"] )
 			if(option_is_correct(game_question.multiple_choices, response.response_index))
@@ -116,17 +123,23 @@ class PlayersController < ApplicationController
 				game_question.winner_score = time_taken
 				@player.score = @player.score + time_taken
 				message = 'won'
+				#response.content = game_question.ganswer
 				game_question.save
-			end
+      else#busted game, both players guessed wrong
+        if(player_responded_incorrectly(session.players[0].responses, game_question) && player_responded_incorrectly(session.players[1].responses, game_question))
+					session.current_question = session.current_question + 1
+					message = 'bust'
+        end
+      end
 		end
-	    @player.responses <<  response
 
-	else
-		if(session.current_question == json["current_question"] )
-			session.current_question = session.current_question + 1
-		end
-		message = 'timedOut'
-	end
+  else
+      if(session.current_question == json["current_question"] )
+        session.current_question = session.current_question + 1
+        message = 'timedOut'
+      end
+
+  end
 	
     
     session.save
@@ -168,6 +181,22 @@ class PlayersController < ApplicationController
       end
     end
   end
+  
+  
+  def player_responded_incorrectly(responses, game_question)
+  	return_val = false
+    responses.each_with_index do |response, index|
+      if(response.game_question_id == game_question.id)
+          if(response.content != game_question.ganswer)
+            return_val = true
+          end
+      end
+    end
+  	return_val
+  
+  end
+  
+  
   def option_is_correct(multiple_choices, choice_index)
 
       return_val = false

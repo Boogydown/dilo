@@ -54,6 +54,7 @@ class SessionsController < ApplicationController
   def generate_choices(questions, gameQuestion, current)
     #choices = Hash.new
     selectable = []
+	logger.debug "questions.inspect: #{questions.inspect}"
     selectable = questions - [questions[current]]
     logger.debug "selectable.inspect: #{selectable.inspect}"
 	
@@ -65,7 +66,7 @@ class SessionsController < ApplicationController
     #randomly select 3 distractors(incorrect choices)
     for i in 0..2
     option = MultipleChoice.new
-	logger.debug "randomized[i].inspect: #{randomized[i].inspect}"
+	logger.debug "randomized#{i}.inspect: #{randomized[i].inspect}"
     option.content = trim_to_comma(randomized[i].answer)
     logger.debug "option.content: #{option.content}"
 	multiple_choices << option
@@ -116,12 +117,13 @@ class SessionsController < ApplicationController
       #questions = Question.find(:all, :order => "created_at ASC", :limit => 7 )
       questions = []
 
-      for i in 0..3
-        questions <<  Question.random
-      end
+      #for i in 0..3
+      #  questions <<  Question.random
+      #end
 
-
-      questions.all? do |question|
+	  questions = Question.find(:all, :order => "created_at ASC", :limit => 4 )
+      
+	  questions.all? do |question|
           @session.game.questions << question
       end
 

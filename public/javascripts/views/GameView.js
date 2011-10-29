@@ -177,7 +177,7 @@ App.Views.GameView = Backbone.View.extend({
 
 	
     //========= start question-specific logic =============
-	QUESTION_TIME : 35000,
+	QUESTION_TIME : 12000,
 	
 	// bind events to the answer choices
     events : {

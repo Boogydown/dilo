@@ -62,6 +62,7 @@ App.Routers.MainRouter = Backbone.Router.extend({
     },
 	showGameOver : function () {
 		( 
+				
 			this.curView = new App.Views.GameOverView({
 			el:this.mainEl,
 			session: this.session,

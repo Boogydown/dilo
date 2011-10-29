@@ -96,45 +96,52 @@ class PlayersController < ApplicationController
     json = ActiveSupport::JSON.decode(request.raw_post)
 
     session = Session.find( json["sessionId"], :include=>[:game])
-    game = Game.find(session.game.id, :include=>[:game_questions])
-    game_question = GameQuestion.find(json["currentGameQuestion"], :include=>[:multiple_choices])
+	message = nil
+	 
+	time_taken = json["time"]
+	if(time_taken > 0)
 	
-    response = Response.new
-    response.game_question = game_question
-    response.response_index = json["newResponse"]
+		game = Game.find(session.game.id, :include=>[:game_questions])
+		game_question = GameQuestion.find(json["currentGameQuestion"], :include=>[:multiple_choices])
+		
+		response = Response.new
+		response.game_question = game_question
+		response.response_index = json["newResponse"]
 
-    if(session.current_question == json["current_question"] )
-    	if(option_is_correct(game_question.multiple_choices, response.response_index))
-			session.current_question = session.current_question + 1
-			session.state = "won"
-			game_question.winner = @player.id
-			game_question.winner_score = json["time"]
-			@player.score = @player.score + json["time"]
-		#else
-	  	#	session.state = "incorrect"
+		if(session.current_question == json["current_question"] )
+			if(option_is_correct(game_question.multiple_choices, response.response_index))
+				session.current_question = session.current_question + 1
+				#session.state = "won"
+				game_question.winner = @player.id
+				game_question.winner_score = time_taken
+				@player.score = @player.score + time_taken
+				message = 'won'
+				game_question.save
+			end
 		end
-    end
+	    @player.responses <<  response
 
-    game_question.save
+	else
+		if(session.current_question == json["current_question"] )
+			session.current_question = session.current_question + 1
+		end
+		message = 'timedOut'
+	end
+	
+    
     session.save
 	
-	logger.debug "game_question attributes hash: #{game_question.attributes.inspect}"
-	
 	session = Session.find( json["sessionId"], :include=>[:game])
+	session.message = message
 	
-	
-    @player.responses <<  response
 
 	Pusher.app_id = '9510'
 	Pusher.key = 'adfabbe2548895aaece0'
 	Pusher.secret = '7d5f57f7b3b6c39317fb'
 	channel_to_use = "player-channel" + session.id.to_s
-	#Pusher['player-channel'].trigger('response-created',  {:some => 'data'})
-	#Pusher['player-channel'].trigger('session-updated', session.attributes)
-	#jsonEncoded =  render_for_api :in_progress_session, :json => session, :root => :session 
 	unencoded = session.as_api_response(:in_progress_session)
 	
-	logger.debug "unencoded: #{unencoded}"
+	#logger.debug "unencoded: #{unencoded}"
 	
 	
 	#if(RAILS_ENV == 'Production')

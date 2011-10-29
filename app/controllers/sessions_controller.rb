@@ -55,14 +55,20 @@ class SessionsController < ApplicationController
     #choices = Hash.new
     selectable = []
     selectable = questions - [questions[current]]
-    randomized = selectable.sample(3)
+    logger.debug "selectable.inspect: #{selectable.inspect}"
+	
+	randomized = selectable.sample(3)
     multiple_choices = []
+
+	
 
     #randomly select 3 distractors(incorrect choices)
     for i in 0..2
     option = MultipleChoice.new
+	logger.debug "randomized[i].inspect: #{randomized[i].inspect}"
     option.content = trim_to_comma(randomized[i].answer)
-    multiple_choices << option
+    logger.debug "option.content: #{option.content}"
+	multiple_choices << option
     #gameQuestion.multiple_choices << option
     end
 
@@ -70,6 +76,7 @@ class SessionsController < ApplicationController
     option = MultipleChoice.new
     option.content = trim_to_comma(questions[current].answer)
     option.correct = true
+	logger.debug "correct option.content: #{option.content}"
 	
     gameQuestion.gprompt = questions[current].prompt
 	gameQuestion.ganswer = trim_to_comma(questions[current].answer)

@@ -7,6 +7,7 @@ class Session < ActiveRecord::Base
     super( :include =>[:players, :game], :except=>[:name, :created_at,:updated_at])
   end
 
+  attr_accessor :message 
 
 
   acts_as_api
@@ -25,6 +26,8 @@ class Session < ActiveRecord::Base
       t.add :players
       t.add :game
       t.add :current_question
+	  t.add :message
+	  
   end
 
 

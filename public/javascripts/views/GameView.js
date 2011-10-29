@@ -7,7 +7,7 @@
  */
 App.Views.GameView = Backbone.View.extend({
     initialize : function (options) {
-        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver", "getPlayerResponses", "pusherDateRecieved" );
+        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver", "getPlayerResponses", "pusherDateRecieved", "timerDone" );
         this.session = options.session;
 		this.session.questionsModel = this.model;
 		this.player = this.session.myPlayer;
@@ -94,118 +94,60 @@ App.Views.GameView = Backbone.View.extend({
 		var timeToWaitBeforeLoadingNextQuestion = 0;
         var qData = this.model.getCurQuestion();
         var gQuestion = this.getSessionGameQuestion(this.model.getCurQuestion().id, this.session.get( "game" ).game_questions);
-		qData.currentGameQuestion = gQuestion;		
 		var states;
-		
 		var currentState =  this.session.get( "state" );
 		
-		if(this.session.get( "current_question" ) != this.model.get("itemNumber"))
-			currentState = "won";
-		else
-			currentState = "";
+		qData.currentGameQuestion = gQuestion;		
+		qData.winner = gQuestion.winner;
 		
-		switch ( currentState ) {
+				
+		states = {
+				timedOut:false,
+				me: {
+					won: qData.winner == this.session.myPlayer.id,
+					score: this.session.myPlayer.get("score"),
+					response : _.last(this.session.myPlayer.get( "responses" ))
+				},
+				them: {
+					won: qData.winner == this.session.theirPlayer.id,
+					score: this.session.theirPlayer.get("score"),
+					response : _.last(this.session.theirPlayer.get( "responses" ))
+				},
+				questionData: qData
+		};
+		this.showPlayerStates(states);
+		
+		
+		//ignore any messages from a past game(for instance a timer goes off for both players at roughly the same time)
+		if(this.session.get( "current_question" ) > this.model.get("itemNumber"))
+		{	
+			var message = this.session.get( "message" );
+			this.timer.stop();
+			switch ( message ) {
 			case "won":
-				this.timer.stop();
-				
-				//location.href = '#gameOver';
-				//return;
-				
-				// HACK
-				//qData.winner = this.session.get( "game" ).game_questions[ qData.itemNumber ].winner;
-				qData.winner = gQuestion.winner;
-				
 				if(qData.winner)
 				{
-					var myID = this.session.myPlayer.id;
-					
 					var id = $("#answer");
 					id[0].style.visibility = "visible";
-                    states = {
-                        me: {
-                            won: qData.winner == myID,
-                            score: this.session.myPlayer.get("score"),
-                            response : _.last(this.session.myPlayer.get( "responses" )),
-							
-                        },
-                        them: {
-                            won: qData.winner != myID,
-                            score: this.session.theirPlayer.get("score"),
-                            response : _.last(this.session.theirPlayer.get( "responses" )),
-						},
-                        questionData: qData
-                    };
-                    //$("#winner").text( states.me.won ? "You won!" : "You lost!" );
-                    this.showPlayerStates( states );
-                    // wait a bit before loading next question...
-				    timeToWaitBeforeLoadingNextQuestion = 2400;
+					timeToWaitBeforeLoadingNextQuestion = 2400;
 					this.loadQuestion(this.session.get("current_question"));
-                }
+				}
 				break;
 			case "timedOut":
-                this.timer.stop();
-				//TODO: this is where we mark both as losers and advance to next Question
-				states = {
-                        timedOut:true,
-                        me: {
-                            won: false,
-                            score: this.session.myPlayer.get("score"),
-                            response : _.last(this.session.myPlayer.get( "responses" ))
-                        },
-                        them: {
-                            won: false,
-                            score: this.session.theirPlayer.get("score"),
-                            response : _.last(this.session.theirPlayer.get( "responses" ))
-                        },
-                        questionData: qData
-                };
+				this.loadQuestion(this.session.get("current_question"));
 				timeToWaitBeforeLoadingNextQuestion = 1200;
-                this.showPlayerStates( states );
 				break;
-			case "incorrect":
-                states = {
-                        timedOut:false,
-                        me: {
-                            won: false,
-                            score: this.session.myPlayer.get("score"),
-                            response : _.last(this.session.myPlayer.get( "responses" ))
-                        },
-                        them: {
-                            won: false,
-                            score: this.session.theirPlayer.get("score"),
-                            response : _.last(this.session.theirPlayer.get( "responses" ))
-                        },
-                        questionData: qData
-                };
-                this.showPlayerStates(states);
-				break;
-            case "nextQuestion":
-                this.loadQuestion(this.session.get("current_question"));
-
-                break;
 			default:
-				//TODO: regardless of who was incorrect, just check players' responses and all are wrong
-				// timer does NOT stop, and we don't update the questions (i.e. session.current_question is still same #)
-                states = {
-                        timedOut:false,
-                        me: {
-                            won: false,
-                            score: this.session.myPlayer.get("score"),
-                            response : _.last(this.session.myPlayer.get( "responses" ))
-                        },
-                        them: {
-                            won: false,
-                            score: this.session.theirPlayer.get("score"),
-                            response : _.last(this.session.theirPlayer.get( "responses" ))
-                        },
-                        questionData: qData
-                };
-                this.showPlayerStates(states);
-
-				// immediately start pollfetch again...
 				timeToWaitBeforeLoadingNextQuestion = 2400;
 				break;
 		}
+			
+		}
+		else
+		{	
+			currentState = "";
+		}
+		
         //this.session.pollFetch( {success:this.sessionStateChange}, null, 1, 300000);
 	},
 	diloGameOver : function () {
@@ -231,7 +173,7 @@ App.Views.GameView = Backbone.View.extend({
 
 	
     //========= start question-specific logic =============
-	QUESTION_TIME : 12000,
+	QUESTION_TIME : 35000,
 	
 	// bind events to the answer choices
     events : {
@@ -348,9 +290,16 @@ App.Views.GameView = Backbone.View.extend({
     },
 	
 	timerDone : function (){
-		// TODO: notify of time out!
-		// TODO: session should return state "lost" or "timed out"
-        // this.session.state.set("timedOut");
-        // this.sessionStateChange();
+		var qData = this.model.getCurQuestion();
+		this.session.myPlayer.save({
+			"currentGameId": this.session.get("game").id,
+			"currentGameQuestion": qData.id,
+			"newResponse": null,
+			"sessionId": this.session.id,
+			"time": -1,
+			"current_question":this.session.get("current_question")
+		});
+		
+		
 	}	
 });

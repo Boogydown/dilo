@@ -7,11 +7,11 @@
  */
 App.Views.GameView = Backbone.View.extend({
     initialize : function (options) {
-        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver", "getPlayerResponses", "pusherDateRecieved", "timerDone" );
+        _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver", "getPlayerResponses", "pusherDateRecieved", "timerDone", "renderCountIn", "waitTimerDone" );
         this.session = options.session;
 		this.session.questionsModel = this.model;
 		this.player = this.session.myPlayer;
-		
+		this.timerWaiter = null;
 		// Enable pusher logging - don't include this in production
 		Pusher.log = function(message) {
 		  if (window.console && window.console.log) window.console.log(message);
@@ -23,17 +23,11 @@ App.Views.GameView = Backbone.View.extend({
 		var pusher = new Pusher('adfabbe2548895aaece0');
 		var channel = pusher.subscribe('player-channel' + this.session.id);
 		channel.bind('session-updated', this.pusherDateRecieved); 
-		//{
-		//  alert(data);
-		//});
-		
-		//var channel = pusher.subscribe('player-channel');
-		//this.sesssionBackpusher = new Backpusher(channel, this.session);
-		//this.sesssionBackpusher.bind('remote_update', this.pusherDateRecieved);
+
     },
 
     start : function (){
-        this.model.fetch( {success:this.loadQuestion} );
+        this.model.fetch( {success:this.renderCountIn} );
         this.gameOver = false;
     },
 
@@ -47,6 +41,7 @@ App.Views.GameView = Backbone.View.extend({
 			if(qNum < (this.model.get( "game_questions" ).length))
 			{
 				this.render();
+				$("#timerBar").show();
 			
 				// this must come after at least the first render since its div isn't in the DOM 'til afterward
 				if ( !this.timer ) {
@@ -91,7 +86,7 @@ App.Views.GameView = Backbone.View.extend({
 	// session pollfetch listener.  States originating from the server callback to here...
     sessionStateChange : function() {
 		console.log(this.model.get("itemNumber") + " of " + this.session.get( "game" ).game_questions.length )
-		var timeToWaitBeforeLoadingNextQuestion = 0;
+		var timeToWaitBeforeLoadingNextQuestion = 2400;
         var qData = this.model.getCurQuestion();
         var gQuestion = this.getSessionGameQuestion(this.model.getCurQuestion().id, this.session.get( "game" ).game_questions);
 		var states;
@@ -129,17 +124,14 @@ App.Views.GameView = Backbone.View.extend({
 				{
 					var id = $("#answer");
 					id[0].style.visibility = "visible";
-					timeToWaitBeforeLoadingNextQuestion = 2400;
-					this.loadQuestion(this.session.get("current_question"));
+					this.timerWaiter = setTimeout( this.renderCountIn, timeToWaitBeforeLoadingNextQuestion, this.session.get("current_question") );	
 				}
 				break;
 			case "timedOut":
-				this.loadQuestion(this.session.get("current_question"));
-				timeToWaitBeforeLoadingNextQuestion = 1200;
+				this.timerWaiter = setTimeout( this.renderCountIn, timeToWaitBeforeLoadingNextQuestion, this.session.get("current_question") );	
 				break;
 			case "bust":
-				this.loadQuestion(this.session.get("current_question"));
-				timeToWaitBeforeLoadingNextQuestion = 1200;
+				this.timerWaiter = setTimeout( this.renderCountIn, timeToWaitBeforeLoadingNextQuestion, this.session.get("current_question") );	
 				break;
 			default:
 				timeToWaitBeforeLoadingNextQuestion = 2400;
@@ -175,6 +167,27 @@ App.Views.GameView = Backbone.View.extend({
 		id[0].style.visibility = "hidden";
     },
 
+	renderCountIn : function () {
+		// replace element with contents of template processed with the questionModel data
+		
+		$(this.el).html( _.template( $("#gameTemplate").html(), this.session ) );
+		$("#timerBar").hide();
+		
+		var waitTime = $("#waitTime");
+		var waiter = $("#waiter");
+		
+		//$("#questionArea", $(this.el) ).html( _.template( $("#waitTime").html(), this.model ) );
+		
+		this.waitTimer = new App.Views.WaitTimerView({el:"#waiter", interval:10});
+		this.waitTimer.bind( "complete", this.waitTimerDone );
+		// re-align to new element (cuz we re-render at each question)
+		this.waitTimer.el = $("#waiter").get(0);
+		this.waitTimer.start( 3000 );
+		
+		
+	},
+
+	
 	
     //========= start question-specific logic =============
 	QUESTION_TIME : 12000,
@@ -292,6 +305,9 @@ App.Views.GameView = Backbone.View.extend({
 		console.log("sent: " + JSON.stringify(this.session.myPlayer) );
     },
 	
+	waitTimerDone : function (){
+		this.loadQuestion(this.session.get("current_question"));
+	},	
 	timerDone : function (){
 		var qData = this.model.getCurQuestion();
 		this.session.myPlayer.save({

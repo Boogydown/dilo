@@ -27,7 +27,9 @@
     <script type="text/javascript" src="javascripts/views/GameView.js"></script>
 	<script type="text/javascript" src="javascripts/views/GameOverView.js"></script>    
 	<script type="text/javascript" src="javascripts/views/TimerView.js"></script>
-    <script type="text/javascript" src="javascripts/dilo-ui.js"></script>
+    <script type="text/javascript" src="javascripts/views/WaitTimerView.js"></script>
+	
+	<script type="text/javascript" src="javascripts/dilo-ui.js"></script>
 <!--
 
     <script type="text/javascript" src="javascripts/backpusher.js"></script>
@@ -106,6 +108,8 @@
             </div>
 			<hr/>
 			<div id="timerBar" style="background-color:#DDDD00; width:100%; height:30px;"></div>
+			<div id="waiter"></div>
+			
         </div>
     </script>
 
@@ -123,8 +127,9 @@
                     <div id="stem">
                          <div>Question <%= (itemNumber + 1 )%>/<%= totalQuestions %></div>
                          <div id="prompt"><%= prompt%> </div>
+						 <!--
 						 <div id="prompt"><img src="<%= prompt_image%>" alt="James Setaro has no profile image available" width="165"></a>  </div>
-						 
+						 -->
                          <div id="answer"><%= answer%></div>
                     </div>
              <!-- end stem -->
@@ -135,6 +140,12 @@
             <div id="choice3" class="answerChoice"><%= choices[3].content %></div>
         </div>
     </script>
+
+	<script type="application/_template" id="waitTime">
+		<div id="betweenRoundWait">
+			 <div id="waiter"></div>
+		</div>
+	</script>
 
 
 

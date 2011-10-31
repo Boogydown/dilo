@@ -62,6 +62,18 @@ body
 	font-size: 24px;
 }
 
+#waiter{
+	width:320px;
+	height:480px;
+	margin-left:auto;
+	margin-right:auto;
+	font-family: CurseCasual;
+	font-size: 300px;
+	margin-top: 87px;
+	color:#ffffff;
+}
+
+
 .centered
 {
     margin-left: auto;

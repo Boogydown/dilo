@@ -103,7 +103,8 @@ App.Views.GameView = Backbone.View.extend({
 			gQuestion = this.getSessionGameQuestion(qData.id, this.session.get( "game" ).game_questions),
 			currentQTest = function(resp){return resp.game_question_id == gQuestion.id;},
 			pacingTime = 0,
-			curQ = this.session.get( "current_question" );
+			curQ = this.session.get( "current_question" ),
+			message = this.session.get( "message" );
 			
 		qData.currentGameQuestion = gQuestion;
 		qData.winner = gQuestion.winner;
@@ -122,7 +123,8 @@ App.Views.GameView = Backbone.View.extend({
 					responses : _.filter(this.session.theirPlayer.get( "responses" ), currentQTest)
 								 .map(function(resp){return resp.response_index;})
 				},
-				questionData: qData
+				questionData: qData,
+				message: message
 		};
 		this.showPlayerStates(states);
 				
@@ -134,7 +136,7 @@ App.Views.GameView = Backbone.View.extend({
 				this.timer.unbind();
 				this.timer = null;
 			}
-			switch ( this.session.get( "message" ) ) {
+			switch ( message ) {
 				case "won":
 					if(qData.winner)
 						pacingTime = 2400;
@@ -147,7 +149,7 @@ App.Views.GameView = Backbone.View.extend({
 			}
 			
 			if( curQ >= this.model.get( "game_questions" ).length)
-				this.diloGameOver();
+				setTimeout( this.diloGameOver, 3000 );
 			else if ( pacingTime )
 				setTimeout( this.renderCountIn, pacingTime );
 		}
@@ -186,7 +188,6 @@ App.Views.GameView = Backbone.View.extend({
 
 		// question styling...
 		$(".answerChoice", $(this.el)).addClass("unselected");
-		$("#answer").hide("fast");
         $("#choice0").click(this.acSelected);
         $("#choice1").click(this.acSelected);
         $("#choice2").click(this.acSelected);
@@ -195,24 +196,21 @@ App.Views.GameView = Backbone.View.extend({
 
 	// immediate reaction to UI
     acSelected : function ( ev ){
-		var target = ev.currentTarget;
-		var correctIndex = this.model.getCorrectIndex();
+		var target = ev.currentTarget,
+			correctIndex = this.model.getCorrectIndex();
 
+		if ( $(target).hasClass("disabled") ) 
+			return;
+			
 		$(target).removeClass("unselected");
 		
-		// mark my choice if incorrect...
+		// mark my choice if incorrect, and disabled others
 		if("choice" + correctIndex != target.id)
-			$(target).addClass("player1-incorrect");
+			this.setChoiceState( target, false, true, "player1");
 			
 		//else don't mark it correct because they /could/ beat you...
 			//$(target).addClass("player1-correct");
 			
-		// ...and disable others
-		$(target).siblings(".answerChoice")
-			.removeClass("unselected")
-			.addClass("disabled");
-		
-
 		this.model.set( {
 			responseContent: target.textContent,
 			pendingResponse: target.id.substr(target.id.length - 1)
@@ -227,33 +225,34 @@ App.Views.GameView = Backbone.View.extend({
 		if(states)
 		{
 			var correctIndex = this.model.getCorrectIndex();
-						
-			this.markIncorrects(states.them.responses, correctIndex, "player2-");
+
+			this.markIncorrects(states.them.responses, correctIndex, "player2");
 			// this is mostly useful in case both players choose wrong; we want both to show, us over them
-			this.markIncorrects(states.me.responses, correctIndex, "player1-");
+			this.markIncorrects(states.me.responses, correctIndex, "player1");
 		
-			$("#answer").show();			
 			if(states.me.won)
-				$("#choice" + correctIndex)
-                    .removeClass("disabled")
-                    .addClass("player1-correct");
+				this.setChoiceState( "#choice" + correctIndex, true, true, "player1" );
 			else if(states.them.won)
-				$("#choice" + correctIndex)
-                    .removeClass("disabled")
-                    .addClass("player2-correct");
-			else 
-				$("#answer").hide();				
+				this.setChoiceState( "#choice" + correctIndex, true, true, "player2" );
+			else if ( states.message == "bust" || states.message == "timedOut" )
+				$("#answer").show();			
 		}
 	},
 	
 	markIncorrects : function (responses, correctIndex, prefix){
 		for (var j = 0; j < responses.length; j++)
-		{
 			if(responses[j] != correctIndex)
-				$("#choice" + responses[j])
-                    .removeClass("disabled")
-                    .addClass(prefix + "incorrect");			
+				this.setChoiceState( "#choice" + responses[j], false, false, prefix );
+	},
+	
+	setChoiceState : function ( choiceEl, correct, disableOthers, prefix ){
+		if (correct){
+			deselectOthers = true; //turn off all others if correct
+			$("#answer").show();
 		}
+		$(choiceEl).removeClass("disabled").addClass(prefix +  (correct ? "-correct" : "-incorrect"));
+		if ( disableOthers )
+			$(choiceEl).siblings(".answerChoice").removeClass("unselected").addClass("disabled");
 	},
 	
     //=========== end question-specific logic ===============

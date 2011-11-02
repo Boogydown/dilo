@@ -240,6 +240,7 @@ body
 	font-size:16pt;
 	font-family: CurseCasual;
 	margin-top: -5px;
+	display: none;
 }
 
 
@@ -302,7 +303,6 @@ table#hor-minimalist-a tbody tr:hover td
 {
 	color: #009;
 }
-
 
 input#usernameEntry 
 { 

@@ -1,5 +1,4 @@
 App.Models.SessionModel = App.Models.PollModel.extend({
-    //url : "http://127.0.0.1:3000/sessions",
     railsModel : "sessions",
     defaults : {
         players : null,
@@ -16,31 +15,29 @@ App.Models.SessionModel = App.Models.PollModel.extend({
     },
 	
 	initialize : function ( options ) {
-		_.bindAll( this, "setPlayers", "setGameQuestions" );
+		_.bindAll( this, "setPlayers" );
+		this.bind( "change:players", this.setPlayers );
         this.myPlayer = new App.Models.PlayerModel();
         this.theirPlayer = new App.Models.PlayerModel();
-		this.questionsModel = options.questionsModel;
 	},
-	
+
+	// whenever session comes back it has updated player info, so let's set them every change
 	setPlayers : function () {
-		var players = this.get( "players" );
-		if ( _.isArray(players) ) 
+		var players = this.get( "players" ), myIndex;
+		if ( _.isArray(players) && players.length == 2 ) 
 		{
-			for (var j = 0; j < players.length; j++)
-			{
-				if(players[j].id != this.myPlayer.id)
-				{	
-					this.theirPlayer.set( players[j] );
-				}	
-			}
+			// figure out which one is me, and then set both respectively
+			myIndex = ( players[0].id == this.myPlayer.id ) ? 0 : 1; 			
+			this.myPlayer.set( players[ myIndex ] )
+			this.theirPlayer.set( players[ 1 - myIndex ] );
 		}
 	},
-	
-	
-	setGameQuestions : function() {
-		if ( this.questionsModel )
-			this.questionsModel.set( this.get( "game" ) );
+
+	finalize : function() {
+		this.unbind();
+		this.myPlayer = null;
+		this.theirPlayer = null;
+		this.clear();
 	}
-	
 });
 

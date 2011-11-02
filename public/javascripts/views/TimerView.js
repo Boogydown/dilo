@@ -1,12 +1,14 @@
 /**
  * A View for controlling the timer
  * constructor( options )
- *	options.el - div element to shrink via width %
+ *	options.el - div element containing tiner
  *	options.interval - ms between update
  * start( time )
  *	start the timer for "time" ms; when done it dispatches a "complete" event
  * stop ()
  *	stops timer and returns remaining time
+ * extend and override renderPercent to receive % left on timer
+ * extend and override renderMS to receive ms left on timer
  */
 App.Views.TimerView = Backbone.View.extend({
 	initialize : function( options ){
@@ -16,20 +18,20 @@ App.Views.TimerView = Backbone.View.extend({
 	},
 	
 	start : function( time ) {
-		if ( this.timerID ) return;
+		if ( this.timerID ) this.stop();
 		this.totalTime = time || 15000;
 		this.timeToStop = this.totalTime + new Date().getTime();
-		$(this.el).css("width","100%");
+		this._updateTimer();
 		this.timerID = setInterval( this._updateTimer, this.interval );
 	},
 	
 	stop : function () {
 		if ( this.timerID != null ) clearInterval( this.timerID );
 		this.timerID = null;
-		// return remaining time
 		return this.getTime();
 	},
 	
+	//return remaining time
 	getTime : function() {
 		return Math.ceil((this.timeToStop - new Date().getTime()) / 10);
 	},
@@ -41,7 +43,15 @@ App.Views.TimerView = Backbone.View.extend({
 			this.stop();
 			this.trigger( "complete" );
 		}
-		$(this.el).css("width", (timeLeft / this.totalTime * 100) + "%" );
-		$(this.el).text( Math.ceil(timeLeft / 10) );
+		this.renderMS( timeLeft );
+		this.renderPercent( timeLeft / this.totalTime * 100 );
+	},
+	
+	renderPercent : function ( p ) {	
+		$(this.el).css("width", p + "%" );
+	},
+	
+	renderMS : function ( ms ) {
+		$(this.el).text( Math.ceil(ms / 10) );
 	}	
 });

@@ -2,112 +2,62 @@
  * User: James Setaro
  */
 App.Views.GameOverView = Backbone.View.extend({
-	events : { "submit #replayForm" : "replay" },
-
 	initialize: function (options) {
 		_.bindAll(this, "render", "getCorrectChoice", "replay");
 		this.session = options.session;
 		this.questionsModel = options.questionsModel;
-		this.player = this.session.myPlayer;
-		
+		this.player = this.session.myPlayer;		
 	},
+
 	getCorrectChoice : function(choices) 
 	{
-			for(var i =0;i< choices.length; i++)
-			{
-				if(choices[i].correct)
-					return choices[i].content;
+		for(var i = 0;i < choices.length; i++)
+			if(choices[i].correct)
+				return choices[i].content;
+		return null;		
+	},
+
+	render : function() {
+		var game_questions = this.session.get("game").game_questions,
+			myID = this.session.myPlayer.id,
+			distractors = this.questionsModel.get("game_questions"),
+			currentQuestion, gameQ, winner,
+			myDisplayData = [],
+			i = 0;
+		//var questions = this.questionsModel.get("questions");
+	
+		for( ; i < game_questions.length; i++)
+		{
+			currentQuestion = this.questionsModel.getCurQuestion( i );
+			gameQ = game_questions[i];
+			switch ( gameQ.winner ) {
+				case myID : winner = this.session.myPlayer.get("name") ; break;
+				case null : winner = "[nada]" ; break;
+				default   : winner = this.session.theirPlayer.get("name"); break;
 			}
 			
-			return null;
-		
-	},
-	render : function() {
-		// replace element with contents of processed template
-		$(this.el).html( _.template( $("#gameOverTemplate").html(), this ));
-		
-		
-		$("#results").append("<br/><br/><br/>");
-		
-		var game_questions = this.session.get("game").game_questions;
-		var questions = this.questionsModel.get("questions");
-		var distractors = this.questionsModel.get("game_questions");
-		
-		var myID = this.session.myPlayer.id;
-		
-		var $wrap = $('<div>').attr('id', 'tableWrap');
-		var $tbl = $('<table>').attr('id', 'hor-minimalist-a');
-		
-		
-		
-		
-		
-		$tbl.append($('<thead>').append(
-						$('<tr>')
-								.append($('<th scope="col">').text("Question"),
-										$('<th scope="col">').text("Answer"),
-										$('<th scope="col">').text("Winnner")
-										)
-					   ));
-		
-		for(var i = 0; i < game_questions.length; i++)
-		{
-			this.questionsModel.set({"itemNumber" : i}, {silent: true});
-			var currentQuestion = this.questionsModel.getCurQuestion();
-			
-			var gameQ = game_questions[i];
-			var question = questions[i];
-			
-			var winner = this.session.myPlayer.get("name");
-			
-			
-			if(myID != gameQ.winner)
-				winner = this.session.theirPlayer.get("name") 
-		
-			$tbl.append(
-						$('<tr>')
-								.append($('<td>').text(currentQuestion.prompt),
-										$('<td>').text(this.getCorrectChoice(distractors[i].multiple_choices)),
-										$('<td>').text(winner)
-										)
-					   );
+			myDisplayData.push({
+				question: currentQuestion.prompt,
+				answer: this.getCorrectChoice(distractors[i].multiple_choices),
+				winner: winner
+			});
 		}
-
-		$wrap.append($tbl);
-		$('#results').append($wrap);
 		
-		
-		
-		
+		// replace element with contents of processed template
+		$(this.el).html( _.template( $("#gameOverTemplate").html(), {data:myDisplayData} ));
+		$("#replayForm").submit( this.replay );
 	},
-
-	
 
 	replay : function () {
-				
-		location.href = '#replay';
+		this.finalize('#home');
 	},
-
-	sessionCreated : function () {
-		var state = this.model.get("state");
-		switch ( state ){
-			case "waiting" :
-				$("#statusMsg").append("<p>Waiting for other player...</p>");
-				
-				// "waiting" means we were the first to create this session, so we're the [0] player in the session's players array
-				this.model.pollFetch({success:this.sessionCreated, error:this.syncError}, "state", 300, 60000 );
-				break;
-
-			case "active" :
-				//$("#statusMsg").html("<p>Paired with player " + this.model.theirPlayer.get("name") + 
-				//					 " with session id " + this.model.id + "!</p>" +
-				//                     );
-				location.href = '#play';
-				break;
-		}
-	},
-
-	syncError : function (model, response) {
-		console.log("Server failure!\n" + response);
+	
+	finalize : function( href ) {
+		// unbind all events
+		$("#replayForm").unbind();
+		this.session = null;
+		this.player = null;
+		href && (location.href = href);
 	}
+	
 });

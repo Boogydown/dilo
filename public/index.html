@@ -63,7 +63,23 @@
 					<button type="submit" id="replayButton">Play Again!</button>
 				</form>
 			</div>
-			<div id="results">
+			<div id="results"><br/><br/><br/>
+				<div id="tableWrap">
+					<table id="hor-minimalist-a">
+						<thead>
+							<tr>
+								<th scope="col">Question</th><th scope="col">Answer</th><th scope="col">Winner</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% _.each(data,function(datum){ %>
+							<tr>
+								<td><%=datum.question%></td><td><%=datum.answer%></td><td><%=datum.winner%></td>
+							</tr>
+							<% }); %>							
+						</tbody>
+					</table>
+				</div>
 			</div>
 			
 			
@@ -107,9 +123,8 @@
                 <div id="questionArea"></div>
             </div>
 			<hr/>
-			<div id="timerBar" style="background-color:#DDDD00; width:100%; height:30px;"></div>
-			<div id="waiter"></div>
-			
+			<div id="timerBar"></div>
+			<div id="waiter"></div>			
         </div>
     </script>
 

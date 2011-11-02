@@ -130,6 +130,7 @@ class PlayersController < ApplicationController
         if(player_responded_incorrectly(session.players[0].responses, game_question) && player_responded_incorrectly(session.players[1].responses, game_question))
 					session.current_question = session.current_question + 1
 					message = 'bust'
+		# else, the won message would've had to be sent first
         end
       end
 		end
@@ -141,13 +142,9 @@ class PlayersController < ApplicationController
       end
 
   end
-	
-    
-    session.save
-	
-	session = Session.find( json["sessionId"], :include=>[:game])
+	    
 	session.message = message
-	
+    session.save
 
 	Pusher.app_id = '9510'
 	Pusher.key = 'adfabbe2548895aaece0'

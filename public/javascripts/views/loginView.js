@@ -6,8 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 App.Views.LoginView = Backbone.View.extend({
-    events : { "submit #loginForm" : "sendPlayer" },
-
     initialize: function (options) {
         _.bindAll(this, "sendPlayer", "playerCreated", "sessionCreated", "syncError");
     },
@@ -15,17 +13,12 @@ App.Views.LoginView = Backbone.View.extend({
     render : function() {
         // replace element with contents of processed template
         $(this.el).html( _.template( $("#loginTemplate").html(), this ));
-		if(this.model.myPlayer)
-		{
-			//$('#loginForm').hide();
-			//this.playerCreated();	
-		}
-		
+		$("#loginForm").submit( this.sendPlayer );		
     },
 
     sendPlayer : function(  ) {
-        
 		console.log($("#usernameEntry").val());
+		
 		// model is player; populate name with value taken from input node of id usernameEntry
         this.model.myPlayer.save({
             name:$("#usernameEntry").val()
@@ -36,8 +29,7 @@ App.Views.LoginView = Backbone.View.extend({
         return false;
     },
 
-    playerCreated : function () {
-        		
+    playerCreated : function () {        		
 		$("#statusMsg").html("<p>Hello "+ this.model.myPlayer.get("name") + "!</p><br/><p>We are pairing you with a partner...</p>");
         
 		var opts = {
@@ -52,8 +44,6 @@ App.Views.LoginView = Backbone.View.extend({
 		};
 		var target = document.getElementById('spinner');
 		var spinner = new Spinner(opts).spin(target);
-		
-		
 		
 		this.model.save({
             playerId: this.model.myPlayer.id
@@ -78,12 +68,19 @@ App.Views.LoginView = Backbone.View.extend({
                 //$("#statusMsg").html("<p>Paired with player " + this.model.theirPlayer.get("name") + 
 				//					 " with session id " + this.model.id + "!</p>" +
                 //                     );
-				location.href = '#play';
+				this.finalize("#play");
                 break;
         }
     },
 
     syncError : function (model, response) {
 		console.log("Server failure!\n" + response);
-    }
+    },
+	
+	finalize : function( href ) {
+		// unbind all delegated events
+		$("#loginForm").unbind();		
+		this.model = null;
+		href && (location.href = href);
+	}
 });

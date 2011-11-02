@@ -1,0 +1,1 @@
+"C:\Program Files\RailsInstaller\Ruby1.8.7\bin\ruby.exe" -e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift) C:/Devel/dilo/script/rails server -b 127.0.0.1 -p 3000 -e development

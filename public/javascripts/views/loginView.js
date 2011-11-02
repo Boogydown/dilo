@@ -71,18 +71,14 @@ App.Views.LoginView = Backbone.View.extend({
                 $("#statusMsg").append("<p>Waiting for other player...</p>");
 				
 				// "waiting" means we were the first to create this session, so we're the [0] player in the session's players array
-				this.model.myIndex = 0;
-                this.model.pollFetch({success:this.sessionCreated, error:this.syncError}, "state", 300, 60000 );
+				this.model.pollFetch({success:this.sessionCreated, error:this.syncError}, "state", 300, 60000 );
                 break;
 
             case "active" :
                 //$("#statusMsg").html("<p>Paired with player " + this.model.theirPlayer.get("name") + 
 				//					 " with session id " + this.model.id + "!</p>" +
                 //                     );
-									 
-				// we don't do myIndex=1 here because regardless of your index you always get an "active" state, so 
-				//	everyone's myIndex would be 1.  We, instead, just make this default inside SessionModel
-                location.href = '#play';
+				location.href = '#play';
                 break;
         }
     },

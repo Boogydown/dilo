@@ -20,20 +20,22 @@ App.Models.SessionModel = App.Models.PollModel.extend({
         this.myPlayer = new App.Models.PlayerModel();
         this.theirPlayer = new App.Models.PlayerModel();
 		this.questionsModel = options.questionsModel;
-		this.myIndex = 1;
-		this.bind( "change:players", this.setPlayers );
-		//this.bind( "change:game", this.setGameQuestions );
 	},
 	
 	setPlayers : function () {
 		var players = this.get( "players" );
-		if ( _.isArray(players) && players.length > 1 ) {
-			// when session comes back from the server it has some player info, so
-			//	we'll apply some of the values to our players' models
-			this.myPlayer.set( players[this.myIndex] );
-			this.theirPlayer.set( players[1 - this.myIndex] );
+		if ( _.isArray(players) ) 
+		{
+			for (var j = 0; j < players.length; j++)
+			{
+				if(players[j].id != this.myPlayer.id)
+				{	
+					this.theirPlayer.set( players[j] );
+				}	
+			}
 		}
 	},
+	
 	
 	setGameQuestions : function() {
 		if ( this.questionsModel )

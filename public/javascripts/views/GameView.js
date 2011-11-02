@@ -10,6 +10,7 @@ App.Views.GameView = Backbone.View.extend({
         _.bindAll( this, "acSelected","render", "renderQuestion", "sessionStateChange", "loadQuestion", "diloGameOver", "getPlayerResponses", "pusherDateRecieved", "timerDone", "renderCountIn", "waitTimerDone" );
         this.session = options.session;
 		this.session.questionsModel = this.model;
+		this.session.setPlayers();
 		this.player = this.session.myPlayer;
 		this.timerWaiter = null;
 		// Enable pusher logging - don't include this in production

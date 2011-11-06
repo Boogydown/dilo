@@ -279,27 +279,25 @@ table#table1 {
 	margin-right:15%;
 }
 
-
-
-table#hor-minimalist-a
+table.hor-minimalist-a
 {
 	width:95%; 
 	margin-left:2.5%; 
 	margin-right:2.5%;
-	border-collapse: collapse;
-	text-align: left;
+	text-align: center;
+    border-collapse:separate;
 }
-table#hor-minimalist-a th
+table.hor-minimalist-a th
 {
 	padding: 10px 8px;
 	border-bottom: 2px solid #000000;
 }
-table#hor-minimalist-a td
+table.hor-minimalist-a td
 {
 	color: #000;
 	padding: 9px 8px 0px 8px;
 }
-table#hor-minimalist-a tbody tr:hover td
+table.hor-minimalist-a tbody tr:hover td
 {
 	color: #009;
 }
@@ -315,7 +313,37 @@ input#usernameEntry
 }
 
 #timerBar{
-	background-color:#DDDD00; 
+	background-image:url('../images/dilo_css_sprite.png');
+    background-position: 0px -640px;
 	width:100%; 
-	height:30px;
+	height:20px;
+}
+
+#tableWrap
+{
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:10pt;
+}
+
+#results-table
+{
+    height:160px;
+    overflow-y: auto;
+}
+
+.darker-cell
+{
+    background-color:#ffffff;
+    opacity:0.4;
+}
+
+.lighter-cell
+{
+    background-color:#ffffff;
+    opacity:0.3;
+}
+
+.opaque
+{
+    opacity:1;
 }

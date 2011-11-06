@@ -34,18 +34,17 @@
 
     <script type="text/javascript" src="javascripts/backpusher.js"></script>
 -->
-	<script src="http://js.pusherapp.com/1.9/pusher.min.js"></script>
+	<script type="text/javascript" src="http://js.pusherapp.com/1.9/pusher.min.js"></script>
 
 
     <script type="application/_template" id="loginTemplate">
         <div id="login">
-            <div data-role="header">
+            <div>
                 <h1>Welcome to Dilo!</h1>
             </div>
             <div data-role="content">
                 <form id="loginForm" action="" onsubmit="return false;">
-                    
-					<input id="usernameEntry" placeholder="User Name" type="text"></input>
+					<input id="usernameEntry" placeholder="User Name" type="text"/>
                     <button type="submit" id="loginDone">Play!</button>
                 </form>
                 <div id="statusMsg"></div>
@@ -58,32 +57,41 @@
 	<script type="application/_template" id="gameOverTemplate">
 		<div>
 			<div data-role="header">
-				<h1>GameOver!</h1>
-				<form id="replayForm" action="" onsubmit="return false;">
-					<button type="submit" id="replayButton">Play Again!</button>
-				</form>
+				<h1>Game Over</h1>
 			</div>
 			<div id="results"><br/><br/><br/>
 				<div id="tableWrap">
-					<table id="hor-minimalist-a">
-						<thead>
-							<tr>
-								<th scope="col">Question</th><th scope="col">Answer</th><th scope="col">Winner</th>
-							</tr>
-						</thead>
-						<tbody>
-							<% _.each(data,function(datum){ %>
-							<tr>
-								<td><%=datum.question%></td><td><%=datum.answer%></td><td><%=datum.winner%></td>
-							</tr>
-							<% }); %>							
-						</tbody>
-					</table>
+                    <div id="results-header">
+                        <table class="hor-minimalist-a">
+                             <thead>
+                                <tr>
+                                    <th scope="col">Question</th>
+                                    <th scope="col">Answer</th>
+                                    <th scope="col">Winner</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div id="results-table">
+                        <table class="hor-minimalist-a">
+                            <tbody>
+                                <% _.each(data,function(datum){ %>
+                                    <tr>
+                                        <td class="darker-cell"><span class="opaque"><%=datum.question%></span></td>
+                                        <td class="lighter-cell"><span class="opaque"><%=datum.answer%></span></td>
+                                        <td class="darker-cell"><span class="opaque"><%=datum.winner%></span></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
 				</div>
 			</div>
-			
-			
-		
+            <div>
+                <form id="replayForm" action="" onsubmit="return false;">
+					<button type="submit" id="replayButton">Play Again!</button>
+				</form>
+			</div>
 		</div>
 	</script>
 	
@@ -157,6 +165,7 @@
     </script>
 
 	<script type="application/_template" id="waitTime">
+         <div>Next question in...</div>
 		<div id="betweenRoundWait">
 			 <div id="waiter"></div>
 		</div>

@@ -104,8 +104,10 @@ class SessionsController < ApplicationController
   def create
 
     #look for an existing session
-    @session = Session.where(:state=>"waiting").order("created_at ASC").limit(1).first
-
+	
+    @session = Session.where("state='waiting' AND updated_at  between ? and ?", Time.now - 60, Time.now).order("created_at ASC").limit(1).first
+	
+	
     #can't find one? let's create one.
     if(@session.blank?)
       @session = Session.new

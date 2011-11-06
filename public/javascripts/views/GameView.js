@@ -13,7 +13,7 @@ App.Views.GameView = Backbone.View.extend({
 						 "loadQuestion", "diloGameOver", "pusherDataRecieved", 
 						 "timerDone", "renderCountIn", "waitTimerDone" );
         this.session = options.session;
-
+		this.model.set({"itemNumber" : 0}, {silent: true});
 		// !!!!!!!! Don't include in production !!!!!!!!!!!!!!!
 		// Enable pusher logging
 		Pusher.log = function(message) {
@@ -44,31 +44,25 @@ App.Views.GameView = Backbone.View.extend({
 	waitTimerDone : function (){
 		this.waitTimer.unbind();
 		this.waitTimer = null;
-		this.loadQuestion();
+		this.loadQuestion(this.session.get("current_question"));
 	},	
 	
 	loadQuestion : function( qNum ) {
-		isNaN(parseInt(qNum)) && (qNum = this.session.get("current_question"));
-
-		if ( qNum != this.model.get("itemNumber")) 
+		if(qNum < (this.model.get( "game_questions" ).length))
 		{
-			this.model.set({"itemNumber" : qNum}, {silent: true});
+			this.render();
 			
-			if(qNum < (this.model.get( "game_questions" ).length))
-			{
-				this.render();
-				
-				// we'll just create a new timer each question; doesn't cost much
-				$("#timerBar").show();
-				this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
-				this.timer.bind( "complete", this.timerDone );
-				this.timer.start( this.QUESTION_TIME );
-			}
-			else
-			{
-				this.diloGameOver();
-			}
+			// we'll just create a new timer each question; doesn't cost much
+			$("#timerBar").show();
+			this.timer = new App.Views.TimerView({el:"#timerBar", interval:100});
+			this.timer.bind( "complete", this.timerDone );
+			this.timer.start( this.QUESTION_TIME );
 		}
+		else
+		{
+			this.diloGameOver();
+		}
+	
 	},
 	
 	// timed out!
@@ -131,6 +125,9 @@ App.Views.GameView = Backbone.View.extend({
 		//ignore any messages from a past game(for instance a timer goes off for both players at roughly the same time)
 		if( curQ > this.model.get("itemNumber"))
 		{	
+			//update the current item number now.
+			this.model.set({"itemNumber" : curQ}, {silent: true});
+			
 			if ( this.timer ) {
 				this.timer.stop();
 				this.timer.unbind();

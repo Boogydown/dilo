@@ -121,8 +121,13 @@ class SessionsController < ApplicationController
       #  questions <<  Question.random
       #end
 
-	  questions = Question.find(:all, :order => "created_at ASC", :limit => 4 )
+	  #questions = Question.find(:all, :order => "created_at ASC", :limit => 4 )
+      questions = Question.where("questionset_id = 2")
       
+	  
+	  questions = questions.sample(6)
+	  
+	  
 	  questions.all? do |question|
           @session.game.questions << question
       end

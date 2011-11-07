@@ -7,9 +7,11 @@ App.Routers.MainRouter = Backbone.Router.extend({
 	
     routes: {
         "" : "showHome",
-        "home" : "showHome",
-        "play" : "showGame",
-		"gameOver" : "showGameOver",
+        "home" : 		"showHome",			// load the homescreen; start everything from scratch
+        "home/:player": "showHome",			// load the homescreen and login as :player
+        "play" : 		"showGame",
+		"gameOver" : 	"showGameOver",
+		"highScores" : 	"showHighScores"
     },
 
     initialize : function () {
@@ -19,21 +21,24 @@ App.Routers.MainRouter = Backbone.Router.extend({
 	/**
 	 * Shows the home/login screen.  All game sessions begin here.
 	 */
-    showHome : function () {
+    showHome : function ( playerId ) {
 		if ( this.curView ) 
 			this.curView.finalize();
 		if ( this.session )
 			this.session.finalize();
 		if ( this.curQ )
 			this.curQ.finalize();
-		
 		this.curQ = null;
+		
+		// remove /playerId, if it exists
+		this.navigate( "#home" );			
 		
         // create the login view and immediately render it
 		this.session = new App.Models.SessionModel();		
         (this.curView = new App.Views.LoginView({
             el:this.mainEl,
-            model: this.session
+            model: this.session,
+			playerId: playerId
         }) ).render();
     },
 	
@@ -77,6 +82,15 @@ App.Routers.MainRouter = Backbone.Router.extend({
 			el:this.mainEl,
 			session: this.session,
 			questionsModel: this.curQ
+		})).render();
+	},
+	
+	showHighScores : function () {
+		if ( this.curView ) 
+			this.curView.finalize();
+		(this.curView = new App.Views.HighScoresView({ 
+			el:this.mainEl,
+			session: this.session // it's ok if this is null; we're only using it for replay player name
 		})).render();
 	}
 	

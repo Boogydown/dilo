@@ -261,6 +261,13 @@ input#usernameEntry
     margin-top: 10px;
 }
 
+#highScoreTableDiv
+{
+	height:300px;
+	left:10px;
+	overflow:auto;
+}
+
 .namerow
 {
     display:block;

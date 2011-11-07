@@ -8,20 +8,30 @@
 App.Views.LoginView = Backbone.View.extend({
     initialize: function (options) {
         _.bindAll(this, "sendPlayer", "playerCreated", "sessionCreated", "syncError");
+		this.bootLoadPlayer = options.playerId || "";
     },
 
     render : function() {
         // replace element with contents of processed template
         $(this.el).html( _.template( $("#loginTemplate").html(), this ));
-		$("#loginForm").submit( this.sendPlayer );		
+		
+		// if init'd with playerid, then auto-login using that
+		if ( this.bootLoadPlayer ) {
+			$("#usernameEntry").val( this.bootLoadPlayer );
+			this.sendPlayer();
+		} else
+			$("#loginForm").submit( this.sendPlayer );		
     },
 
     sendPlayer : function(  ) {
-		console.log($("#usernameEntry").val());
-		
+		var username = $("#usernameEntry").val();
+		if ( !username ) return alert( "Name cannot be empty!" );
+		console.log( username );
+
 		// model is player; populate name with value taken from input node of id usernameEntry
         this.model.myPlayer.save({
-            name:$("#usernameEntry").val()
+            //id: username,
+            name: username
         },{
             success: this.playerCreated,
             error: this.syncError

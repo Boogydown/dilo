@@ -22,10 +22,12 @@
     <script type="text/javascript" src="javascripts/models/CoreModels.js"></script>
     <script type="text/javascript" src="javascripts/models/SessionModel.js"></script>
     <script type="text/javascript" src="javascripts/models/QuestionModel.js"></script>
+    <script type="text/javascript" src="javascripts/collections/PlayersColl.js"></script>
     <script type="text/javascript" src="javascripts/controllers/MainRouter.js"></script>
     <script type="text/javascript" src="javascripts/views/loginView.js"></script>
     <script type="text/javascript" src="javascripts/views/GameView.js"></script>
 	<script type="text/javascript" src="javascripts/views/GameOverView.js"></script>    
+	<script type="text/javascript" src="javascripts/views/HighScoresView.js"></script>    
 	<script type="text/javascript" src="javascripts/views/TimerView.js"></script>
     <script type="text/javascript" src="javascripts/views/WaitTimerView.js"></script>
 	
@@ -56,6 +58,27 @@
 
             </div>
             <div id="pairing">
+                <div id="statusMsg"></div>
+				<div id="spinner"></div>
+            </div>
+            <button id="startGameBtn" onclick="location.href='#play'" style="display:none">Start Game!</button>
+        </div>
+    </script>
+	
+    <script type="application/_template" id="highScoresTemplate">
+        <div id="login">
+            <div data-role="header">
+                <h1>Dilo High Scores</h1>
+            </div>
+            <div data-role="content">
+				<div id="highScoreTableDiv">
+					<table><tbody id="highScoreTable">
+					</tbody></table>
+				</div>
+                <form id="replayForm" action="" onsubmit="return false;">
+					<input id="usernameEntry" placeholder="User Name" type="text"></input>
+                    <button type="submit" id="loginDone" class="playButton">Play</button>
+                </form>
                 <div id="statusMsg"></div>
 				<div id="spinner"></div>
             </div>
@@ -123,7 +146,7 @@
 				</div>
 			</div>
             <div>
-                <button id="viewHighScores">View High Scores</button>
+                <button id="viewHighScores" onclick="location.href='#highScores'">View High Scores</button>
                 <form id="replayForm" action="" onsubmit="return false;">
 					<button type="submit" id="replayButton">Play Again!</button>
 				</form>

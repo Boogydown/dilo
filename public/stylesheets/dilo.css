@@ -62,17 +62,17 @@ body
 	font-size: 24px;
 }
 
-#waiter{
-	width:320px;
-	height:480px;
-	margin-left:auto;
-	margin-right:auto;
-	font-family: CurseCasual;
-	font-size: 300px;
-	margin-top: 87px;
-	color:#ffffff;
+.bodytext
+{
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:14pt;
+
 }
 
+.welcome
+{
+    font-size:24pt;
+}
 
 .centered
 {
@@ -81,9 +81,49 @@ body
     text-align: center;
 }
 
+
 .hideAtInit
 {
     display:none;
+}
+
+/* login screen styles */
+
+input#usernameEntry
+{
+	background: transparent url('../images/dilo_css_sprite.png') no-repeat;
+    background-position: 0px -760px;
+    border: 0;
+    width: 200px;
+	height: 45px;
+	padding: 3px;
+	font-size: 24px;
+	font-family: CurseCasual;
+    text-align:center;
+}
+
+#loginDone
+{
+    background: transparent url('../images/dilo_css_sprite.png') no-repeat;
+    background-position: -220px -760px;
+    border: 0;
+    width: 82px;
+	height: 49px;
+	padding: 0px;
+	font-size: 24px;
+	font-family: CurseCasual;
+    color:#ffffff;
+}
+
+#viewHighScores
+{
+    background: transparent url('../images/dilo_css_sprite.png') no-repeat;
+    background-position: 0px -820px;
+    border: 0;
+    width:171px;
+    height:49px;
+    font-size: 24px;
+	font-family: CurseCasual;
 }
 
 /* waiting screen styles */
@@ -127,6 +167,18 @@ body
 }
 
 /* countdown styles */
+
+#waiter{
+	width:320px;
+	height:480px;
+	margin-left:auto;
+	margin-right:auto;
+	font-family: CurseCasual;
+	font-size: 300px;
+	margin-top: 87px;
+	color:#ffffff;
+}
+
 
 #downer {
 	display: block;
@@ -273,6 +325,16 @@ body
     color:#000000;
 }
 
+#timerBar{
+	background-image:url('../images/dilo_css_sprite.png');
+    background-position: 0px -640px;
+	width:100%;
+	height:20px;
+}
+
+
+/* game over screen styles */
+
 table#table1 {
 	width:70%; 
 	margin-left:15%; 
@@ -302,23 +364,6 @@ table.hor-minimalist-a tbody tr:hover td
 	color: #009;
 }
 
-input#usernameEntry 
-{ 
-	width: 100px; 
-	height: 24px; 
-	border: 1px solid #999999; 
-	padding: 5px; 
-	font-size: 24px;
-	font-family: CurseCasual;
-}
-
-#timerBar{
-	background-image:url('../images/dilo_css_sprite.png');
-    background-position: 0px -640px;
-	width:100%; 
-	height:20px;
-}
-
 #tableWrap
 {
     font-family:Arial,Helvetica,sans-serif;
@@ -343,7 +388,14 @@ input#usernameEntry
     opacity:0.3;
 }
 
-.opaque
+#replayButton
 {
-    opacity:1;
+    background: transparent url('../images/dilo_css_sprite.png') no-repeat;
+    background-position: -190px -820px;
+    border: 0;
+    width:125px;
+    height:49px;
+    font-size: 24px;
+    color:#ffffff;
+	font-family: CurseCasual;
 }

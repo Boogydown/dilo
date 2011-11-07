@@ -6,7 +6,7 @@ App.Views.GameOverView = Backbone.View.extend({
 		_.bindAll(this, "render", "getCorrectChoice", "replay");
 		this.session = options.session;
 		this.questionsModel = options.questionsModel;
-		this.player = this.session.myPlayer;		
+		this.player = this.session.myPlayer;
 	},
 
 	getCorrectChoice : function(choices) 
@@ -44,7 +44,7 @@ App.Views.GameOverView = Backbone.View.extend({
 		}
 		
 		// replace element with contents of processed template
-		$(this.el).html( _.template( $("#gameOverTemplate").html(), {data:myDisplayData} ));
+		$(this.el).html( _.template( $("#gameOverTemplate").html(), {session:this.session, data:myDisplayData} ));
 		$("#replayForm").submit( this.replay );
 	},
 

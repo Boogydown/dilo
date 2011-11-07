@@ -30,7 +30,7 @@ App.Views.LoginView = Backbone.View.extend({
     },
 
     playerCreated : function () {        		
-		$("#statusMsg").html("<p>Hello "+ this.model.myPlayer.get("name") + "!</p><br/><p>We are pairing you with a partner...</p>");
+		$("#statusMsg").html("<p class='bodytext'>Hello "+ this.model.myPlayer.get("name") + "!</p><p class='bodytext'>We are pairing you with a partner...</p>");
         
 		var opts = {
 		  lines: 12, // The number of lines to draw

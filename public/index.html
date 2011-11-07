@@ -39,14 +39,20 @@
 
     <script type="application/_template" id="loginTemplate">
         <div id="login">
+            <img src="logo.jpg" width="150" height="100" alt="placeholder for dilo logo"/>
             <div>
-                <h1>Welcome to Dilo!</h1>
+                <h1 class="welcome">Welcome to DILO.</h1>
             </div>
+            <br clear="all"/>
             <div data-role="content">
+                <p class="bodytext">Enter your User Name and click Play to begin.</p>
+
                 <form id="loginForm" action="" onsubmit="return false;">
 					<input id="usernameEntry" placeholder="User Name" type="text"/>
                     <button type="submit" id="loginDone">Play!</button>
                 </form>
+                <br/>
+                <button id="viewHighScores" class="centered">View High Scores</button>
                 <div id="statusMsg"></div>
 				<div id="spinner"></div>
             </div>
@@ -56,10 +62,36 @@
 	
 	<script type="application/_template" id="gameOverTemplate">
 		<div>
-			<div data-role="header">
+            <!-- start scores -->
+                <div id="player1" class="scorebox">
+                    <div class="scorerow">
+                        <div class="scoreIcon"></div>
+                        <div class="scoreNumber">
+                            <div id="myScore" class="scoreScore"><%= session.myPlayer.get("score") %></div>
+                        </div>
+                    </div>
+                    <br clear="all"/>
+                    <div class="namerow">
+                         <div class="playerName centered"><%= session.myPlayer.get("name") %></div>
+                    </div>
+                </div>
+                <div id="player2" class="scorebox">
+                     <div class="scorerow">
+                        <div class="scoreIcon"></div>
+                        <div class="scoreNumber">
+                            <div id="theirScore" class="scoreScore"><%= session.theirPlayer.get("score") %></div>
+                        </div>
+                    </div>
+                    <br clear="all"/>
+                    <div class="namerow">
+                         <div class="playerName centered"><%= session.theirPlayer.get("name") %></div>
+                    </div>
+                </div>
+                <!-- end scores -->
+			<div>
 				<h1>Game Over</h1>
 			</div>
-			<div id="results"><br/><br/><br/>
+			<div id="results">
 				<div id="tableWrap">
                     <div id="results-header">
                         <table class="hor-minimalist-a">
@@ -88,6 +120,7 @@
 				</div>
 			</div>
             <div>
+                <button id="viewHighScores">View High Scores</button>
                 <form id="replayForm" action="" onsubmit="return false;">
 					<button type="submit" id="replayButton">Play Again!</button>
 				</form>

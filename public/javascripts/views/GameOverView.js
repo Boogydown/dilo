@@ -58,10 +58,14 @@ App.Views.GameOverView = Backbone.View.extend({
             $(this).removeClass("highScoresDown");
             $(this).addClass("highScoresUp");
         });
+		
+		// we're done with this session, so let's toss it!
+		//this.session.destroy();
+		this.session.save({state:"over"});
 	},
 
 	replay : function () {
-		finalize("#home/" + this.session.myPlayer.id );
+		this.finalize("#home/" + this.session.myPlayer.id);
 	},
 	
 	finalize : function( href ) {

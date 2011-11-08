@@ -23,6 +23,7 @@
     <script type="text/javascript" src="javascripts/models/SessionModel.js"></script>
     <script type="text/javascript" src="javascripts/models/QuestionModel.js"></script>
     <script type="text/javascript" src="javascripts/collections/PlayersColl.js"></script>
+    <script type="text/javascript" src="javascripts/collections/SessionsColl.js"></script>
     <script type="text/javascript" src="javascripts/controllers/MainRouter.js"></script>
     <script type="text/javascript" src="javascripts/views/loginView.js"></script>
     <script type="text/javascript" src="javascripts/views/GameView.js"></script>
@@ -46,17 +47,15 @@
             <div>
                 <h1 class="welcome">Welcome to DILO.</h1>
             </div>
-            <br clear="all"/>
             <div id="loginInputs">
-                <p class="bodytext centered">Enter your User Name and click Play to begin.</p>
-
+                <p class="bodytext centered"><br/>Enter your User Name and click Play to begin.</p>
                 <form id="loginForm" action="" onsubmit="return false;">
 					<input id="usernameEntry" placeholder="User Name" type="text"/>
                     <button type="submit" id="loginDone" class="loginUp">Play!</button>
                 </form>
                 <br/>
                 <button id="viewHighScores" class="highScoresUp centered" onclick="location.href='#highScores'">View High Scores</button>
-
+				<div id="numPlayers" style="color:white;"></div>
             </div>
             <div id="pairing">
                 <div id="statusMsg"></div>
@@ -225,7 +224,7 @@
     </script>
 
 	<script type="application/_template" id="waitTime">
-         <div>Next question in...</div>
+        <div>Next question in...</div>
 		<div id="betweenRoundWait">
 			 <div id="waiter"></div>
 		</div>

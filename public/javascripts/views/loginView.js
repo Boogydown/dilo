@@ -7,13 +7,16 @@
  */
 App.Views.LoginView = Backbone.View.extend({
     initialize: function (options) {
-        _.bindAll(this, "sendPlayer", "playerCreated", "sessionCreated", "syncError");
+        _.bindAll(this, "sendPlayer", "playerCreated", "sessionCreated", "syncError" );
 		this.bootLoadPlayer = options.playerId || "";
     },
 
     render : function() {
         // replace element with contents of processed template
         $(this.el).html( _.template( $("#loginTemplate").html(), this ));
+		var sessions = new App.Collections.SessionsColl();
+		sessions.bind( "reset", this.sessionsFetched );
+		sessions.fetch();
 		
 		// if init'd with playerid, then auto-login using that
 		if ( this.bootLoadPlayer ) {
@@ -47,25 +50,29 @@ App.Views.LoginView = Backbone.View.extend({
         });
     },
 
+	sessionsFetched : function( sessionsColl ) {
+		$("#numPlayers").text( (sessionsColl.numPlayers) + " people are playing now!" );
+		sessionsColl.unbind();
+		delete sessionsColl;
+	},
+	
     sendPlayer : function(  ) {
 		var username = $("#usernameEntry").val();
 		if ( !username ) return alert( "Name cannot be empty!" );
-		console.log( username );
-
-		// model is player; populate name with value taken from input node of id usernameEntry
-        this.model.myPlayer.save({
-            //id: username,
-            name: username
-        },{
-            success: this.playerCreated,
-            error: this.syncError
-        });
+		
+		console.log( "Player " + username + " logging in.");
+		this.model.myPlayer.save({
+			name: username
+		},{
+			success: this.playerCreated,
+			error: this.syncError
+		});
         return false;
     },
 
     playerCreated : function () {
-        $("#loginInputs").css('display','none')
-		$("#statusMsg").html("<p>Hello "+ this.model.myPlayer.get("name") + "!</p><p>We are pairing you with a partner...</p>");
+        $("#loginInputs").hide();
+		$("#statusMsg").html("<p><br/>Hello "+ this.model.myPlayer.get("name") + "!<br/>We are pairing you with a partner...</p>");
         
 		var opts = {
 		  lines: 12, // The number of lines to draw
@@ -100,16 +107,19 @@ App.Views.LoginView = Backbone.View.extend({
                 break;
 
             case "active" :
-                //$("#statusMsg").html("<p>Paired with player " + this.model.theirPlayer.get("name") + 
-				//					 " with session id " + this.model.id + "!</p>" +
-                //                     );
 				this.finalize("#play");
                 break;
         }
     },
 
     syncError : function (model, response) {
-		console.log("Server failure!\n" + response);
+		if ( model.poll && model.poll.timedout ) {
+			if ( confirm("Did not find a player yet!  Would you like to keep trying?") )
+				location.href="#home/" + this.model.myPlayer.get("name");
+			else
+				location.href="/";
+		} else
+			console.log("Server failure!  Could not pair you. :(\n" + response);
     },
 	
 	finalize : function( href ) {

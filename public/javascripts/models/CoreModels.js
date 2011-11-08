@@ -28,6 +28,7 @@ App.Models.PollModel = App.Models.RailsModel.extend({
     // put into the prototype, thus it's static and will prevent more than one pollFetch at a time (for now)
     poll : {
         polling: false,
+		timedout: false,
         next: function() {
             if ( this.polling ){
 				console.log( "next poll for " + this.changeStr );
@@ -37,10 +38,12 @@ App.Models.PollModel = App.Models.RailsModel.extend({
         stop: function( timedout ) {
 			if ( ! this.polling ) console.log( "poll stopping (timedout:" + timedout + ")" );
             this.model.unbind( this.changeStr, this.model._pollChangedHandler);			
-            if ( timedout && this.polling )
-                this.options.error();
+            this.timedout = timedout && this.polling;
 			clearTimeout( this.timeoutID );
 			this.polling = false;
+			if ( this.timedout ) 
+				this.options.error( );
+			this.timedout = false;
         }
     },
 
@@ -91,6 +94,7 @@ App.Models.PlayerModel = App.Models.PollModel.extend({
     railsModel : "players",
     defaults: {
         name:"",
+		time:-1,
         level:0,
         ranking:0,
 		score:0,

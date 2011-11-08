@@ -41,20 +41,21 @@
 
     <script type="application/_template" id="loginTemplate">
         <div id="login">
-            <img src="logo.jpg" width="150" height="100" alt="placeholder for dilo logo"/>
+            <br/>
+            <div id="dilologo" class="centered"/>
             <div>
                 <h1 class="welcome">Welcome to DILO.</h1>
             </div>
             <br clear="all"/>
             <div id="loginInputs">
-                <p class="bodytext">Enter your User Name and click Play to begin.</p>
+                <p class="bodytext centered">Enter your User Name and click Play to begin.</p>
 
                 <form id="loginForm" action="" onsubmit="return false;">
 					<input id="usernameEntry" placeholder="User Name" type="text"/>
-                    <button type="submit" id="loginDone">Play!</button>
+                    <button type="submit" id="loginDone" class="loginUp">Play!</button>
                 </form>
                 <br/>
-                <button id="viewHighScores" class="centered">View High Scores</button>
+                <button id="viewHighScores" class="highScoresUp centered" onclick="location.href='#highScores'">View High Scores</button>
 
             </div>
             <div id="pairing">
@@ -146,7 +147,7 @@
 				</div>
 			</div>
             <div>
-                <button id="viewHighScores" onclick="location.href='#highScores'">View High Scores</button>
+                <button id="viewHighScores" class="highScoresUp" onclick="location.href='#highScores'">View High Scores</button>
                 <form id="replayForm" action="" onsubmit="return false;">
 					<button type="submit" id="replayButton">Play Again!</button>
 				</form>

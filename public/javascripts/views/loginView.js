@@ -20,7 +20,31 @@ App.Views.LoginView = Backbone.View.extend({
 			$("#usernameEntry").val( this.bootLoadPlayer );
 			this.sendPlayer();
 		} else
-			$("#loginForm").submit( this.sendPlayer );		
+			$("#loginForm").submit( this.sendPlayer );
+
+        $("#loginDone").mousedown(function()
+        {
+            $(this).removeClass("loginUp");
+            $(this).addClass("loginDown");
+        });
+
+         $("#loginDone").mouseup(function()
+        {
+            $(this).removeClass("loginDown");
+            $(this).addClass("loginUp");
+        });
+
+        $("#viewHighScores").mousedown(function()
+        {
+            $(this).removeClass("highScoresUp");
+            $(this).addClass("highScoresDown");
+        });
+
+         $("#viewHighScores").mouseup(function()
+        {
+            $(this).removeClass("highScoresDown");
+            $(this).addClass("highScoresUp");
+        });
     },
 
     sendPlayer : function(  ) {

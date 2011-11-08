@@ -398,7 +398,7 @@ table.hor-minimalist-a th
 table.hor-minimalist-a td
 {
 	color: #000;
-	padding: 9px 8px 0px 8px;
+	padding: 0px 0px 0px 0px;
 }
 table.hor-minimalist-a tbody tr:hover td
 {
@@ -417,10 +417,12 @@ table.hor-minimalist-a tbody tr:hover td
     overflow-y: auto;
 }
 
-.darker-cell
+.results-row
 {
-    background-color:#ffffff;
-    opacity:0.4;
+    background: transparent url('../images/dilo_css_sprite.png') no-repeat;
+    background-position: 0px -1110px;
+    width:294px;
+    height:22px;
 }
 
 .lighter-cell

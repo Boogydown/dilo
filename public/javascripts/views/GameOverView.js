@@ -46,6 +46,18 @@ App.Views.GameOverView = Backbone.View.extend({
 		// replace element with contents of processed template
 		$(this.el).html( _.template( $("#gameOverTemplate").html(), {session:this.session, data:myDisplayData} ));
 		$("#replayForm").submit( this.replay );
+
+         $("#viewHighScores").mousedown(function()
+        {
+            $(this).removeClass("highScoresUp");
+            $(this).addClass("highScoresDown");
+        });
+
+         $("#viewHighScores").mouseup(function()
+        {
+            $(this).removeClass("highScoresDown");
+            $(this).addClass("highScoresUp");
+        });
 	},
 
 	replay : function () {

@@ -135,10 +135,10 @@
                         <table class="hor-minimalist-a">
                             <tbody>
                                 <% _.each(data,function(datum){ %>
-                                    <tr>
-                                        <td class="darker-cell"><span class="opaque"><%=datum.question%></span></td>
-                                        <td class="lighter-cell"><span class="opaque"><%=datum.answer%></span></td>
-                                        <td class="darker-cell"><span class="opaque"><%=datum.winner%></span></td>
+                                    <tr class="results-row">
+                                        <td><%=datum.question%></span></td>
+                                        <td><%=datum.answer%></span></td>
+                                        <td><%=datum.winner%></span></td>
                                     </tr>
                                 <% }); %>
                             </tbody>

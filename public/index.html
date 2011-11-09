@@ -4,6 +4,7 @@
 <head>
     <title>Welcome to Dilo!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css"/>
     <link rel="stylesheet" href="stylesheets/dilo.css" />
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
@@ -27,11 +28,11 @@
     <script type="text/javascript" src="javascripts/controllers/MainRouter.js"></script>
     <script type="text/javascript" src="javascripts/views/loginView.js"></script>
     <script type="text/javascript" src="javascripts/views/GameView.js"></script>
-	<script type="text/javascript" src="javascripts/views/GameOverView.js"></script>    
-	<script type="text/javascript" src="javascripts/views/HighScoresView.js"></script>    
+	<script type="text/javascript" src="javascripts/views/GameOverView.js"></script>
+	<script type="text/javascript" src="javascripts/views/HighScoresView.js"></script>
 	<script type="text/javascript" src="javascripts/views/TimerView.js"></script>
     <script type="text/javascript" src="javascripts/views/WaitTimerView.js"></script>
-	
+
 	<script type="text/javascript" src="javascripts/dilo-ui.js"></script>
 <!--
 
@@ -64,7 +65,7 @@
             <button id="startGameBtn" onclick="location.href='#play'" style="display:none">Start Game!</button>
         </div>
     </script>
-	
+
     <script type="application/_template" id="highScoresTemplate">
         <div id="login">
             <div data-role="header">
@@ -85,7 +86,7 @@
             <button id="startGameBtn" onclick="location.href='#play'" style="display:none">Start Game!</button>
         </div>
     </script>
-	
+
 	<script type="application/_template" id="gameOverTemplate">
 		<div>
             <!-- start scores -->
@@ -153,7 +154,7 @@
 			</div>
 		</div>
 	</script>
-	
+
 
     <script type="application/_template" id="gameTemplate">
         <div id="game">
@@ -191,7 +192,7 @@
             </div>
 			<hr/>
 			<div id="timerBar"></div>
-			<div id="waiter"></div>			
+			<div id="waiter"></div>
         </div>
     </script>
 

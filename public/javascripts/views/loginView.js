@@ -60,20 +60,17 @@ App.Views.LoginView = Backbone.View.extend({
 		var username = $("#usernameEntry").val();
 		if ( !username ) return alert( "Name cannot be empty!" );
 		
+		
+		$("#usernameEntry").attr("disabled", true);
+		$('#loginDone').attr("disabled", true);
+		
 		console.log( "Player " + username + " logging in.");
-		this.model.myPlayer.save({
-			name: username
-		},{
-			success: this.playerCreated,
-			error: this.syncError
-		});
-        return false;
-    },
-
-    playerCreated : function () {
-        $("#loginInputs").hide();
-		$("#statusMsg").html("<p><br/>Hello "+ this.model.myPlayer.get("name") + "!<br/>We are pairing you with a partner...</p>");
-        
+		
+		$("#statusMsg").html("<p><br/>Hello "+ username  + "!<br/>We are pairing you with a partner...</p>");
+       
+		
+		$("#loginInputs").hide();
+		
 		var opts = {
 		  lines: 12, // The number of lines to draw
 		  length: 7, // The length of each line
@@ -87,6 +84,19 @@ App.Views.LoginView = Backbone.View.extend({
 		var target = document.getElementById('spinner');
 		var spinner = new Spinner(opts).spin(target);
 		
+		
+		this.model.myPlayer.save({
+			name: username
+		},{
+			success: this.playerCreated,
+			error: this.syncError
+		});
+        return false;
+		
+    },
+
+    playerCreated : function () {
+        
 		this.model.save({
             playerId: this.model.myPlayer.id
         },{
@@ -97,7 +107,9 @@ App.Views.LoginView = Backbone.View.extend({
 
     sessionCreated : function () {
 		$('#loginForm').hide();
-        var state = this.model.get("state");
+        
+		 
+		var state = this.model.get("state");
         switch ( state ){
             case "waiting" :
                 $("#statusMsg").append("<p>Waiting for other player...</p>");

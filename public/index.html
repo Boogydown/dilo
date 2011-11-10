@@ -13,6 +13,13 @@
        $(document).bind("mobileinit",function(){
             $.mobile.hashListeningEnabled = false;
        });
+   
+	   $(function () {
+		  $(window).load(function () {
+			$(':input:visible:enabled:first').focus();
+		  });
+		})
+	   
     </script>
     <script type="text/javascript" src="javascripts/json2.js"></script>
     <script type="text/javascript" src="javascripts/underscore.js"></script>
@@ -40,6 +47,8 @@
 -->
 	<script type="text/javascript" src="http://js.pusherapp.com/1.9/pusher.min.js"></script>
 
+	
+	
 
     <script type="application/_template" id="loginTemplate">
         <div id="login">

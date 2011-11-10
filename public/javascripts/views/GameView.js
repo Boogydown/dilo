@@ -201,9 +201,16 @@ App.Views.GameView = Backbone.View.extend({
 			
 		$(target).removeClass("unselected");
 		
-		// mark my choice if incorrect, and disabled others
-		if("choice" + correctIndex != target.id)
+		if("choice" + correctIndex == target.id)
+		{
+			$(target).removeClass("disabled").addClass("player1");
+			$(target).siblings(".answerChoice").removeClass("unselected").addClass("disabled");
+		}
+		else
+		{
 			this.setChoiceState( target, false, true, "player1");
+		}
+		
 			
 		//else don't mark it correct because they /could/ beat you...
 			//$(target).addClass("player1-correct");
@@ -232,7 +239,9 @@ App.Views.GameView = Backbone.View.extend({
 			else if(states.them.won)
 				this.setChoiceState( "#choice" + correctIndex, true, true, "player2" );
 			else if ( states.message == "bust" || states.message == "timedOut" )
-				$("#answer").show();			
+			{	//busted question means nobody answered correctly.	
+				$("#choice" + correctIndex).removeClass("disabled").addClass("unselected-correct");
+			}
 		}
 	},
 	
@@ -241,11 +250,9 @@ App.Views.GameView = Backbone.View.extend({
 			if(responses[j] != correctIndex)
 				this.setChoiceState( "#choice" + responses[j], false, false, prefix );
 	},
-	
 	setChoiceState : function ( choiceEl, correct, disableOthers, prefix ){
 		if (correct){
 			deselectOthers = true; //turn off all others if correct
-			$("#answer").show();
 		}
 		$(choiceEl).removeClass("disabled").addClass(prefix +  (correct ? "-correct" : "-incorrect"));
 		if ( disableOthers )

@@ -76,18 +76,20 @@
     </script>
 
     <script type="application/_template" id="highScoresTemplate">
-        <div id="login">
-            <div data-role="header">
-                <h1>Dilo High Scores</h1>
+        <div>
+           <br/>
+            <div id="dilologo" class="centered"/>
+            <div>
+                <h1 class="welcome">High Scores</h1>
             </div>
             <div data-role="content">
-				<div id="highScoreTableDiv">
-					<table><tbody id="highScoreTable">
-					</tbody></table>
+				<div id="highscore-table">
+					 <table class="hor-minimalist-a"><tbody id="highScoreTable"></tbody></table>
 				</div>
+                <br/>
                 <form id="replayForm" action="" onsubmit="return false;">
 					<input id="usernameEntry" placeholder="User Name" type="text"></input>
-                    <button type="submit" id="loginDone" class="playButton">Play</button>
+                     <button type="submit" id="loginDone" class="loginUp">Play!</button>
                 </form>
                 <div id="statusMsg"></div>
 				<div id="spinner"></div>

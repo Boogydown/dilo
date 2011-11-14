@@ -21,7 +21,7 @@ App.Views.HighScoresView = Backbone.View.extend({
 		var startIndex = playerColl.length - 10;
 		if ( startIndex < 0 ) startIndex = 0;
 		playerColl.chain().rest(startIndex).each( function ( player ){
-			$("#highScoreTable").prepend( "<tr><td>" + player.get("name") + "</td><td>" + player.get("score") + "</td></tr>" );
+			$("#highScoreTable").prepend( "<tr class='highscore-row'><td>" + player.get("name") + "</td><td>" + player.get("score") + "</td></tr>" );
 		});
 	},
 

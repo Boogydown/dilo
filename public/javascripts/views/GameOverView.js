@@ -65,7 +65,7 @@ App.Views.GameOverView = Backbone.View.extend({
 	},
 
 	replay : function () {
-		this.finalize("#home/" + this.session.myPlayer.id);
+		this.finalize("#home/" + this.session.myPlayer.get("name"));
 	},
 	
 	finalize : function( href ) {

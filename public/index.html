@@ -47,31 +47,28 @@
 -->
 	<script type="text/javascript" src="http://js.pusherapp.com/1.9/pusher.min.js"></script>
 
-	
-	
-
     <script type="application/_template" id="loginTemplate">
         <div id="login">
-            <br/>
             <div id="dilologo" class="centered"/>
-            <div>
-                <h1 class="welcome">Welcome to DILO.</h1>
-            </div>
-            <div id="loginInputs">
-                <p class="bodytext centered"><br/>Enter your User Name and click Play to begin.</p>
-                <form id="loginForm" action="" onsubmit="return false;">
-					<input id="usernameEntry" placeholder="User Name" type="text"/>
-                    <button type="submit" id="loginDone" class="loginUp">Play!</button>
-                </form>
-                <br/>
-                <button id="viewHighScores" class="highScoresUp centered" onclick="location.href='#highScores'">View High Scores</button>
-				<div id="numPlayers" style="color:white;"></div>
-            </div>
-            <div id="pairing">
-                <div id="statusMsg"></div>
-				<div id="spinner"></div>
-            </div>
-            <button id="startGameBtn" onclick="location.href='#play'" style="display:none">Start Game!</button>
+	    <div id="loginInputs">
+		<div id="welcome">
+			<h1 class="welcome">Welcome to DILO.</h1>
+		</div>
+		<div id="welcomeButtons">
+			<p class="bodytext centered">Enter your User Name and click Play to begin.</p>
+			<form id="loginForm" action="" onsubmit="return false;">
+				<input id="usernameEntry" placeholder="User Name" type="text"/>
+				<button type="submit" id="loginDone" class="loginUp">Play!</button>
+			</form>
+			<button id="viewHighScores" class="highScoresUp centered" onclick="location.href='#highScores'"><span id="playTxt">View High Scores</span></button>
+			<div id="numPlayers" style="color:white; visibility:hidden;"></div>
+		</div>
+	    </div>
+	    <div id="pairing">
+		<div id="helloMsg"></div>
+	    	<div id="spinner"></div>
+		<div id="statusMsg"></div>
+	    </div>
         </div>
     </script>
 
@@ -199,7 +196,6 @@
 			<div id="winner"></div>
             <br clear="all"/>
             <div data-role="content" class="centered">
-            asdfsdffd dsgasfasdfsdf    
             <div id="questionArea"></div>
             </div>
 			<hr/>

@@ -66,9 +66,10 @@ App.Views.LoginView = Backbone.View.extend({
 		
 		console.log( "Player " + username + " logging in.");
 		
-		$("#statusMsg").html("<p><br/>Hello "+ username  + "!<br/>We are pairing you with a partner...</p>");
-       
-		
+		$("#helloMsg").html("<p><br/>Hello "+ username + "!");
+		$("#statusMsg").html("Finding your partner now...")
+		//<br/>We are pairing you with a partner...</p>");
+   		
 		$("#loginInputs").hide();
 		
 		var opts = {
@@ -112,7 +113,7 @@ App.Views.LoginView = Backbone.View.extend({
 		var state = this.model.get("state");
         switch ( state ){
             case "waiting" :
-                $("#statusMsg").append("<p>Waiting for other player...</p>");
+                //$("#statusMsg").append("<p>Waiting for other player...</p>");
 				
 				// "waiting" means we were the first to create this session, so we're the [0] player in the session's players array
 				this.model.pollFetch({success:this.sessionCreated, error:this.syncError}, "state", 300, 60000 );

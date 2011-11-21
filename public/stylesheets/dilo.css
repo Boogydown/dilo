@@ -1,8 +1,8 @@
 /* shared styles */
-html, body {
+html, body 
+{
   width:100%;
   height:100%;
-
 }
 
 html
@@ -19,12 +19,19 @@ body
    padding: 0px 0px 0px 0px;
 }
 
+*:focus
+{
+	outline: none;
+}
+
 #dilologo
 {
-    display:block;
-    background: transparent url('../images/dilo_css_sprite.png') no-repeat;
+ 	position:relative;
+	top: 10px;
+	display:block;
+	background: transparent url('../images/dilo_css_sprite.png') no-repeat;
     background-position: 0px -1000px;
-    width:160px;
+    width:157px;
     height:100px;
 
 }
@@ -38,10 +45,37 @@ body
     top:0;
     z-index:-1;
 }
+
+#pairing
+{
+	position:relative;
+	top:-55px;
+}
+
+#spinner
+{
+	position:relative;
+	top:80px;
+}
+
 #statusMsg
 {
+	position:relative;
+	top:105px;
 	font-size:24pt;
 	font-family: CurseCasual;
+}
+
+#helloMsg
+{
+	font-size:26pt;
+	font-family: CurseCasual;
+}
+
+#playtxt
+{
+	position:relative;
+	top:-15px;
 }
 
 #bottombar {
@@ -55,15 +89,16 @@ body
 }
 
 #middlebar {
-    height:480px;
+    height:460px;;
     margin:0 auto;
     background-image:url('../images/web_bg_grad.jpg');
+	background-position: 0px -20px;
     background-repeat:repeat-x;
 }
 
 #maincontent {
     width:320px;
-    height:480px;
+    height:460px;
     margin-left:auto;
     margin-right:auto;
     background-image:url('../images/dilo_bg.jpg');
@@ -72,16 +107,31 @@ body
 	font-size: 24px;
 }
 
+#loginInputs
+{
+	position:relative;
+	top:5px;
+}
+
+#welcomeButtons
+{
+	position:relative;
+	top:35px;
+}
+
 .bodytext
 {
-    font-family:CurseCasual;
-    font-size:18pt;
+    font-family:arial, helvetica, sans-serif;
+    font-size:14pt;
+	line-height:20px;
     width:200px;
 }
 
 .welcome
 {
-    font-size:24pt;
+    font-size:28pt;
+	position:relative;
+	top:-10px;
 }
 
 .centered
@@ -147,6 +197,8 @@ input#usernameEntry
     height:49px;
     font-size: 24px;
 	font-family: CurseCasual;
+	position:relative;
+	top:40px;
 }
 
 .highScoresDown
@@ -194,6 +246,8 @@ input#usernameEntry
 
 .loginForm {
 	font-size:1.5em;
+	position:relative;
+	top:-20px;
 }
 
 .translation {
@@ -204,7 +258,7 @@ input#usernameEntry
 
 #waiter{
 	width:320px;
-	height:480px;
+	height:460px;;
 	margin-left:auto;
 	margin-right:auto;
 	font-family: CurseCasual;

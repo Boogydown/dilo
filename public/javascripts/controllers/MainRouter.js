@@ -7,15 +7,17 @@ App.Routers.MainRouter = Backbone.Router.extend({
 	
     routes: {
         "" : "showHome",
-        "home" : 		"showHome",			// load the homescreen; start everything from scratch
-        "home/:player": "showHome",			// load the homescreen and login as :player
-        "play" : 		"showGame",
-		"gameOver" : 	"showGameOver",
-		"highScores" : 	"showHighScores"
+        "home" : 				"showHome",			// load the homescreen; start everything from scratch
+        "home/:player": 		"showHome",			// load the homescreen and login as :player
+        "play" : 				"showGame",
+        "play/s:session" : 		"showGame",
+		"gameOver" :			"showGameOver",
+		"gameOver/s:session" :	"showGameOver",
+		"highScores" : 			"showHighScores"
     },
 
     initialize : function () {
-        _.bindAll( this, "showHome", "showGame", "showGame");
+        _.bindAll( this, "showHome", "showGame", "showGame", "bootLoadSession" );
     },
 
 	/**
@@ -33,21 +35,59 @@ App.Routers.MainRouter = Backbone.Router.extend({
 		// remove /playerId, if it exists
 		this.navigate( "#home" );			
 		
-        // create the login view and immediately render it
+        // create the login view...
 		this.session = new App.Models.SessionModel();		
         (this.curView = new App.Views.LoginView({
             el:this.mainEl,
             model: this.session,
 			playerId: playerId
-        }) ).render();
+			
+		// ...and immediately render it
+        })).render();
     },
+	
+	bootLoadSession : function ( sessionID, callback, loadQuestions ) {
+		var s = this.session = new App.Models.SessionModel({id:sessionID});
+		
+		// load curQ (on session's load success))
+		if ( loadQuestions ) {
+			var q = this.curQ = new App.Models.QuestionModel();
+			callback = function() {
+				q.set({id:s.get("game").id});
+				q.fetch({
+					success: function(){callback();},
+					error: function() {alert("Could not find game_questions " + q.id);}
+				});
+			};
+		}
+
+		// load session
+		s.fetch({
+			success: function(session){
+				session.set({
+					state: "active",
+					current_question: 0
+				});
+				callback();
+			},
+			error: function() {
+				alert("Could not find session " + sessionID);
+			}
+		});
+	},
 	
 	/**
 	 * Once a session is created and has matched players the we can begin the game
 	 */
-    showGame : function () {
+    showGame : function ( sessionID ) {
 		if ( this.curView ) 
 			this.curView.finalize();
+		this.curView = null;
+		
+		if ( _.isString(sessionID) && sessionID != "" ){
+			this.bootLoadSession( sessionID, this.showGame );
+			return;
+		}
 		
 		// kick back to home screen if no session
         if ( !this.session || this.session.get("state") != "active" ) {
@@ -68,9 +108,14 @@ App.Routers.MainRouter = Backbone.Router.extend({
         })).start();
     },
 	
-	showGameOver : function () {
+	showGameOver : function ( sessionID ) {
 		if ( this.curView ) 
 			this.curView.finalize();
+
+		if ( _.isString(sessionID) && sessionID != "" ) {
+			this.bootLoadSession( sessionID, this.showGameOver, true );
+			return;
+		}
 
 		// kick back to home screen if no session
 		if ( !this.session || !this.curQ ) {

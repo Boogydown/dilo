@@ -12,6 +12,8 @@ html
 
 body
 {
+	overflow-x: hidden;
+	overflow-y: scroll;
    text-align:center;
    display:table-cell;
    vertical-align:middle;

@@ -36,7 +36,7 @@ App.Views.GameView = Backbone.View.extend({
 		$(this.el).html( _.template( $("#gameTemplate").html(), this.session ) );
 		$("#timerBar").hide();
 		
-		this.waitTimer = new App.Views.WaitTimerView({el:"#waiter", interval:100});
+		this.waitTimer = new App.Views.WaitTimerView({el:"#waiter", interval:1000});
 		this.waitTimer.bind( "complete", this.waitTimerDone );
 		this.waitTimer.start( 3000 );
 	},

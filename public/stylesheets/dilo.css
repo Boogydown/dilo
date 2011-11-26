@@ -164,7 +164,7 @@ input#usernameEntry
     text-align:center;
 }
 
-.loginUp
+#loginDone
 {
     background: transparent url('../images/dilo_css_sprite.png') no-repeat;
     background-position: -220px -760px;
@@ -177,7 +177,7 @@ input#usernameEntry
     color:#ffffff;
 }
 
-.loginDown
+#loginDone:active
 {
     background: transparent url('../images/dilo_css_sprite.png') no-repeat;
     background-position: -220px -880px;
@@ -508,6 +508,18 @@ table.hor-minimalist-a tbody tr:hover td
 {
     background: transparent url('../images/dilo_css_sprite.png') no-repeat;
     background-position: -190px -820px;
+    border: 0;
+    width:125px;
+    height:49px;
+    font-size: 24px;
+    color:#ffffff;
+	font-family: CurseCasual;
+}
+
+#replayButton:active
+{
+    background: transparent url('../images/dilo_css_sprite.png') no-repeat;
+    background-position: -190px -940px;
     border: 0;
     width:125px;
     height:49px;

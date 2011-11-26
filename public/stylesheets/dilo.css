@@ -197,10 +197,9 @@ input#usernameEntry
     border: 0;
     width:171px;
     height:49px;
+    margin-top:20px;
     font-size: 24px;
 	font-family: CurseCasual;
-	position:relative;
-	top:40px;
 }
 
 .highScoresDown
@@ -210,6 +209,7 @@ input#usernameEntry
     border: 0;
     width:171px;
     height:49px;
+    margin-top:20px;
     font-size: 24px;
 	font-family: CurseCasual;
 }
@@ -443,6 +443,7 @@ input#usernameEntry
     background-position: 0px -640px;
 	width:100%;
 	height:20px;
+    margin-top:17px;
 }
 
 
@@ -464,8 +465,8 @@ table.hor-minimalist-a
 }
 table.hor-minimalist-a th
 {
-	padding: 10px 8px;
-	border-bottom: 2px solid #000000;
+	padding: 0px 10px 0px 28px;
+    border-bottom: 2px solid #000000;
 }
 table.hor-minimalist-a td
 {
@@ -485,14 +486,14 @@ table.hor-minimalist-a tbody tr:hover td
 
 #results-table, #highscore-table
 {
-    height:160px;
+    height:120px;
     overflow-y: auto;
 }
 
 .results-row
 {
     background: transparent url('../images/dilo_css_sprite.png') no-repeat;
-    background-position: 0px -1110px;
+    background-position: 0px -1150px;
     width:294px;
     height:22px;
 }
@@ -523,4 +524,14 @@ table.hor-minimalist-a tbody tr:hover td
     background-position: 0px -1150px;
     width:286px;
     height:29px;
+}
+
+#highScoreBlock
+{
+    display:block;
+}
+
+#replayBlock
+{
+    display:block;
 }

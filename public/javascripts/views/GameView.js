@@ -211,10 +211,43 @@ App.Views.GameView = Backbone.View.extend({
 			this.setChoiceState( target, false, true, "player1");
 		}
 		
-			
-		//else don't mark it correct because they /could/ beat you...
-			//$(target).addClass("player1-correct");
-			
+		//pop-out animation!
+/*		var animatedEl = $(target).css({
+			color:"rgba(0,0,0,0.1)"
+		}).animate({
+			textShadowBlur:20,
+			fontSize: "37pt"
+		},{
+			duration: 300,
+			easing: "linear",
+			queue: false,
+			complete: function() {
+				animatedEl.css({
+					color:"rgba(0,0,0,1)",
+					textShadow: "0px 0px 0px",
+					fontSize: "24pt"
+				});
+			}
+		});
+*/
+		var animatedEl = $("<div/>").text($(target).text()).appendTo($(target)).css({
+			color: "rgba(0,0,0,0.2)",
+			top:"-37px",
+			position: "relative"
+		}).animate({
+			textShadowBlur:20,
+			fontSize:"67pt",
+			top:"-83px",
+			opacity: 0
+		}, {
+			duration: 300,
+			easing: "linear",
+			queue: false,
+			complete: function() {
+				animatedEl.remove();
+			}
+		});
+
 		this.model.set( {
 			responseContent: target.textContent,
 			pendingResponse: target.id.substr(target.id.length - 1)
@@ -252,7 +285,7 @@ App.Views.GameView = Backbone.View.extend({
 	},
 	setChoiceState : function ( choiceEl, correct, disableOthers, prefix ){
 		if (correct){
-			deselectOthers = true; //turn off all others if correct
+			disableOthers = true; //turn off all others if correct
 		}
 		$(choiceEl).removeClass("disabled").addClass(prefix +  (correct ? "-correct" : "-incorrect"));
 		if ( disableOthers )

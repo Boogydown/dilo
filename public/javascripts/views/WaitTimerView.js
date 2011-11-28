@@ -10,17 +10,19 @@ App.Views.WaitTimerView = App.Views.TimerView.extend({
 			this.startStyle = {
 				fontSize: e.css("fontSize"),
 				marginTop: e.css("marginTop"),
+				marginLeft: e.css("marginLeft"),
 				opacity: 1
 			};
 			
 		e.css( this.startStyle ).animate({
-			fontSize: "800px",
-			marginTop: "-300px",
-			opacity: 0.5
+			fontSize: "1500px",
+			marginTop: "-650px",
+			marginLeft: "-96px",
+			opacity: 0
 		}, {
 			duration: 1100,
 			easing: "linear",
-			queue: false
+			queue: false,
 		});
 	}
 });

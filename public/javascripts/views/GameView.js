@@ -121,6 +121,7 @@ App.Views.GameView = Backbone.View.extend({
 				message: message
 		};
 		this.showPlayerStates(states);
+		this._pendingCorrect = false;
 				
 		//ignore any messages from a past game(for instance a timer goes off for both players at roughly the same time)
 		if( curQ > this.model.get("itemNumber"))
@@ -201,35 +202,22 @@ App.Views.GameView = Backbone.View.extend({
 			
 		$(target).removeClass("unselected");
 		
-		if("choice" + correctIndex == target.id)
+		if( this._pendingCorrect = ("choice" + correctIndex == target.id ) )
 		{
+			// could be correct... 
+			// marking selected but will wait for server response before marking correct
 			$(target).removeClass("disabled").addClass("player1");
 			$(target).siblings(".answerChoice").removeClass("unselected").addClass("disabled");
 		}
 		else
 		{
+			// incorrect, so show incorrect state immediately...
 			this.setChoiceState( target, false, true, "player1");
+			// ...and shake it!
+			$(target).effect("shake",{distance:1.5, direction:"left", times:5}, 20);
 		}
 		
 		//pop-out animation!
-/*		var animatedEl = $(target).css({
-			color:"rgba(0,0,0,0.1)"
-		}).animate({
-			textShadowBlur:20,
-			fontSize: "37pt"
-		},{
-			duration: 300,
-			easing: "linear",
-			queue: false,
-			complete: function() {
-				animatedEl.css({
-					color:"rgba(0,0,0,1)",
-					textShadow: "0px 0px 0px",
-					fontSize: "24pt"
-				});
-			}
-		});
-*/
 		var animatedEl = $("<div/>").text($(target).text()).appendTo($(target)).css({
 			color: "rgba(0,0,0,0.2)",
 			top:"-37px",
@@ -267,10 +255,15 @@ App.Views.GameView = Backbone.View.extend({
 			// this is mostly useful in case both players choose wrong; we want both to show, us over them
 			this.markIncorrects(states.me.responses, correctIndex, "player1");
 		
-			if(states.me.won)
+			if(states.me.won) {
 				this.setChoiceState( "#choice" + correctIndex, true, true, "player1" );
-			else if(states.them.won)
+				this.animateResultMessage( "You Won!", "#080", $("#choice" + correctIndex) );
+			}
+			else if(states.them.won){
 				this.setChoiceState( "#choice" + correctIndex, true, true, "player2" );
+				if ( this._pendingCorrect )
+					this.animateResultMessage( "Too Slow!", "#800", $("#choice" + correctIndex) );
+			}
 			else if ( states.message == "bust" || states.message == "timedOut" )
 			{	//busted question means nobody answered correctly.	
 				$("#choice" + correctIndex).removeClass("disabled").addClass("unselected-correct");
@@ -283,13 +276,38 @@ App.Views.GameView = Backbone.View.extend({
 			if(responses[j] != correctIndex)
 				this.setChoiceState( "#choice" + responses[j], false, false, prefix );
 	},
+	
 	setChoiceState : function ( choiceEl, correct, disableOthers, prefix ){
-		if (correct){
+		if (correct)
 			disableOthers = true; //turn off all others if correct
-		}
+			
 		$(choiceEl).removeClass("disabled").addClass(prefix +  (correct ? "-correct" : "-incorrect"));
 		if ( disableOthers )
-			$(choiceEl).siblings(".answerChoice").removeClass("unselected").addClass("disabled");
+			$(choiceEl).siblings(".answerChoice").removeClass("unselected").addClass("disabled");			
+	},
+	
+	animateResultMessage : function( message, color, el ) {
+		var animatedEl = $("<div>" + message + "</div>").appendTo($(el)).css({
+			textShadow: "#000 0px 0px 20px",
+			color: color,
+			fontSize:"75pt",
+			top:"-83px",
+			opacity: 0,
+			position: "relative"
+		}).animate({
+			textShadowBlur:0,
+			opacity: 1,
+			fontSize: "26pt",
+			top:"-37px"
+		}, {
+			duration: 300,
+			easing: "linear",
+			queue: false,
+			complete: function() {
+				el.css({textShadow: "white 0px 0px 3px"}).effect("shake",{distance:1.5, direction:"up", times:5}, 20);
+				animatedEl.fadeOut("slow", function(){animatedEl.remove();});
+			}
+		});
 	},
 	
     //=========== end question-specific logic ===============
